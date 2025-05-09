@@ -1,0 +1,50 @@
+Project Requirements Template:
+
+1. Project Overview
+- Project name: harkkapankki
+- Brief description: A system that can be used for creating a 90 minute disc golf training program containing:
+- greeting and instructions
+- warmup
+- putting practise
+- throwing practise
+- quiz
+- round-up
+- Target platforms (web/mobile/both):
+
+2. Technical Stack
+- React version preference: 19
+- Remix
+- Type system (JavaScript/TypeScript): TypeScript
+- Database: postgresql
+- Migrations: prisma ORM
+- Styling approach (CSS/SCSS/Styled Components/Tailwind/etc): Tailwind and scss
+- UI component library preference (if any): Radix UI
+- Docker
+    - docker-compose.yml
+    - postgres
+        - container name: harkka-db
+        - external port: 5434
+        - internal port: 5432
+        - environment variables:
+            - POSTGRES_USER: postgres
+            - POSTGRES_PASSWORD: postgres
+            - POSTGRES_DB: harkka_db
+    
+
+3. Development Environment
+- Package manager preference (npm/yarn/pnpm): npm
+- Linting/formatting preferences: eslint
+
+
+4. Database structure
+- Tables:
+    - exercises:
+        - id: uuid (primary key, required)
+        - name: string (required)
+        - description: string
+        - content: string (required)
+        - youtube_video: string (optional)
+        - duration: number (required)
+        - created_at: timestamp (default: now)
+        - updated_at: timestamp (default: now)
+- create Prisma migration for exercises table
