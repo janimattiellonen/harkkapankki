@@ -1,0 +1,17 @@
+Add form validation for exercises:
+- name: required
+    - min length: 1
+    - max length: 255
+- description: optional
+    - max length: 1024
+- content: required
+    - min length: 1
+    - max length: 2048
+- youtubeVideo: optional
+    - max length: 255
+- duration: required
+    - number
+    - min value: 1
+    - max value: 255
+
+- use same validation both when creating a new exercise and when editing an exercise

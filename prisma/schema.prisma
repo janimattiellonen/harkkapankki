@@ -7,15 +7,48 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model ExerciseType {
+  id          String        @id @default(uuid())
+  slug        String        @unique // computer-friendly name, e.g. "technique", "backhand"
+  parentId    String?       // null for root level types
+  parent      ExerciseType? @relation("ExerciseTypeHierarchy", fields: [parentId], references: [id])
+  children    ExerciseType[] @relation("ExerciseTypeHierarchy")
+  translations ExerciseTypeTranslation[]
+  exercises    Exercise[]
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+
+  @@map("exercise_types")
+  @@index([parentId])
+}
+
+model ExerciseTypeTranslation {
+  id            String       @id @default(uuid())
+  exerciseType  ExerciseType @relation(fields: [exerciseTypeId], references: [id], onDelete: Cascade)
+  exerciseTypeId String      @map("exercise_type_id")
+  language      String       // e.g. "fi", "en", "sv"
+  name          String       // translated name
+  description   String?      // optional description in the given language
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @updatedAt @map("updated_at")
+
+  @@map("exercise_type_translations")
+  @@unique([exerciseTypeId, language])
+  @@index([language])
+}
+
 model Exercise {
-  id           String   @id @default(uuid())
-  name         String
-  description  String?
-  content      String
-  youtubeVideo String? @map("youtube_video")
-  duration     Int
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
+  id            String       @id @default(uuid())
+  name          String
+  description   String?
+  content       String
+  youtubeVideo  String?     @map("youtube_video")
+  duration      Int
+  exerciseType  ExerciseType @relation(fields: [exerciseTypeId], references: [id])
+  exerciseTypeId String      @map("exercise_type_id")
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
 
   @@map("exercises")
+  @@index([exerciseTypeId])
 }
