@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 let db: PrismaClient;
 
 declare global {
-  var __db: PrismaClient | undefined;
+  let __db: PrismaClient | undefined;
 }
 
 if (process.env.NODE_ENV === "production") {

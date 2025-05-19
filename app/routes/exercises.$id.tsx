@@ -3,7 +3,7 @@ import { Link, useLoaderData } from "@remix-run/react";
 import { fetchExerciseById } from "~/services/exercises.server";
 
 export async function loader({ params }: LoaderFunctionArgs) {
-  const exercise = await fetchExerciseById(params.id!);
+  const exercise = await fetchExerciseById(params.id!, 'en');
 
   if (!exercise) {
     throw new Response("Exercise not found", { status: 404 });
@@ -17,7 +17,15 @@ export default function ExerciseDetail() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-4">{exercise.name}</h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-3xl font-bold">{exercise.name}</h1>
+        <Link
+          to="edit"
+          className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        >
+          Edit Exercise
+        </Link>
+      </div>
       
       {exercise.description && (
         <p className="text-gray-600 mb-6">{exercise.description}</p>
@@ -29,11 +37,22 @@ export default function ExerciseDetail() {
           {exercise.content}
         </div>
         
-        <div className="mt-6 flex items-center text-sm text-gray-500">
-          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          Duration: {exercise.duration} minutes
+        <div className="mt-6 space-y-2">
+          <div className="flex items-center text-sm text-gray-500">
+            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Duration: {exercise.duration} minutes
+          </div>
+
+          {exercise.exerciseTypePath && (
+            <div className="flex items-center text-sm text-gray-500">
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z" />
+              </svg>
+              Type: {exercise.exerciseTypePath}
+            </div>
+          )}
         </div>
 
         {exercise.youtubeVideo && (

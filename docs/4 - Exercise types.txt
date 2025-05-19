@@ -1,0 +1,21 @@
+- alkulämmittelyt
+- tekniikkaharjoitukset
+    - puttaaminen
+    - heittäminen
+- tietovisa
+
+
+I have the following exercise hierarchy:
+
+- Technique
+    - backhand
+    - sidearm
+    - putting
+- Supplementary exercises
+    - motor skills exercises
+    - strength training exercises
+    - warm-up exercises
+- Games, plays and challenges
+    - throwing games
+    - warm-up games
+    - putting games
