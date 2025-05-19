@@ -31,6 +31,10 @@ export const exerciseFormSchema = z.object({
         message: "Duration must be a number between 1 and 255 minutes",
       }
     ),
+
+  exerciseTypeId: z.string()
+    .min(1, "Exercise type is required")
+    .uuid("Invalid exercise type"),
 });
 
 // Schema for validated data (after transformation)
@@ -65,6 +69,10 @@ export const exerciseSchema = z.object({
       }
     )
     .transform((val) => parseInt(val, 10)),
+
+  exerciseTypeId: z.string()
+    .min(1, "Exercise type is required")
+    .uuid("Invalid exercise type"),
 });
 
 export type ExerciseFormData = z.infer<typeof exerciseFormSchema>;

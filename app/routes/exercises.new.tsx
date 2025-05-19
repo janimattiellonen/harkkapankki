@@ -1,9 +1,15 @@
-import { json, redirect, type ActionFunctionArgs } from "@remix-run/node";
-import { Form, useActionData } from "@remix-run/react";
+import { json, redirect, type ActionFunctionArgs, type LoaderFunctionArgs } from "@remix-run/node";
+import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import { ExerciseForm } from "~/components/ExerciseForm";
 import { exerciseSchema } from "~/schemas/exercise";
 import { createExercise } from "~/services/exercises.server";
+import { fetchExerciseTypeOptions } from "~/services/exerciseTypes.server";
 import { parseData } from "~/utils/validation";
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  const exerciseTypes = await fetchExerciseTypeOptions('en');
+  return json({ exerciseTypes });
+}
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
@@ -22,6 +28,7 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function NewExercise() {
+  const { exerciseTypes } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
 
   return (
@@ -32,6 +39,7 @@ export default function NewExercise() {
           submitText="Create Exercise" 
           errors={actionData?.errors}
           defaultValues={actionData?.values}
+          exerciseTypes={exerciseTypes}
         />
       </Form>
     </div>

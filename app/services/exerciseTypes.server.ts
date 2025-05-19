@@ -1,4 +1,5 @@
 import { db } from "~/utils/db.server";
+import type { ExerciseTypeOption } from "~/types";
 
 type ExerciseTypeWithPath = {
   id: string;
@@ -68,4 +69,43 @@ export async function fetchExerciseTypePath(exerciseTypeId: string, language: st
     slug: exerciseType.slug,
     translatedPath: pathParts.join(" / "),
   };
+}
+
+export async function fetchExerciseTypeOptions(language: string = 'en'): Promise<ExerciseTypeOption[]> {
+  const types = await db.exerciseType.findMany({
+    where: {
+      // Get root level types (those without parents)
+      parentId: null,
+    },
+    include: {
+      translations: {
+        where: { language },
+        select: { name: true },
+      },
+      children: {
+        include: {
+          translations: {
+            where: { language },
+            select: { name: true },
+          },
+        },
+      },
+    },
+    orderBy: {
+      slug: 'asc',
+    },
+  });
+
+  return types.map(type => ({
+    id: type.id,
+    name: type.translations[0]?.name || type.slug,
+    slug: type.slug,
+    children: type.children
+      .sort((a, b) => a.slug.localeCompare(b.slug))
+      .map(child => ({
+        id: child.id,
+        name: child.translations[0]?.name || child.slug,
+        slug: child.slug,
+      })),
+  }));
 }

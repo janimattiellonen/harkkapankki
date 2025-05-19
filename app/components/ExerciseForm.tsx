@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { Exercise } from "@prisma/client";
 import { exerciseFormSchema, type ExerciseFormData } from "~/schemas/exercise";
 import { useEffect } from "react";
+import type { ExerciseTypeOption } from "~/types";
 
 type SerializedExercise = Omit<Exercise, 'createdAt' | 'updatedAt'> & {
   createdAt: string;
@@ -13,14 +14,16 @@ type ExerciseFormProps = {
   exercise?: SerializedExercise;
   submitText?: string;
   errors?: Record<string, string>;
-  defaultValues?: Record<string, string>;
+  defaultValues?: ExerciseFormData;
+  exerciseTypes: ExerciseTypeOption[];
 };
 
 export function ExerciseForm({ 
   exercise, 
   submitText = "Save", 
   errors,
-  defaultValues 
+  defaultValues,
+  exerciseTypes
 }: ExerciseFormProps) {
   const {
     register,
@@ -31,11 +34,12 @@ export function ExerciseForm({
   } = useForm<ExerciseFormData>({
     resolver: zodResolver(exerciseFormSchema),
     values: defaultValues || (exercise ? {
-      name: exercise.name,
+      name: exercise.name ?? "",
       description: exercise.description ?? "",
-      content: exercise.content,
+      content: exercise.content ?? "",
       youtubeVideo: exercise.youtubeVideo ?? "",
-      duration: String(exercise.duration),
+      duration: String(exercise.duration ?? 0),
+      exerciseTypeId: exercise.exerciseTypeId ?? "",
     } : undefined)
   });
 
@@ -101,6 +105,33 @@ export function ExerciseForm({
           />
           {formErrors.content && (
             <p className="mt-1 text-sm text-red-600">{formErrors.content.message}</p>
+          )}
+        </div>
+
+        <div>
+          <label htmlFor="exerciseTypeId" className="block text-sm font-medium text-gray-700">
+            Exercise Type
+          </label>
+          <select
+            id="exerciseTypeId"
+            {...register("exerciseTypeId")}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          >
+            <option value="">Select exercise type...</option>
+            {exerciseTypes.map((type) => (
+              <optgroup key={type.id} label={type.name}>
+                {/* Parent type as an option */}
+                <option value={type.id}>{type.name}</option>
+                
+                {/* Child types */}
+                {type.children?.map((child) => (
+                  <option key={child.id} value={child.id}>↳ {child.name}</option>
+                ))}
+              </optgroup>
+            ))}
+          </select>
+          {formErrors.exerciseTypeId && (
+            <p className="mt-1 text-sm text-red-600">{formErrors.exerciseTypeId.message}</p>
           )}
         </div>
 
