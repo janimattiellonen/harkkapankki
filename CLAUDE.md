@@ -1,0 +1,1 @@
+#prefer types over interfaces
