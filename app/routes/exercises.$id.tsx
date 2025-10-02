@@ -1,6 +1,8 @@
 import { json, type LoaderFunctionArgs } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import { fetchExerciseById } from "~/services/exercises.server";
+import { useEffect, useState } from "react";
+import type MDEditor from "@uiw/react-md-editor";
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const exercise = await fetchExerciseById(params.id!, 'en');
@@ -14,6 +16,13 @@ export async function loader({ params }: LoaderFunctionArgs) {
 
 export default function ExerciseDetail() {
   const { exercise } = useLoaderData<typeof loader>();
+  const [MarkdownComponent, setMarkdownComponent] = useState<typeof MDEditor.Markdown | null>(null);
+
+  useEffect(() => {
+    import("@uiw/react-md-editor").then((mod) => {
+      setMarkdownComponent(() => mod.default.Markdown);
+    });
+  }, []);
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
@@ -33,8 +42,12 @@ export default function ExerciseDetail() {
 
       <div className="bg-white shadow rounded-lg p-6">
         <h2 className="text-xl font-semibold mb-4">Instructions</h2>
-        <div className="prose max-w-none whitespace-pre-line">
-          {exercise.content}
+        <div className="prose max-w-none">
+          {MarkdownComponent ? (
+            <MarkdownComponent source={exercise.content} />
+          ) : (
+            <div className="whitespace-pre-line">{exercise.content}</div>
+          )}
         </div>
         
         <div className="mt-6 space-y-2">

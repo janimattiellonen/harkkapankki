@@ -12,6 +12,8 @@ import Layout from "./components/Layout";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: tailwindStyles },
+  { rel: "stylesheet", href: "https://uiwjs.github.io/react-md-editor/markdown-editor.css" },
+  { rel: "stylesheet", href: "https://uiwjs.github.io/react-markdown-preview/markdown.css" },
 ];
 
 export default function App() {
@@ -23,7 +25,7 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body>
+      <body data-color-mode="light">
         <Layout>
           <Outlet />
         </Layout>

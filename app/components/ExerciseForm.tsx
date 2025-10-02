@@ -1,9 +1,10 @@
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { Exercise } from "@prisma/client";
 import { exerciseFormSchema, type ExerciseFormData } from "~/schemas/exercise";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { ExerciseTypeOption } from "~/types";
+import type MDEditor from "@uiw/react-md-editor";
 
 type SerializedExercise = Omit<Exercise, 'createdAt' | 'updatedAt'> & {
   createdAt: string;
@@ -18,15 +19,25 @@ type ExerciseFormProps = {
   exerciseTypes: ExerciseTypeOption[];
 };
 
-export function ExerciseForm({ 
-  exercise, 
-  submitText = "Save", 
+export function ExerciseForm({
+  exercise,
+  submitText = "Save",
   errors,
   defaultValues,
   exerciseTypes
 }: ExerciseFormProps) {
+  const [MDEditorComponent, setMDEditorComponent] = useState<typeof MDEditor | null>(null);
+
+  useEffect(() => {
+    // Dynamically import MDEditor only on the client side
+    import("@uiw/react-md-editor").then((mod) => {
+      setMDEditorComponent(() => mod.default);
+    });
+  }, []);
+
   const {
     register,
+    control,
     formState: { errors: formErrors },
     setError,
     clearErrors,
@@ -94,14 +105,33 @@ export function ExerciseForm({
         </div>
 
         <div>
-          <label htmlFor="content" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-2">
             Content
           </label>
-          <textarea
-            id="content"
-            rows={5}
-            {...register("content")}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          <Controller
+            name="content"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <>
+                {MDEditorComponent ? (
+                  <MDEditorComponent
+                    value={value}
+                    onChange={onChange}
+                    preview="edit"
+                    height={400}
+                  />
+                ) : (
+                  <textarea
+                    id="content"
+                    rows={10}
+                    value={value}
+                    onChange={(e) => onChange(e.target.value)}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  />
+                )}
+                <input type="hidden" name="content" value={value} />
+              </>
+            )}
           />
           {formErrors.content && (
             <p className="mt-1 text-sm text-red-600">{formErrors.content.message}</p>
