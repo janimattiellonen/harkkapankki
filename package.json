@@ -19,6 +19,8 @@
     "@remix-run/node": "^2.16.6",
     "@remix-run/react": "^2.16.6",
     "@remix-run/serve": "^2.16.6",
+    "@uiw/react-md-editor": "^4.0.8",
+    "i18next": "^25.2.0",
     "isbot": "^4.1.0",
     "prisma": "^6.7.0",
     "react": "^18.2.0",
