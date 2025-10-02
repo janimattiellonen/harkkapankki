@@ -123,6 +123,7 @@ export function ExerciseForm({
                 ) : (
                   <textarea
                     id="content"
+                    name="content"
                     rows={10}
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
