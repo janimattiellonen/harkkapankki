@@ -1,9 +1,9 @@
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import { fetchExercises } from "~/services/exercises.server";
-import type { Exercise } from "@prisma/client";
+import type { ExerciseWithTypePath } from "~/services/exercises.server";
 
-type ExerciseData = Omit<Exercise, 'createdAt' | 'updatedAt'> & {
+type ExerciseData = Omit<ExerciseWithTypePath, 'createdAt' | 'updatedAt'> & {
   createdAt: string;
   updatedAt: string;
 };
@@ -16,12 +16,8 @@ export const loader = async () => {
 export default function Exercises() {
   const { exercises } = useLoaderData<typeof loader>();
 
-  const formatFinnishDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day}.${month}.${year}`;
+  const formatDate = (dateString: string, locale: string = 'fi-FI') => {
+    return new Date(dateString).toLocaleDateString(locale);
   };
 
   return (
@@ -53,7 +49,10 @@ export default function Exercises() {
                 <div className="flex-1 min-w-0">
                   <h2 className="text-xl font-semibold text-blue-600">{exercise.name}</h2>
                   <p className="text-xs text-gray-500 mt-1">
-                    {formatFinnishDate(exercise.createdAt)}
+                    {formatDate(exercise.createdAt)}
+                    {exercise.exerciseTypePath && (
+                      <> - {exercise.exerciseTypePath}</>
+                    )}
                   </p>
                   {exercise.description && (
                     <p className="text-gray-600 mt-2 line-clamp-2">{exercise.description}</p>

@@ -16,10 +16,23 @@ export type ExerciseWithTypePath = Exercise & {
   exerciseTypePath: string | null;
 };
 
-export async function fetchExercises(): Promise<Exercise[]> {
-  return db.exercise.findMany({
+export async function fetchExercises(language: string = 'en'): Promise<ExerciseWithTypePath[]> {
+  const exercises = await db.exercise.findMany({
     orderBy: { name: "asc" },
   });
+
+  // Fetch exercise type paths for all exercises
+  const exercisesWithPaths = await Promise.all(
+    exercises.map(async (exercise) => {
+      const exerciseTypePath = await fetchExerciseTypePath(exercise.exerciseTypeId, language);
+      return {
+        ...exercise,
+        exerciseTypePath: exerciseTypePath?.translatedPath || null,
+      };
+    })
+  );
+
+  return exercisesWithPaths;
 }
 
 export async function fetchExerciseById(id: string, language: string = 'en'): Promise<ExerciseWithTypePath | null> {
