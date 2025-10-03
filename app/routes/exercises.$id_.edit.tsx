@@ -5,6 +5,7 @@ import { exerciseSchema } from "~/schemas/exercise";
 import { fetchExerciseById, updateExercise } from "~/services/exercises.server";
 import { fetchExerciseTypeOptions } from "~/services/exerciseTypes.server";
 import { parseData } from "~/utils/validation";
+import { parseFormData } from "~/utils/upload.server";
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const [exercise, exerciseTypes] = await Promise.all([
@@ -20,18 +21,28 @@ export async function loader({ params }: LoaderFunctionArgs) {
 }
 
 export async function action({ request, params }: ActionFunctionArgs) {
-  const formData = await request.formData();
+  const formData = await parseFormData(request);
   const data = Object.fromEntries(formData);
-  
+
   const result = parseData(exerciseSchema, data);
   if (!result.success) {
-    return json({ 
+    return json({
       errors: result.errors,
       values: data
     }, { status: 400 });
   }
 
-  await updateExercise(params.id!, result.data);
+  // Get image path from formData if uploaded
+  const imageValue = formData.get("image");
+  const image = typeof imageValue === "string" && imageValue ? imageValue : null;
+
+  // Fetch existing exercise to preserve image if not updated
+  const existingExercise = await fetchExerciseById(params.id!, 'en');
+
+  await updateExercise(params.id!, {
+    ...result.data,
+    image: image || existingExercise?.image || null,
+  });
   return redirect(`/exercises/${params.id}`);
 }
 

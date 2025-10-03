@@ -40,6 +40,16 @@ export default function ExerciseDetail() {
         <p className="text-gray-600 mb-6">{exercise.description}</p>
       )}
 
+      {exercise.image && (
+        <div className="mb-6">
+          <img
+            src={exercise.image}
+            alt={exercise.name}
+            className="w-full max-w-2xl rounded-lg shadow-lg object-cover"
+          />
+        </div>
+      )}
+
       <div className="bg-white shadow rounded-lg p-6">
         <h2 className="text-xl font-semibold mb-4">Instructions</h2>
         <div className="prose max-w-none">

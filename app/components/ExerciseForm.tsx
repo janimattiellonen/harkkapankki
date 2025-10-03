@@ -73,7 +73,7 @@ export function ExerciseForm({
 
   return (
     <div className="space-y-4">
-      <form onSubmit={onSubmit} method="post" className="space-y-4">
+      <form onSubmit={onSubmit} method="post" encType="multipart/form-data" className="space-y-4">
         <div>
           <label htmlFor="name" className="block text-sm font-medium text-gray-700">
             Name
@@ -163,6 +163,24 @@ export function ExerciseForm({
           </select>
           {formErrors.exerciseTypeId && (
             <p className="mt-1 text-sm text-red-600">{formErrors.exerciseTypeId.message}</p>
+          )}
+        </div>
+
+        <div>
+          <label htmlFor="image" className="block text-sm font-medium text-gray-700">
+            Image
+          </label>
+          <input
+            type="file"
+            id="image"
+            name="image"
+            accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+            className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+          />
+          {exercise?.image && (
+            <p className="mt-2 text-sm text-gray-500">
+              Current: <a href={exercise.image} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{exercise.image}</a>
+            </p>
           )}
         </div>
 

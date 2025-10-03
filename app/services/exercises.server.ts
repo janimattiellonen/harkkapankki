@@ -6,6 +6,7 @@ export type ExerciseInput = {
   name: string;
   description?: string | null;
   content: string;
+  image?: string | null;
   youtubeVideo?: string | null;
   duration: number;
   exerciseTypeId: string;
@@ -40,20 +41,30 @@ export async function fetchExerciseById(id: string, language: string = 'en'): Pr
 }
 
 export async function createExercise(data: ExerciseInput): Promise<Exercise> {
+  const { exerciseTypeId, ...rest } = data;
+
   return db.exercise.create({
     data: {
-      ...data,
-      duration: Number(data.duration),
+      ...rest,
+      duration: Number(rest.duration),
+      exerciseType: {
+        connect: { id: exerciseTypeId },
+      },
     },
   });
 }
 
 export async function updateExercise(id: string, data: ExerciseInput): Promise<Exercise> {
+  const { exerciseTypeId, ...rest } = data;
+
   return db.exercise.update({
     where: { id },
     data: {
-      ...data,
-      duration: Number(data.duration),
+      ...rest,
+      duration: Number(rest.duration),
+      exerciseType: {
+        connect: { id: exerciseTypeId },
+      },
     },
   });
 }
