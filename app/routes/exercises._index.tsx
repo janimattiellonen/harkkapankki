@@ -16,6 +16,14 @@ export const loader = async () => {
 export default function Exercises() {
   const { exercises } = useLoaderData<typeof loader>();
 
+  const formatFinnishDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}.${month}.${year}`;
+  };
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Training Exercises</h1>
@@ -44,6 +52,9 @@ export default function Exercises() {
               <div className="flex-1 flex justify-between items-start min-w-0">
                 <div className="flex-1 min-w-0">
                   <h2 className="text-xl font-semibold text-blue-600">{exercise.name}</h2>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {formatFinnishDate(exercise.createdAt)}
+                  </p>
                   {exercise.description && (
                     <p className="text-gray-600 mt-2 line-clamp-2">{exercise.description}</p>
                   )}
