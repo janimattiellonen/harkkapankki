@@ -27,6 +27,8 @@ export function ExerciseForm({
   exerciseTypes
 }: ExerciseFormProps) {
   const [MDEditorComponent, setMDEditorComponent] = useState<typeof MDEditor | null>(null);
+  const [showRemoveDialog, setShowRemoveDialog] = useState(false);
+  const [imageToRemove, setImageToRemove] = useState<string | null>(null);
 
   useEffect(() => {
     // Dynamically import MDEditor only on the client side
@@ -177,10 +179,30 @@ export function ExerciseForm({
             accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
             className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
           />
-          {exercise?.image && (
-            <p className="mt-2 text-sm text-gray-500">
-              Current: <a href={exercise.image} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{exercise.image}</a>
-            </p>
+          {exercise?.image && !imageToRemove && (
+            <div className="mt-2 flex items-center gap-4">
+              <p className="text-sm text-gray-500">
+                Current: <a href={exercise.image} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{exercise.image}</a>
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setImageToRemove(exercise.image);
+                  setShowRemoveDialog(true);
+                }}
+                className="text-sm text-red-600 hover:text-red-800 font-medium"
+              >
+                Remove
+              </button>
+            </div>
+          )}
+          {imageToRemove && (
+            <>
+              <input type="hidden" name="removeImage" value="true" />
+              <p className="mt-2 text-sm text-amber-600">
+                Image will be removed when you save
+              </p>
+            </>
           )}
         </div>
 
@@ -225,6 +247,39 @@ export function ExerciseForm({
           </button>
         </div>
       </form>
+
+      {/* Remove Image Confirmation Dialog */}
+      {showRemoveDialog && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Remove Image</h3>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to remove this image? The image file will remain on the server, but it will no longer be associated with this exercise.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowRemoveDialog(false);
+                  setImageToRemove(null);
+                }}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowRemoveDialog(false);
+                }}
+                className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
+              >
+                Remove
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

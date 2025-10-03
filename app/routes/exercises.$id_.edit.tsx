@@ -32,16 +32,31 @@ export async function action({ request, params }: ActionFunctionArgs) {
     }, { status: 400 });
   }
 
+  // Check if user wants to remove the image
+  const removeImage = formData.get("removeImage") === "true";
+
   // Get image path from formData if uploaded
   const imageValue = formData.get("image");
-  const image = typeof imageValue === "string" && imageValue ? imageValue : null;
+  const newImage = typeof imageValue === "string" && imageValue ? imageValue : null;
 
-  // Fetch existing exercise to preserve image if not updated
+  // Fetch existing exercise to preserve image if not updated or removed
   const existingExercise = await fetchExerciseById(params.id!, 'en');
+
+  let finalImage: string | null = null;
+  if (removeImage) {
+    // User wants to remove the image
+    finalImage = null;
+  } else if (newImage) {
+    // User uploaded a new image
+    finalImage = newImage;
+  } else {
+    // Keep existing image
+    finalImage = existingExercise?.image || null;
+  }
 
   await updateExercise(params.id!, {
     ...result.data,
-    image: image || existingExercise?.image || null,
+    image: finalImage,
   });
   return redirect(`/exercises/${params.id}`);
 }
