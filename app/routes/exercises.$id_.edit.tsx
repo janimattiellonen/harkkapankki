@@ -58,6 +58,14 @@ export async function action({ request, params }: ActionFunctionArgs) {
     ...result.data,
     image: finalImage,
   });
+
+  // Check if user wants to stay on the page
+  const saveAndContinue = formData.get("saveAndContinue") === "true";
+
+  if (saveAndContinue) {
+    return json({ success: true, message: "Exercise updated successfully" });
+  }
+
   return redirect(`/exercises/${params.id}`);
 }
 
@@ -68,10 +76,16 @@ export default function EditExercise() {
   return (
     <div className="mx-auto max-w-3xl p-6">
       <h1 className="mb-6 text-2xl font-bold">Edit Exercise</h1>
+      {actionData && 'success' in actionData && actionData.success && (
+        <div className="mb-4 rounded-md bg-green-50 p-4">
+          <p className="text-sm text-green-800">{actionData.message}</p>
+        </div>
+      )}
       <Form method="post">
-        <ExerciseForm 
+        <ExerciseForm
           exercise={exercise}
           submitText="Update Exercise"
+          showSaveAndContinue={true}
           errors={actionData?.errors}
           defaultValues={actionData?.values}
           exerciseTypes={exerciseTypes}

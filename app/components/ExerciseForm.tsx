@@ -15,6 +15,7 @@ type SerializedExercise = Omit<Exercise, 'createdAt' | 'updatedAt'> & {
 type ExerciseFormProps = {
   exercise?: SerializedExercise;
   submitText?: string;
+  showSaveAndContinue?: boolean;
   errors?: Record<string, string>;
   defaultValues?: ExerciseFormData;
   exerciseTypes: ExerciseTypeOption[];
@@ -23,6 +24,7 @@ type ExerciseFormProps = {
 export function ExerciseForm({
   exercise,
   submitText = "Save",
+  showSaveAndContinue = false,
   errors,
   defaultValues,
   exerciseTypes
@@ -262,7 +264,17 @@ export function ExerciseForm({
           )}
         </div>
 
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-3">
+          {showSaveAndContinue && (
+            <button
+              type="submit"
+              name="saveAndContinue"
+              value="true"
+              className="rounded-md bg-gray-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+            >
+              Save and Continue
+            </button>
+          )}
           <button
             type="submit"
             className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
