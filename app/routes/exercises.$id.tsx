@@ -3,6 +3,7 @@ import { Link, useLoaderData } from "@remix-run/react";
 import { fetchExerciseById } from "~/services/exercises.server";
 import { useEffect, useState } from "react";
 import type MDEditor from "@uiw/react-md-editor";
+import { rehypeYouTube } from "~/utils/rehype-youtube";
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const exercise = await fetchExerciseById(params.id!, 'en');
@@ -54,7 +55,10 @@ export default function ExerciseDetail() {
         <h2 className="text-xl font-semibold mb-4">Instructions</h2>
         <div className="prose max-w-none">
           {MarkdownComponent ? (
-            <MarkdownComponent source={exercise.content} />
+            <MarkdownComponent
+              source={exercise.content}
+              rehypePlugins={[rehypeYouTube]}
+            />
           ) : (
             <div className="whitespace-pre-line">{exercise.content}</div>
           )}
