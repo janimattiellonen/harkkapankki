@@ -42,6 +42,7 @@ model Exercise {
   name          String
   description   String?
   content       String
+  image         String?      // path to uploaded image
   youtubeVideo  String?     @map("youtube_video")
   duration      Int
   exerciseType  ExerciseType @relation(fields: [exerciseTypeId], references: [id])

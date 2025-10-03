@@ -3,6 +3,7 @@ import { Link, useLoaderData } from "@remix-run/react";
 import { fetchExerciseById } from "~/services/exercises.server";
 import { useEffect, useState } from "react";
 import type MDEditor from "@uiw/react-md-editor";
+import { rehypeYouTube } from "~/utils/rehype-youtube";
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const exercise = await fetchExerciseById(params.id!, 'en');
@@ -24,10 +25,19 @@ export default function ExerciseDetail() {
     });
   }, []);
 
+  const formatDate = (dateString: string, locale: string = 'fi-FI') => {
+    return new Date(dateString).toLocaleDateString(locale);
+  };
+
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-3xl font-bold">{exercise.name}</h1>
+        <div>
+          <h1 className="text-3xl font-bold">{exercise.name}</h1>
+          <p className="text-xs text-gray-500 mt-1">
+            {formatDate(exercise.createdAt)}
+          </p>
+        </div>
         <Link
           to="edit"
           className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
@@ -35,16 +45,29 @@ export default function ExerciseDetail() {
           Edit Exercise
         </Link>
       </div>
-      
+
       {exercise.description && (
         <p className="text-gray-600 mb-6">{exercise.description}</p>
+      )}
+
+      {exercise.image && (
+        <div className="mb-6">
+          <img
+            src={exercise.image}
+            alt={exercise.name}
+            className="w-full max-w-2xl rounded-lg shadow-lg object-cover"
+          />
+        </div>
       )}
 
       <div className="bg-white shadow rounded-lg p-6">
         <h2 className="text-xl font-semibold mb-4">Instructions</h2>
         <div className="prose max-w-none">
           {MarkdownComponent ? (
-            <MarkdownComponent source={exercise.content} />
+            <MarkdownComponent
+              source={exercise.content}
+              rehypePlugins={[rehypeYouTube]}
+            />
           ) : (
             <div className="whitespace-pre-line">{exercise.content}</div>
           )}

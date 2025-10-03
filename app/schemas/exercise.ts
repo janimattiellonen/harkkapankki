@@ -13,7 +13,7 @@ export const exerciseFormSchema = z.object({
   
   content: z.string()
     .min(1, "Content is required")
-    .max(2048, "Content cannot be longer than 2048 characters"),
+    .max(50000, "Content cannot be longer than 50,000 characters"),
   
   youtubeVideo: z.string()
     .max(255, "YouTube video URL cannot be longer than 255 characters")
@@ -50,7 +50,7 @@ export const exerciseSchema = z.object({
   
   content: z.string()
     .min(1, "Content is required")
-    .max(2048, "Content cannot be longer than 2048 characters"),
+    .max(50000, "Content cannot be longer than 50,000 characters"),
   
   youtubeVideo: z.string()
     .max(255, "YouTube video URL cannot be longer than 255 characters")

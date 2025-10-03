@@ -6,6 +6,7 @@ export type ExerciseInput = {
   name: string;
   description?: string | null;
   content: string;
+  image?: string | null;
   youtubeVideo?: string | null;
   duration: number;
   exerciseTypeId: string;
@@ -15,10 +16,23 @@ export type ExerciseWithTypePath = Exercise & {
   exerciseTypePath: string | null;
 };
 
-export async function fetchExercises(): Promise<Exercise[]> {
-  return db.exercise.findMany({
+export async function fetchExercises(language: string = 'en'): Promise<ExerciseWithTypePath[]> {
+  const exercises = await db.exercise.findMany({
     orderBy: { name: "asc" },
   });
+
+  // Fetch exercise type paths for all exercises
+  const exercisesWithPaths = await Promise.all(
+    exercises.map(async (exercise) => {
+      const exerciseTypePath = await fetchExerciseTypePath(exercise.exerciseTypeId, language);
+      return {
+        ...exercise,
+        exerciseTypePath: exerciseTypePath?.translatedPath || null,
+      };
+    })
+  );
+
+  return exercisesWithPaths;
 }
 
 export async function fetchExerciseById(id: string, language: string = 'en'): Promise<ExerciseWithTypePath | null> {
@@ -40,20 +54,30 @@ export async function fetchExerciseById(id: string, language: string = 'en'): Pr
 }
 
 export async function createExercise(data: ExerciseInput): Promise<Exercise> {
+  const { exerciseTypeId, ...rest } = data;
+
   return db.exercise.create({
     data: {
-      ...data,
-      duration: Number(data.duration),
+      ...rest,
+      duration: Number(rest.duration),
+      exerciseType: {
+        connect: { id: exerciseTypeId },
+      },
     },
   });
 }
 
 export async function updateExercise(id: string, data: ExerciseInput): Promise<Exercise> {
+  const { exerciseTypeId, ...rest } = data;
+
   return db.exercise.update({
     where: { id },
     data: {
-      ...data,
-      duration: Number(data.duration),
+      ...rest,
+      duration: Number(rest.duration),
+      exerciseType: {
+        connect: { id: exerciseTypeId },
+      },
     },
   });
 }

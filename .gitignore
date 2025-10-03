@@ -5,3 +5,7 @@ node_modules
 .env
 .DS_Store
 .idea
+
+# Uploaded files (keep .gitkeep)
+/public/uploads/*
+!/public/uploads/.gitkeep

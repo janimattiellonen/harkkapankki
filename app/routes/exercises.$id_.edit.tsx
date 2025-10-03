@@ -5,6 +5,7 @@ import { exerciseSchema } from "~/schemas/exercise";
 import { fetchExerciseById, updateExercise } from "~/services/exercises.server";
 import { fetchExerciseTypeOptions } from "~/services/exerciseTypes.server";
 import { parseData } from "~/utils/validation";
+import { parseFormData } from "~/utils/upload.server";
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const [exercise, exerciseTypes] = await Promise.all([
@@ -20,18 +21,51 @@ export async function loader({ params }: LoaderFunctionArgs) {
 }
 
 export async function action({ request, params }: ActionFunctionArgs) {
-  const formData = await request.formData();
+  const formData = await parseFormData(request);
   const data = Object.fromEntries(formData);
-  
+
   const result = parseData(exerciseSchema, data);
   if (!result.success) {
-    return json({ 
+    return json({
       errors: result.errors,
       values: data
     }, { status: 400 });
   }
 
-  await updateExercise(params.id!, result.data);
+  // Check if user wants to remove the image
+  const removeImage = formData.get("removeImage") === "true";
+
+  // Get image path from formData if uploaded
+  const imageValue = formData.get("image");
+  const newImage = typeof imageValue === "string" && imageValue ? imageValue : null;
+
+  // Fetch existing exercise to preserve image if not updated or removed
+  const existingExercise = await fetchExerciseById(params.id!, 'en');
+
+  let finalImage: string | null = null;
+  if (removeImage) {
+    // User wants to remove the image
+    finalImage = null;
+  } else if (newImage) {
+    // User uploaded a new image
+    finalImage = newImage;
+  } else {
+    // Keep existing image
+    finalImage = existingExercise?.image || null;
+  }
+
+  await updateExercise(params.id!, {
+    ...result.data,
+    image: finalImage,
+  });
+
+  // Check if user wants to stay on the page
+  const saveAndContinue = formData.get("saveAndContinue") === "true";
+
+  if (saveAndContinue) {
+    return json({ success: true, message: "Exercise updated successfully" });
+  }
+
   return redirect(`/exercises/${params.id}`);
 }
 
@@ -42,10 +76,16 @@ export default function EditExercise() {
   return (
     <div className="mx-auto max-w-3xl p-6">
       <h1 className="mb-6 text-2xl font-bold">Edit Exercise</h1>
+      {actionData && 'success' in actionData && actionData.success && (
+        <div className="mb-4 rounded-md bg-green-50 p-4">
+          <p className="text-sm text-green-800">{actionData.message}</p>
+        </div>
+      )}
       <Form method="post">
-        <ExerciseForm 
+        <ExerciseForm
           exercise={exercise}
           submitText="Update Exercise"
+          showSaveAndContinue={true}
           errors={actionData?.errors}
           defaultValues={actionData?.values}
           exerciseTypes={exerciseTypes}

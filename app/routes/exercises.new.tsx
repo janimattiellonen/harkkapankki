@@ -5,6 +5,7 @@ import { exerciseSchema } from "~/schemas/exercise";
 import { createExercise } from "~/services/exercises.server";
 import { fetchExerciseTypeOptions } from "~/services/exerciseTypes.server";
 import { parseData } from "~/utils/validation";
+import { parseFormData } from "~/utils/upload.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const exerciseTypes = await fetchExerciseTypeOptions('en');
@@ -12,18 +13,25 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  const formData = await request.formData();
+  const formData = await parseFormData(request);
   const data = Object.fromEntries(formData);
-  
+
   const result = parseData(exerciseSchema, data);
   if (!result.success) {
-    return json({ 
+    return json({
       errors: result.errors,
       values: data
     }, { status: 400 });
   }
 
-  await createExercise(result.data);
+  // Get image path from formData if uploaded
+  const imageValue = formData.get("image");
+  const image = typeof imageValue === "string" && imageValue ? imageValue : null;
+
+  await createExercise({
+    ...result.data,
+    image,
+  });
   return redirect("/exercises");
 }
 
