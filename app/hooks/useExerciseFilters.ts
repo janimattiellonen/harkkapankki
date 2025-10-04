@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useSearchParams, useSubmit } from "@remix-run/react";
 import type { ExerciseTypeOption } from "~/types";
 
@@ -24,7 +24,7 @@ export function useExerciseFilters({ exerciseTypes }: UseExerciseFiltersProps) {
   );
 
   // Sync filters to URL
-  const syncToURL = (search: string, typeIds: string[]) => {
+  const syncToURL = useCallback((search: string, typeIds: string[]) => {
     const params = new URLSearchParams();
 
     if (search.length >= 3) {
@@ -36,7 +36,7 @@ export function useExerciseFilters({ exerciseTypes }: UseExerciseFiltersProps) {
     }
 
     submit(params, { method: "get", replace: true, preventScrollReset: true });
-  };
+  }, [submit]);
 
   // Debounce search term and sync to URL
   useEffect(() => {
@@ -62,7 +62,7 @@ export function useExerciseFilters({ exerciseTypes }: UseExerciseFiltersProps) {
     return () => {
       clearTimeout(timer);
     };
-  }, [searchTerm]);
+  }, [searchTerm, selectedTypeIds, syncToURL]);
 
   // Sync selected types to URL immediately
   useEffect(() => {
@@ -70,7 +70,7 @@ export function useExerciseFilters({ exerciseTypes }: UseExerciseFiltersProps) {
       return;
     }
     syncToURL(searchTerm, selectedTypeIds);
-  }, [selectedTypeIds]);
+  }, [selectedTypeIds, searchTerm, syncToURL]);
 
   // Get all child IDs for a parent type
   const getChildIds = (parentId: string): string[] => {

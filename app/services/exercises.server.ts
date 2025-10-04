@@ -22,7 +22,10 @@ export type ExerciseFilters = {
 };
 
 export async function fetchExercises(language: string = 'en', filters?: ExerciseFilters): Promise<ExerciseWithTypePath[]> {
-  const where: any = {};
+  const where: {
+    name?: { contains: string; mode: 'insensitive' };
+    exerciseTypeId?: { in: string[] };
+  } = {};
 
   // Apply search term filter
   if (filters?.searchTerm && filters.searchTerm.length >= 3) {
