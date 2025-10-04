@@ -16,8 +16,31 @@ export type ExerciseWithTypePath = Exercise & {
   exerciseTypePath: string | null;
 };
 
-export async function fetchExercises(language: string = 'en'): Promise<ExerciseWithTypePath[]> {
+export type ExerciseFilters = {
+  searchTerm?: string;
+  exerciseTypeIds?: string[];
+};
+
+export async function fetchExercises(language: string = 'en', filters?: ExerciseFilters): Promise<ExerciseWithTypePath[]> {
+  const where: any = {};
+
+  // Apply search term filter
+  if (filters?.searchTerm && filters.searchTerm.length >= 3) {
+    where.name = {
+      contains: filters.searchTerm,
+      mode: 'insensitive',
+    };
+  }
+
+  // Apply exercise type filter
+  if (filters?.exerciseTypeIds && filters.exerciseTypeIds.length > 0) {
+    where.exerciseTypeId = {
+      in: filters.exerciseTypeIds,
+    };
+  }
+
   const exercises = await db.exercise.findMany({
+    where,
     orderBy: { name: "asc" },
   });
 

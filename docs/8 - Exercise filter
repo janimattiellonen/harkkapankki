@@ -1,0 +1,51 @@
+Exercise filter
+
+I need a way for the visitors to be able to search for exercises using given filters.
+
+- display on the exercise listing page, below the title and before the list
+- make it an own component
+  - separate visuals from search logic
+- utilize debouncing to minimize the amount of api requests made
+
+
+
+Available filters:
+
+    - exercise types are found in the database
+        - it should be possible to select 0 or more exercise types
+        - selecting a parent, you implicitly select any child exercises
+    - exercise title
+        - a minimum of 3 characters must be typed, before search is triggered
+        - any whole parts of the title should be searchable
+            - if the whole title is "A lazy cat walked down the street",
+              then searches for "cat", "A laz" and "walk" should be considered positive matches,
+              while searches for "cas" "wlk" should be considered as failing matches
+            - if possible, search should be case insensitive
+
+
+    For reference, see files:
+    - app/types.ts
+        - type ExerciseTypeOption
+    - app/services/exerciseTypes.server.ts
+        - function fetchExerciseTypeOptions()
+    - prisma/schema.prisma
+        - model ExerciseType
+
+
+
+Implementation
+
+1) Plan
+
+- create a plan for how to implement the exercise filter
+- show how you would split the visuals from the logic
+- show me a suggested structure
+
+2) Ask
+
+- if unsure about specs or implementation, ask me for clearance
+
+
+3) Implement
+
+Only implement when I have accepted the plan
