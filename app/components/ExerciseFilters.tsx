@@ -10,7 +10,6 @@ type ExerciseFiltersProps = {
   onClearFilters: () => void;
   isParentSelected: (parentId: string) => boolean;
   isParentIndeterminate: (parentId: string) => boolean;
-  disabled: boolean;
   hasActiveFilters: boolean;
 };
 
@@ -23,7 +22,6 @@ export function ExerciseFilters({
   onClearFilters,
   isParentSelected,
   isParentIndeterminate,
-  disabled,
   hasActiveFilters,
 }: ExerciseFiltersProps) {
   const showSearchWarning = searchTerm.length > 0 && searchTerm.length < 3;
@@ -104,9 +102,9 @@ export function ExerciseFilters({
             showAdvancedFilters ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
           }`}
         >
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <div className="block text-sm font-medium text-gray-700 mb-2">
             Exercise types
-          </label>
+          </div>
           <div className="grid grid-cols-2 gap-4">
             {exerciseTypes.map((type) => (
               <div key={type.id}>

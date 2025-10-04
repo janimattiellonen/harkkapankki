@@ -1,4 +1,4 @@
-import { json, redirect, type ActionFunctionArgs, type LoaderFunctionArgs } from "@remix-run/node";
+import { json, redirect, type ActionFunctionArgs } from "@remix-run/node";
 import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import { ExerciseForm } from "~/components/ExerciseForm";
 import { exerciseSchema } from "~/schemas/exercise";
@@ -7,7 +7,7 @@ import { fetchExerciseTypeOptions } from "~/services/exerciseTypes.server";
 import { parseData } from "~/utils/validation";
 import { parseFormData } from "~/utils/upload.server";
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader() {
   const exerciseTypes = await fetchExerciseTypeOptions('en');
   return json({ exerciseTypes });
 }
