@@ -62,7 +62,8 @@ export function useExerciseFilters({ exerciseTypes }: UseExerciseFiltersProps) {
     return () => {
       clearTimeout(timer);
     };
-  }, [searchTerm, selectedTypeIds, syncToURL]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchTerm]);
 
   // Sync selected types to URL immediately
   useEffect(() => {
@@ -70,7 +71,8 @@ export function useExerciseFilters({ exerciseTypes }: UseExerciseFiltersProps) {
       return;
     }
     syncToURL(searchTerm, selectedTypeIds);
-  }, [selectedTypeIds, searchTerm, syncToURL]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedTypeIds]);
 
   // Get all child IDs for a parent type
   const getChildIds = (parentId: string): string[] => {
