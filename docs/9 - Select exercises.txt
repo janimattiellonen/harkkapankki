@@ -40,6 +40,7 @@ types (as text)
 IMPLEMENTATION
 
 Phase 1 - Frontpage
+Status: DONE
 
 Create two clickable boxes that are rendered horizontally, if space. Each box should take about 50% of
 horizontal space with some gap between. On smaller devices, the boxes should be rendered vertically.
@@ -63,3 +64,9 @@ Box #2:
 
 
 Read the pasted text, plan, and execute Phase 1
+
+Phase 2 - Exercise selection form
+Status: NOT IMPLEMENTED
+Tecnical name to use in code:
+- practiseEvent
+- route: practise-event/new
