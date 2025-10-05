@@ -36,12 +36,12 @@ export default function HomePage() {
         <FeatureBox
           imagePath="/app/asssets/images/exercise-plan.png"
           title="Design a practise event"
-          href="#"
+          href="/practise-sessions/new"
         />
         <FeatureBox
           imagePath="/app/asssets/images/piggybank.jpeg"
           title="Exercise bank"
-          href="#"
+          href="/exercises"
         />
       </div>
     </div>

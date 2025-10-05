@@ -13,7 +13,7 @@ can select 0 or more exercises for the practise event.
 For example, the user may select:
 - 2 exercises for warm-up
 - 1 exercise for putting practise
-- 2 exercises for throwrng practise
+- 2 exercises for throwing practise
 - 1 exercise for closing
 
 The page shows a total estimated time required for the selected practises.
@@ -63,10 +63,105 @@ Box #2:
 - link: no target available yet, implement an empty link
 
 
-Read the pasted text, plan, and execute Phase 1
+Read the pasted text, plan, and execute Phase 1 if not marked as DONE.
 
 Phase 2 - Exercise selection form
 Status: NOT IMPLEMENTED
-Tecnical name to use in code:
-- practiseEvent
-- route: practise-event/new
+
+Technical name to use in code:
+- practiseSession(s)
+- route: practise-sessions/new
+
+
+Implementation of phase 2
+
+In phase 2, we don't care about database structure nor about persisting or fetching data to and
+from the database. In this phase we want to test the feasibility of the UI and iterate it until it feels
+stable and functioning.
+
+Initially, the practise event form has:
+- practise event length selection
+    - 60 minutes or 90 minutes
+    - should be designed so that 1-n selections are possible
+    - can be assumed that length is always in minutes
+- 4 sections that are empty by default
+
+The practise event form initially contains 4 empty sections:
+- introduction
+- warm-up
+- technique
+- closing
+
+Each section allows the user to select 0 or more items from a list of available items. Each section has
+its own list of items that are only available to the specific section.
+
+Each section has a default length. For example, introduction and closing are both typically 5 minutes.
+Note that the section length may vary depending on the selected length of the practise event.
+
+
+Initially available sections:
+    - Introduction
+        - selectable items:
+            - Throwing order
+            - Ob rules
+        - section length in minutes: 5
+
+    - Warm-up
+        - selectable items:
+            - Motor skill
+            - Muscle condition
+        - section length in minutes
+            - practise length 60 minutes: 10
+            - practise length 90 minutes: 20
+    - Technique
+        - selectable items:
+            - Putting
+            - Driving
+        - section length in minutes
+            - practise length 60 minutes: 40
+            - practise length 90 minutes: 60
+    - Closing
+        - selectable items:
+            - Closing
+        - section length in minutes: 5
+
+
+Use the above listed available sections in the form. Generate uuid values as ids for each item.
+Use 'label' for the human readable value and 'value' for the uuid. Not that each section may have
+0-n selected items. Allow the user to add new items and remove added items. Same item may not be
+added twice.
+
+Before generating actual code in the project, plan and suggest a solution.
+
+
+Section (database):
+- table name: sections
+- fields:
+    - id (uuid, primary key)
+    - created_at
+    - updated_at
+
+SectionTranslation (database);
+- table name: section_translations
+- fields:
+    - id (uuid, primary key)
+    - section_id
+    - language
+    - name
+    - description (nullable)
+    - created_at
+    - updated_at
+
+
+
+If the user chooses "Design a practise event", the user presented with a form, where the user
+can select 0 or more exercises for the practise event.
+
+For example, the user may select:
+- 2 exercises for warm-up
+- 1 exercise for putting practise
+- 2 exercises for throwing practise
+- 1 exercise for closing
+
+The page shows a total estimated time required for the selected practises.
+The user may choose a 60 minute or a 90 minute practise event and plan accordingly.
