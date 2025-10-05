@@ -46,8 +46,8 @@ export async function fetchExerciseTypePath(exerciseTypeId: string, language: st
   };
 }
 
-export async function fetchExerciseTypeOptions(language: string = 'en'): Promise<ExerciseTypeOption[]> {
-  const types = await exerciseTypeRepo.findRootExerciseTypesWithChildren(language);
+export async function fetchExerciseTypeOptions(language: string = 'en', groupSlug?: string): Promise<ExerciseTypeOption[]> {
+  const types = await exerciseTypeRepo.findRootExerciseTypesWithChildren(language, groupSlug);
 
   return types.map(type => ({
     id: type.id,

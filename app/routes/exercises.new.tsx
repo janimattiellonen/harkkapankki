@@ -8,7 +8,7 @@ import { parseData } from "~/utils/validation";
 import { parseFormData } from "~/utils/upload.server";
 
 export async function loader() {
-  const exerciseTypes = await fetchExerciseTypeOptions('en');
+  const exerciseTypes = await fetchExerciseTypeOptions('en', 'exercise-form');
   return json({ exerciseTypes });
 }
 

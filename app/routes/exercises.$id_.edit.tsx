@@ -10,7 +10,7 @@ import { parseFormData } from "~/utils/upload.server";
 export async function loader({ params }: LoaderFunctionArgs) {
   const [exercise, exerciseTypes] = await Promise.all([
     fetchExerciseById(params.id!, 'en'),
-    fetchExerciseTypeOptions('en')
+    fetchExerciseTypeOptions('en', 'exercise-form')
   ]);
 
   if (!exercise) {

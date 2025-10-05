@@ -133,6 +133,40 @@ added twice.
 
 Before generating actual code in the project, plan and suggest a solution.
 
+Phase 3 - database changes (planning)
+
+The project database already has tables exercise_types and exercise_type_translations, which contain a
+hierarchical representation of available exercise types (each exercise type can be both a parent
+and/or a child).
+
+The previously mentioned sections will contains these same exercise types in a pre-determined set.
+We need to be able to link selected exercise types to one or more sections. Currently we will most
+likely just link a certain exercise type to one section, but let's support linking each exercise to
+several sections.
+
+See file prisma/seed.ts and `exerciseTypes` for more info on what exercise types look like.
+
+
+In phase 3, we'll just plan and design the required database changes, but not actually creating any
+migrations, until the plan sounds right.
+
+Additions to phase 3:
+
+We could create a new table named exercise_type_groups which we could use to create multiple groups
+containing a different setup of exercise types:
+- one group for exercise form
+- on group for practise session form
+
+This way we could add a new exercise type named "Introduction" that we only show the practise session form.
+
+
+Phase 4 - use actual exercise type group values in "New practise session" form.
+
+Currently we use mock values for the section select lists. Now as we have a functioning database structure,
+let's use the real values.
+
+First, plan on how to implement this. SHow me some code. If it looks good, you can implement it
+
 
 Section (database):
 - table name: sections
