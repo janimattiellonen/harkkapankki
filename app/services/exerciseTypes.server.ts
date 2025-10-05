@@ -1,4 +1,4 @@
-import { db } from "~/utils/db.server";
+import * as exerciseTypeRepo from "~/repositories/exerciseType.server";
 import type { ExerciseTypeOption } from "~/types";
 
 type ExerciseTypeWithPath = {
@@ -8,32 +8,7 @@ type ExerciseTypeWithPath = {
 };
 
 export async function fetchExerciseTypePath(exerciseTypeId: string, language: string): Promise<ExerciseTypeWithPath | null> {
-  // First get the exercise type with its parent hierarchy
-  const exerciseType = await db.exerciseType.findUnique({
-    where: { id: exerciseTypeId },
-    include: {
-      translations: {
-        where: { language },
-        select: { name: true },
-      },
-      parent: {
-        include: {
-          translations: {
-            where: { language },
-            select: { name: true },
-          },
-          parent: {
-            include: {
-              translations: {
-                where: { language },
-                select: { name: true },
-              },
-            },
-          },
-        },
-      },
-    },
-  });
+  const exerciseType = await exerciseTypeRepo.findExerciseTypeWithHierarchy(exerciseTypeId, language);
 
   if (!exerciseType) {
     return null;
@@ -72,29 +47,7 @@ export async function fetchExerciseTypePath(exerciseTypeId: string, language: st
 }
 
 export async function fetchExerciseTypeOptions(language: string = 'en'): Promise<ExerciseTypeOption[]> {
-  const types = await db.exerciseType.findMany({
-    where: {
-      // Get root level types (those without parents)
-      parentId: null,
-    },
-    include: {
-      translations: {
-        where: { language },
-        select: { name: true },
-      },
-      children: {
-        include: {
-          translations: {
-            where: { language },
-            select: { name: true },
-          },
-        },
-      },
-    },
-    orderBy: {
-      slug: 'asc',
-    },
-  });
+  const types = await exerciseTypeRepo.findRootExerciseTypesWithChildren(language);
 
   return types.map(type => ({
     id: type.id,
