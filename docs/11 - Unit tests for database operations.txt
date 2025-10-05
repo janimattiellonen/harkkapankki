@@ -1,0 +1,18 @@
+Unit tests for database operations
+
+Description
+
+I want my app to be safe from regression due to changes. I need unit tests for functionality that inserts,
+updates and deletes data to and from database.
+
+I want to use a real database so that the tests are authentic.
+
+Plan
+
+Devise a plan on how to set up a testing environment that utilizes a real database and that is easy to setup.
+
+Adding new test data should be pain free.
+
+Without creating actual code yet, show me how a single unit tests would look like that:
+- inserts a new exercise using the function createExercise found in app/services/exercises.server.ts
+- makes sure that exercise was created properly
