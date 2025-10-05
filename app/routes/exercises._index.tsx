@@ -63,7 +63,6 @@ export default function Exercises() {
         onClearFilters={clearFilters}
         isParentSelected={isParentSelected}
         isParentIndeterminate={isParentIndeterminate}
-        disabled={false}
         hasActiveFilters={hasActiveFilters}
       />
 
