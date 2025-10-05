@@ -1,0 +1,65 @@
+Select exercises
+
+
+
+When arriving to the exercises web site, the user is presented with two choices
+1) Design a practise event
+2) Browse exercises
+
+
+If the user chooses "Design a practise event", the user presented with a form, where the user
+can select 0 or more exercises for the practise event.
+
+For example, the user may select:
+- 2 exercises for warm-up
+- 1 exercise for putting practise
+- 2 exercises for throwrng practise
+- 1 exercise for closing
+
+The page shows a total estimated time required for the selected practises.
+The user may choose a 60 minute or a 90 minute practise event and plan accordingly.
+
+
+If the user chooses "Browse exercises", the user is presented with available exercise types:
+- Technique
+- Games, plays and challenges
+- Supplementary exercises
+- All games
+
+Each type could be presented as a big box with an image representing the type along with
+the type title.
+
+Each box is a clickable link navigating to a page that lists all exercises for the selected
+exercise type.
+
+This makes it more visually appealing to the user, instead of just vertical list of exercise
+types (as text)
+
+
+
+IMPLEMENTATION
+
+Phase 1 - Frontpage
+
+Create two clickable boxes that are rendered horizontally, if space. Each box should take about 50% of
+horizontal space with some gap between. On smaller devices, the boxes should be rendered vertically.
+
+Each box should render an image and a title text. The text should be rendered centered,
+both vertically and horizontally. The text could have a background that is somewhat transparent
+with a blur filter. Use a shade of gray as the background. This to make the title text always readable,
+no matter what background image is used.
+
+The image should cover the whole box. Use appropriate css styles so that the image is not scaled weirdly.
+
+Box #1:
+- image: assets/images/exercise-plan.png
+- title text: Design a practise event
+- link: no target available yet, implement an empty link
+
+Box #2:
+- image: assets/images/piggybank.jpeg
+- title text: Exercise bank
+- link: no target available yet, implement an empty link
+
+
+Read the pasted text, plan, and execute Phase 1
