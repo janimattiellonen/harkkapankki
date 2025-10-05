@@ -1,11 +1,14 @@
 import { useState } from "react";
 import type { PractiseLength, SelectedItem, Section, SectionItem } from "~/types";
-import { SECTIONS } from "~/utils/practiseSessionData";
 import { PractiseSessionLengthSelector } from "~/components/PractiseSessionLengthSelector";
 import { PractiseSessionSection } from "~/components/PractiseSessionSection";
 import { PractiseSessionSummary } from "~/components/PractiseSessionSummary";
 
-export default function PractiseSessionForm() {
+type PractiseSessionFormProps = {
+  sections: Section[];
+};
+
+export default function PractiseSessionForm({ sections }: PractiseSessionFormProps) {
   const [practiseLength, setPractiseLength] = useState<PractiseLength>(60);
   const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([]);
 
@@ -18,7 +21,7 @@ export default function PractiseSessionForm() {
 
   // Calculate total allocated time
   const calculateTotalTime = (): number => {
-    return SECTIONS.reduce((total, section) => {
+    return sections.reduce((total, section) => {
       const hasSelectedItems = selectedItems.some(
         (item) => item.sectionId === section.id
       );
@@ -28,7 +31,7 @@ export default function PractiseSessionForm() {
 
   // Get selected items for a specific section
   const getSectionItems = (sectionId: string): SectionItem[] => {
-    const section = SECTIONS.find((s) => s.id === sectionId);
+    const section = sections.find((s) => s.id === sectionId);
     if (!section) return [];
 
     return selectedItems
@@ -72,7 +75,7 @@ export default function PractiseSessionForm() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Sections */}
         <div className="lg:col-span-2 space-y-4">
-          {SECTIONS.map((section) => (
+          {sections.map((section) => (
             <PractiseSessionSection
               key={section.id}
               section={section}
