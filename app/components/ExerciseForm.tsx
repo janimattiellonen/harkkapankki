@@ -17,7 +17,7 @@ type ExerciseFormProps = {
   submitText?: string;
   showSaveAndContinue?: boolean;
   errors?: Record<string, string>;
-  defaultValues?: ExerciseFormData;
+  defaultValues?: Partial<ExerciseFormData>;
   exerciseTypes: ExerciseTypeOption[];
 };
 
@@ -49,7 +49,7 @@ export function ExerciseForm({
     handleSubmit,
   } = useForm<ExerciseFormData>({
     resolver: zodResolver(exerciseFormSchema),
-    values: defaultValues || (exercise ? {
+    values: (defaultValues as ExerciseFormData | undefined) || (exercise ? {
       name: exercise.name ?? "",
       description: exercise.description ?? "",
       content: exercise.content ?? "",

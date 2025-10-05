@@ -1,5 +1,5 @@
-import { db } from "~/utils/db.server";
 import type { Exercise } from "@prisma/client";
+import * as exerciseRepo from "~/repositories/exercise.server";
 import { fetchExerciseTypePath } from "./exerciseTypes.server";
 
 export type ExerciseInput = {
@@ -22,10 +22,7 @@ export type ExerciseFilters = {
 };
 
 export async function fetchExercises(language: string = 'en', filters?: ExerciseFilters): Promise<ExerciseWithTypePath[]> {
-  const where: {
-    name?: { contains: string; mode: 'insensitive' };
-    exerciseTypeId?: { in: string[] };
-  } = {};
+  const where: exerciseRepo.ExerciseWhereInput = {};
 
   // Apply search term filter
   if (filters?.searchTerm && filters.searchTerm.length >= 3) {
@@ -42,10 +39,7 @@ export async function fetchExercises(language: string = 'en', filters?: Exercise
     };
   }
 
-  const exercises = await db.exercise.findMany({
-    where,
-    orderBy: { name: "asc" },
-  });
+  const exercises = await exerciseRepo.findManyExercises(where);
 
   // Fetch exercise type paths for all exercises
   const exercisesWithPaths = await Promise.all(
@@ -62,9 +56,7 @@ export async function fetchExercises(language: string = 'en', filters?: Exercise
 }
 
 export async function fetchExerciseById(id: string, language: string = 'en'): Promise<ExerciseWithTypePath | null> {
-  const exercise = await db.exercise.findUnique({
-    where: { id },
-  });
+  const exercise = await exerciseRepo.findExerciseById(id);
 
   if (!exercise) {
     return null;
@@ -82,13 +74,11 @@ export async function fetchExerciseById(id: string, language: string = 'en'): Pr
 export async function createExercise(data: ExerciseInput): Promise<Exercise> {
   const { exerciseTypeId, ...rest } = data;
 
-  return db.exercise.create({
-    data: {
-      ...rest,
-      duration: Number(rest.duration),
-      exerciseType: {
-        connect: { id: exerciseTypeId },
-      },
+  return exerciseRepo.createExercise({
+    ...rest,
+    duration: Number(rest.duration),
+    exerciseType: {
+      connect: { id: exerciseTypeId },
     },
   });
 }
@@ -96,14 +86,11 @@ export async function createExercise(data: ExerciseInput): Promise<Exercise> {
 export async function updateExercise(id: string, data: ExerciseInput): Promise<Exercise> {
   const { exerciseTypeId, ...rest } = data;
 
-  return db.exercise.update({
-    where: { id },
-    data: {
-      ...rest,
-      duration: Number(rest.duration),
-      exerciseType: {
-        connect: { id: exerciseTypeId },
-      },
+  return exerciseRepo.updateExercise(id, {
+    ...rest,
+    duration: Number(rest.duration),
+    exerciseType: {
+      connect: { id: exerciseTypeId },
     },
   });
 }

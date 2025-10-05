@@ -86,8 +86,8 @@ export default function EditExercise() {
           exercise={exercise}
           submitText="Update Exercise"
           showSaveAndContinue={true}
-          errors={actionData?.errors}
-          defaultValues={actionData?.values}
+          errors={actionData && 'errors' in actionData ? actionData.errors : undefined}
+          defaultValues={actionData && 'values' in actionData ? actionData.values : undefined}
           exerciseTypes={exerciseTypes}
         />
       </Form>

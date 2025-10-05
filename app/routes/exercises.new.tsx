@@ -43,10 +43,10 @@ export default function NewExercise() {
     <div className="mx-auto max-w-3xl p-6">
       <h1 className="mb-6 text-2xl font-bold">New Exercise</h1>
       <Form method="post">
-        <ExerciseForm 
-          submitText="Create Exercise" 
-          errors={actionData?.errors}
-          defaultValues={actionData?.values}
+        <ExerciseForm
+          submitText="Create Exercise"
+          errors={actionData && 'errors' in actionData ? actionData.errors : undefined}
+          defaultValues={actionData && 'values' in actionData ? actionData.values : undefined}
           exerciseTypes={exerciseTypes}
         />
       </Form>
