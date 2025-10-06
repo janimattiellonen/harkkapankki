@@ -15,6 +15,8 @@ model ExerciseType {
   children    ExerciseType[] @relation("ExerciseTypeHierarchy")
   translations ExerciseTypeTranslation[]
   exercises    Exercise[]
+  sectionLinks SectionExerciseType[]
+  groupMemberships ExerciseTypeGroupMember[]
   createdAt   DateTime     @default(now()) @map("created_at")
   updatedAt   DateTime     @updatedAt @map("updated_at")
 
@@ -51,5 +53,106 @@ model Exercise {
   updatedAt     DateTime    @updatedAt @map("updated_at")
 
   @@map("exercises")
+  @@index([exerciseTypeId])
+}
+
+model ExerciseTypeGroup {
+  id          String   @id @default(uuid())
+  slug        String   @unique
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  translations    ExerciseTypeGroupTranslation[]
+  exerciseTypes   ExerciseTypeGroupMember[]
+
+  @@map("exercise_type_groups")
+}
+
+model ExerciseTypeGroupTranslation {
+  id          String             @id @default(uuid())
+  group       ExerciseTypeGroup  @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId     String             @map("group_id")
+  language    String
+  name        String
+  description String?
+  createdAt   DateTime           @default(now()) @map("created_at")
+  updatedAt   DateTime           @updatedAt @map("updated_at")
+
+  @@map("exercise_type_group_translations")
+  @@unique([groupId, language])
+  @@index([language])
+}
+
+model ExerciseTypeGroupMember {
+  id              String            @id @default(uuid())
+  group           ExerciseTypeGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId         String            @map("group_id")
+  exerciseType    ExerciseType      @relation(fields: [exerciseTypeId], references: [id], onDelete: Cascade)
+  exerciseTypeId  String            @map("exercise_type_id")
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
+
+  @@map("exercise_type_group_members")
+  @@unique([groupId, exerciseTypeId])
+  @@index([groupId])
+  @@index([exerciseTypeId])
+}
+
+model Section {
+  id          String   @id @default(uuid())
+  slug        String   @unique
+  order       Int
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  translations        SectionTranslation[]
+  durationConfigs     SectionDurationConfig[]
+  exerciseTypeLinks   SectionExerciseType[]
+
+  @@map("sections")
+  @@index([order])
+}
+
+model SectionTranslation {
+  id          String   @id @default(uuid())
+  section     Section  @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  sectionId   String   @map("section_id")
+  language    String
+  name        String
+  description String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("section_translations")
+  @@unique([sectionId, language])
+  @@index([language])
+}
+
+model SectionDurationConfig {
+  id              String   @id @default(uuid())
+  section         Section  @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  sectionId       String   @map("section_id")
+  sessionLength   Int
+  duration        Int
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@map("section_duration_configs")
+  @@unique([sectionId, sessionLength])
+  @@index([sessionLength])
+}
+
+model SectionExerciseType {
+  id              String       @id @default(uuid())
+  section         Section      @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  sectionId       String       @map("section_id")
+  exerciseType    ExerciseType @relation(fields: [exerciseTypeId], references: [id], onDelete: Cascade)
+  exerciseTypeId  String       @map("exercise_type_id")
+  createdAt       DateTime     @default(now()) @map("created_at")
+  updatedAt       DateTime     @updatedAt @map("updated_at")
+
+  @@map("section_exercise_types")
+  @@unique([sectionId, exerciseTypeId])
+  @@index([sectionId])
   @@index([exerciseTypeId])
 }

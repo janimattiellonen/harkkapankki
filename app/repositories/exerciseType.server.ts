@@ -28,10 +28,19 @@ export function findExerciseTypeWithHierarchy(exerciseTypeId: string, language: 
   });
 }
 
-export function findRootExerciseTypesWithChildren(language: string) {
+export function findRootExerciseTypesWithChildren(language: string, groupSlug?: string) {
   return db.exerciseType.findMany({
     where: {
       parentId: null,
+      ...(groupSlug && {
+        groupMemberships: {
+          some: {
+            group: {
+              slug: groupSlug,
+            },
+          },
+        },
+      }),
     },
     include: {
       translations: {
@@ -39,6 +48,15 @@ export function findRootExerciseTypesWithChildren(language: string) {
         select: { name: true },
       },
       children: {
+        where: groupSlug ? {
+          groupMemberships: {
+            some: {
+              group: {
+                slug: groupSlug,
+              },
+            },
+          },
+        } : undefined,
         include: {
           translations: {
             where: { language },

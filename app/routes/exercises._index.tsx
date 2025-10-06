@@ -22,7 +22,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   const [exercises, exerciseTypes] = await Promise.all([
     fetchExercises('en', filters),
-    fetchExerciseTypeOptions('en'),
+    fetchExerciseTypeOptions('en', 'exercise-form'),
   ]);
 
   return json({ exercises, exerciseTypes });
