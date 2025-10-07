@@ -23,14 +23,14 @@ export async function action({ request }: ActionFunctionArgs) {
   const selectedItemsJson = formData.get("selectedItems") as string;
   const selectedItems: SelectedItem[] = JSON.parse(selectedItemsJson);
 
-  await createPracticeSession({
+  const session = await createPracticeSession({
     name: name || undefined,
     description: description || undefined,
     sessionLength,
     selectedItems,
   });
 
-  return redirect("/practise-sessions");
+  return redirect(`/practise-sessions/${session.slug}`);
 }
 
 export default function NewPractiseSession() {

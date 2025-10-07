@@ -1,6 +1,7 @@
 import { db } from "~/utils/db.server";
 
 type CreatePracticeSessionData = {
+  slug: string;
   name?: string;
   description?: string;
   sessionLength: number;
@@ -14,6 +15,7 @@ type CreatePracticeSessionData = {
 export async function createPracticeSession(data: CreatePracticeSessionData) {
   return db.practiceSession.create({
     data: {
+      slug: data.slug,
       name: data.name || null,
       description: data.description || null,
       sessionLength: data.sessionLength,
@@ -51,6 +53,79 @@ export async function findAllPracticeSessions() {
           sectionItems: true,
         },
       },
+    },
+  });
+}
+
+export async function findPracticeSessionById(id: string, language: string) {
+  return db.practiceSession.findUnique({
+    where: { id },
+    include: {
+      sectionItems: {
+        orderBy: [
+          { sectionId: 'asc' },
+          { order: 'asc' },
+        ],
+        include: {
+          section: {
+            include: {
+              translations: {
+                where: { language },
+              },
+            },
+          },
+          exerciseType: {
+            include: {
+              translations: {
+                where: { language },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
+export async function findPracticeSessionBySlug(slug: string, language: string) {
+  return db.practiceSession.findUnique({
+    where: { slug },
+    include: {
+      sectionItems: {
+        orderBy: [
+          { sectionId: 'asc' },
+          { order: 'asc' },
+        ],
+        include: {
+          section: {
+            include: {
+              translations: {
+                where: { language },
+              },
+            },
+          },
+          exerciseType: {
+            include: {
+              translations: {
+                where: { language },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
+export async function findPracticeSessionsBySlugs(slugs: string[]) {
+  return db.practiceSession.findMany({
+    where: {
+      slug: {
+        in: slugs,
+      },
+    },
+    select: {
+      slug: true,
     },
   });
 }

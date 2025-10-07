@@ -2,6 +2,7 @@ import { Link } from "@remix-run/react";
 
 type PracticeSession = {
   id: string;
+  slug: string;
   name: string | null;
   description: string | null;
   sessionLength: number;
@@ -53,7 +54,7 @@ export default function PractiseSessionsList({ sessions }: PractiseSessionsListP
           {sessions.map((session) => (
             <Link
               key={session.id}
-              to={session.id}
+              to={session.slug}
               className="block border p-4 rounded-lg hover:border-blue-500 hover:shadow-md transition duration-150"
             >
               <div className="flex justify-between items-start">

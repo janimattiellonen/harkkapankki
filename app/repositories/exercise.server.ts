@@ -19,7 +19,14 @@ export function findExerciseById(id: string) {
   });
 }
 
+export function findExerciseBySlug(slug: string) {
+  return db.exercise.findUnique({
+    where: { slug },
+  });
+}
+
 export type CreateExerciseData = {
+  slug: string;
   name: string;
   description?: string | null;
   content: string;
@@ -37,7 +44,21 @@ export function createExercise(data: CreateExerciseData): Promise<Exercise> {
   });
 }
 
+export async function findExercisesBySlugs(slugs: string[]) {
+  return db.exercise.findMany({
+    where: {
+      slug: {
+        in: slugs,
+      },
+    },
+    select: {
+      slug: true,
+    },
+  });
+}
+
 export type UpdateExerciseData = {
+  slug?: string;
   name: string;
   description?: string | null;
   content: string;

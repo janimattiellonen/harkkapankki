@@ -42,6 +42,7 @@ model ExerciseTypeTranslation {
 
 model Exercise {
   id            String       @id @default(uuid())
+  slug          String       @unique
   name          String
   description   String?
   content       String
@@ -161,6 +162,7 @@ model SectionExerciseType {
 
 model PracticeSession {
   id            String   @id @default(uuid())
+  slug          String   @unique
   name          String?
   description   String?  @db.Text
   sessionLength Int
