@@ -28,11 +28,11 @@ export async function action({ request }: ActionFunctionArgs) {
   const imageValue = formData.get("image");
   const image = typeof imageValue === "string" && imageValue ? imageValue : null;
 
-  await createExercise({
+  const exercise = await createExercise({
     ...result.data,
     image,
   });
-  return redirect("/exercises");
+  return redirect(`/exercises/${exercise.slug}`);
 }
 
 export default function NewExercise() {

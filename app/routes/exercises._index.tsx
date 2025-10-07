@@ -101,7 +101,7 @@ export default function Exercises() {
             {exercises.map((exercise: ExerciseData) => (
               <Link
                 key={exercise.id}
-                to={exercise.id}
+                to={exercise.slug}
                 className="block border p-4 rounded-lg hover:border-blue-500 hover:shadow-md transition duration-150"
               >
                 <div className="flex gap-4 items-center">

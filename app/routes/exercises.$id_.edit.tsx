@@ -42,6 +42,10 @@ export async function action({ request, params }: ActionFunctionArgs) {
   // Fetch existing exercise to preserve image if not updated or removed
   const existingExercise = await fetchExerciseById(params.id!, 'en');
 
+  if (!existingExercise) {
+    throw new Response("Exercise not found", { status: 404 });
+  }
+
   let finalImage: string | null = null;
   if (removeImage) {
     // User wants to remove the image
@@ -51,10 +55,10 @@ export async function action({ request, params }: ActionFunctionArgs) {
     finalImage = newImage;
   } else {
     // Keep existing image
-    finalImage = existingExercise?.image || null;
+    finalImage = existingExercise.image || null;
   }
 
-  await updateExercise(params.id!, {
+  const updatedExercise = await updateExercise(params.id!, {
     ...result.data,
     image: finalImage,
   });
@@ -66,7 +70,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     return json({ success: true, message: "Exercise updated successfully" });
   }
 
-  return redirect(`/exercises/${params.id}`);
+  return redirect(`/exercises/${updatedExercise.slug}`);
 }
 
 export default function EditExercise() {

@@ -11,6 +11,7 @@ Code conventions
 - use native Javascript functions when possible
 - use Date.toLocaleDateString() instead of a custom made date formatting function
 - follow same naming conventions (files, functions etc) as is previously used in the project
+- prefer const over let and var when possible
 
 #Architecture
 - keep database related queries in own separate files. Group them by features. For example,
@@ -19,8 +20,7 @@ for operating with exercises should be put in a different file.
 - keep xxx.server.ts files as "dumb" as possible and make them delegate to other files. 
 
 #Routes
-- keep files in routes directory as "dumb" as possible
-- put code for the rendered React component in an own file in the pages directory 
+- keep route files clean of html code when possible. Use a page component for the actual content
 
 General development
 - if unsure about something, ask, don't guess
