@@ -120,3 +120,8 @@ an array of objects. Make sure to update all code and docs to reflect on this ch
 
 Phase 4 - Improved unit tests
 
+Unit tests for crawler does not reflect the new changes:
+- possibility to load directly form an url, from a html file or from a .txt file containing
+multiple urls or paths to html files
+
+Update unit tests to include these changes

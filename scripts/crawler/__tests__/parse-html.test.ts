@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { extractTitle, extractAndConvertContent } from '../parse-html';
+import { extractTitle, extractAndConvertContent, parseHtmlContent } from '../parse-html';
 
 describe('HTML Parser', () => {
   describe('extractTitle', () => {
@@ -342,6 +342,50 @@ describe('HTML Parser', () => {
       const result = extractAndConvertContent(html);
 
       expect(result.images[0].localPath).toBe('image-1.jpg');
+    });
+  });
+
+  describe('parseHtmlContent', () => {
+    it('should parse HTML string directly', () => {
+      const html = `
+        <html>
+          <body>
+            <header class="entry-header">
+              <h1 class="entry-title">Test Title</h1>
+            </header>
+            <div class="entry-content">
+              <p>Test content</p>
+            </div>
+          </body>
+        </html>
+      `;
+
+      const result = parseHtmlContent(html);
+
+      expect(result.header).toBe('Test Title');
+      expect(result.body).toContain('Test content');
+      expect(result.images).toEqual([]);
+    });
+
+    it('should be equivalent to extractAndConvertContent', () => {
+      const html = `
+        <html>
+          <body>
+            <header class="entry-header">
+              <h1 class="entry-title">Test</h1>
+            </header>
+            <div class="entry-content">
+              <p>Content</p>
+              <img src="https://example.com/img.jpg" alt="Test">
+            </div>
+          </body>
+        </html>
+      `;
+
+      const result1 = parseHtmlContent(html);
+      const result2 = extractAndConvertContent(html);
+
+      expect(result1).toEqual(result2);
     });
   });
 
