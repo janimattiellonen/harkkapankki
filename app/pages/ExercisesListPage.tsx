@@ -36,7 +36,15 @@ export default function ExercisesListPage({ exercises, exerciseTypes }: Exercise
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Training Exercises</h1>
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Training Exercises</h1>
+        <Link
+          to="/exercises/new"
+          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        >
+          New Exercise
+        </Link>
+      </div>
 
       {/* Filter Component */}
       <ExerciseFiltersComponent
