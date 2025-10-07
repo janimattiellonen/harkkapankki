@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Form } from '@remix-run/react';
+import { Form, useSubmit } from '@remix-run/react';
 import { ExerciseForm } from '~/components/ExerciseForm';
 import type { Exercise } from '@prisma/client';
 import type { ExerciseTypeOption } from '~/types';
@@ -26,14 +26,16 @@ export default function EditExercisePage({
   actionData,
 }: EditExercisePageProps) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const submit = useSubmit();
 
   const handleDeleteClick = () => {
     setShowDeleteDialog(true);
   };
 
   const handleDeleteConfirm = () => {
-    // TODO: Implement delete functionality
-    console.log('Delete confirmed');
+    const formData = new FormData();
+    formData.append('intent', 'delete');
+    submit(formData, { method: 'post' });
     setShowDeleteDialog(false);
   };
 
@@ -44,11 +46,14 @@ export default function EditExercisePage({
   return (
     <div className="mx-auto max-w-3xl p-6">
       <h1 className="mb-6 text-2xl font-bold">Edit Exercise</h1>
+
+      {/* Success message for update */}
       {actionData && 'success' in actionData && actionData.success && (
         <div className="mb-4 rounded-md bg-green-50 p-4">
           <p className="text-sm text-green-800">{actionData.message}</p>
         </div>
       )}
+
       <Form method="post">
         <ExerciseForm
           exercise={exercise}

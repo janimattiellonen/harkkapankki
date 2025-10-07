@@ -1,4 +1,5 @@
-import { Link, useNavigation } from '@remix-run/react';
+import { useState, useEffect } from 'react';
+import { Link, useNavigation, useNavigate } from '@remix-run/react';
 import { ExerciseFilters as ExerciseFiltersComponent } from '~/components/ExerciseFilters';
 import { useExerciseFilters } from '~/hooks/useExerciseFilters';
 import type { ExerciseWithTypePath } from '~/services/exercises.server';
@@ -12,10 +13,26 @@ type ExerciseData = Omit<ExerciseWithTypePath, 'createdAt' | 'updatedAt'> & {
 type ExercisesListPageProps = {
   exercises: ExerciseData[];
   exerciseTypes: ExerciseTypeOption[];
+  deleted?: boolean;
 };
 
-export default function ExercisesListPage({ exercises, exerciseTypes }: ExercisesListPageProps) {
+export default function ExercisesListPage({
+  exercises,
+  exerciseTypes,
+  deleted,
+}: ExercisesListPageProps) {
   const navigation = useNavigation();
+  const navigate = useNavigate();
+  const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
+
+  // When deleted prop is true, show message and clean up URL
+  useEffect(() => {
+    if (deleted) {
+      setShowDeleteSuccess(true);
+      // Clean up the URL by removing the query parameter
+      navigate('/exercises', { replace: true });
+    }
+  }, [deleted, navigate]);
 
   const {
     searchTerm,
@@ -45,6 +62,28 @@ export default function ExercisesListPage({ exercises, exerciseTypes }: Exercise
           New Exercise
         </Link>
       </div>
+
+      {/* Success message for deletion */}
+      {showDeleteSuccess && (
+        <div className="mb-4 rounded-md bg-green-50 p-4">
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-green-800">Exercise deleted successfully</p>
+            <button
+              onClick={() => setShowDeleteSuccess(false)}
+              className="text-green-600 hover:text-green-800"
+              aria-label="Dismiss"
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Filter Component */}
       <ExerciseFiltersComponent

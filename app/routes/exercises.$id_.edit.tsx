@@ -1,8 +1,14 @@
-import { json, redirect, type ActionFunctionArgs, type LoaderFunctionArgs } from '@remix-run/node';
+import {
+  json,
+  redirect,
+  redirectDocument,
+  type ActionFunctionArgs,
+  type LoaderFunctionArgs,
+} from '@remix-run/node';
 import { useActionData, useLoaderData } from '@remix-run/react';
 import EditExercisePage from '~/pages/EditExercisePage';
 import { exerciseSchema } from '~/schemas/exercise';
-import { fetchExerciseById, updateExercise } from '~/services/exercises.server';
+import { fetchExerciseById, updateExercise, deleteExercise } from '~/services/exercises.server';
 import { fetchExerciseTypeOptions } from '~/services/exerciseTypes.server';
 import { parseData } from '~/utils/validation';
 import { parseFormData } from '~/utils/upload.server';
@@ -21,7 +27,53 @@ export async function loader({ params }: LoaderFunctionArgs) {
 }
 
 export async function action({ request, params }: ActionFunctionArgs) {
+  // Clone request to check content type
+  const contentType = request.headers.get('content-type') || '';
+
+  // For delete action, parse as regular form data
+  if (contentType.includes('application/x-www-form-urlencoded')) {
+    const formData = await request.formData();
+    const intent = formData.get('intent');
+
+    if (intent === 'delete') {
+      try {
+        await deleteExercise(params.id!);
+        return redirectDocument('/exercises?deleted=true');
+      } catch (error) {
+        return json(
+          {
+            success: false,
+            message: 'Failed to delete exercise. Please try again.',
+            deleted: false,
+          },
+          { status: 500 }
+        );
+      }
+    }
+  }
+
+  // For update action, parse as multipart form data (for file uploads)
   const formData = await parseFormData(request);
+  const intent = formData.get('intent');
+
+  // Handle delete action from multipart form
+  if (intent === 'delete') {
+    try {
+      await deleteExercise(params.id!);
+      return redirectDocument('/exercises?deleted=true');
+    } catch (error) {
+      return json(
+        {
+          success: false,
+          message: 'Failed to delete exercise. Please try again.',
+          deleted: false,
+        },
+        { status: 500 }
+      );
+    }
+  }
+
+  // Handle update action
   const data = Object.fromEntries(formData);
 
   const result = parseData(exerciseSchema, data);
