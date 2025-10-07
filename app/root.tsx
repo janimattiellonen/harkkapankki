@@ -1,19 +1,13 @@
-import type { LinksFunction } from "@remix-run/node";
-import {
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "@remix-run/react";
-import tailwindStyles from "./styles/tailwind.css?url";
+import type { LinksFunction } from '@remix-run/node';
+import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
+import tailwindStyles from './styles/tailwind.css?url';
 
-import Layout from "./components/Layout";
+import Layout from './components/Layout';
 
 export const links: LinksFunction = () => [
-  { rel: "stylesheet", href: tailwindStyles },
-  { rel: "stylesheet", href: "https://uiwjs.github.io/react-md-editor/markdown-editor.css" },
-  { rel: "stylesheet", href: "https://uiwjs.github.io/react-markdown-preview/markdown.css" },
+  { rel: 'stylesheet', href: tailwindStyles },
+  { rel: 'stylesheet', href: 'https://uiwjs.github.io/react-md-editor/markdown-editor.css' },
+  { rel: 'stylesheet', href: 'https://uiwjs.github.io/react-markdown-preview/markdown.css' },
 ];
 
 export default function App() {

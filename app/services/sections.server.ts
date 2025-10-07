@@ -1,5 +1,5 @@
-import * as sectionRepo from "~/repositories/section.server";
-import type { Section, PractiseLength } from "~/types";
+import * as sectionRepo from '~/repositories/section.server';
+import type { Section, PractiseLength } from '~/types';
 
 export async function fetchSectionsForPractiseSession(language: string = 'en'): Promise<Section[]> {
   const dbSections = await sectionRepo.findAllSectionsWithDetails(language);

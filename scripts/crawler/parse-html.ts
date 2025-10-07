@@ -107,7 +107,10 @@ export function extractAndConvertContent(html: string): ParsedContent {
 
     if (html && html.includes('•')) {
       // Split by <br> and process each line
-      const lines = html.split(/<br\s*\/?>/i).map(line => line.trim()).filter(line => line);
+      const lines = html
+        .split(/<br\s*\/?>/i)
+        .map(line => line.trim())
+        .filter(line => line);
       const parts: Array<{ type: 'text' | 'list'; content: string[] }> = [];
       let currentList: string[] = [];
       let currentText: string[] = [];
@@ -145,13 +148,15 @@ export function extractAndConvertContent(html: string): ParsedContent {
 
       // Build replacement HTML
       if (parts.length > 0) {
-        const replacement = parts.map(part => {
-          if (part.type === 'text') {
-            return '<p>' + part.content.join(' ') + '</p>';
-          } else {
-            return '<ul>' + part.content.map(item => `<li>${item}</li>`).join('') + '</ul>';
-          }
-        }).join('');
+        const replacement = parts
+          .map(part => {
+            if (part.type === 'text') {
+              return '<p>' + part.content.join(' ') + '</p>';
+            } else {
+              return '<ul>' + part.content.map(item => `<li>${item}</li>`).join('') + '</ul>';
+            }
+          })
+          .join('');
 
         p.replaceWith(replacement);
       }

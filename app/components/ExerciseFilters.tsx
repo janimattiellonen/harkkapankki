@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import type { ExerciseTypeOption } from "~/types";
+import { useEffect, useRef, useState } from 'react';
+import type { ExerciseTypeOption } from '~/types';
 
 type ExerciseFiltersProps = {
   exerciseTypes: ExerciseTypeOption[];
@@ -73,17 +73,19 @@ export function ExerciseFilters({
               type="text"
               id="search"
               value={searchTerm}
-              onChange={(e) => onSearchChange(e.target.value)}
-              onFocus={() => { wasFocusedRef.current = true; }}
-              onBlur={() => { wasFocusedRef.current = false; }}
+              onChange={e => onSearchChange(e.target.value)}
+              onFocus={() => {
+                wasFocusedRef.current = true;
+              }}
+              onBlur={() => {
+                wasFocusedRef.current = false;
+              }}
               placeholder="Type at least 3 characters..."
               className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             />
           </div>
           {showSearchWarning && (
-            <p className="mt-1 text-sm text-amber-600">
-              Type at least 3 characters to search
-            </p>
+            <p className="mt-1 text-sm text-amber-600">Type at least 3 characters to search</p>
           )}
         </div>
 
@@ -93,27 +95,25 @@ export function ExerciseFilters({
           onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
           className="text-sm text-blue-600 hover:text-blue-800 font-medium"
         >
-          {showAdvancedFilters ? "Less filters" : "More filters"}
+          {showAdvancedFilters ? 'Less filters' : 'More filters'}
         </button>
 
         {/* Exercise Type Checkboxes */}
         <div
           className={`overflow-hidden transition-all duration-300 ease-in-out ${
-            showAdvancedFilters ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+            showAdvancedFilters ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
           }`}
         >
-          <div className="block text-sm font-medium text-gray-700 mb-2">
-            Exercise types
-          </div>
+          <div className="block text-sm font-medium text-gray-700 mb-2">Exercise types</div>
           <div className="grid grid-cols-2 gap-4">
-            {exerciseTypes.map((type) => (
+            {exerciseTypes.map(type => (
               <div key={type.id}>
                 {/* Parent Checkbox */}
                 <label className="flex items-center cursor-pointer hover:bg-gray-50 p-2 rounded">
                   <input
                     type="checkbox"
                     checked={isParentSelected(type.id)}
-                    ref={(input) => {
+                    ref={input => {
                       if (input) {
                         input.indeterminate = isParentIndeterminate(type.id);
                       }
@@ -127,8 +127,11 @@ export function ExerciseFilters({
                 {/* Child Checkboxes */}
                 {type.children && type.children.length > 0 && (
                   <div className="ml-6 space-y-2 mt-1">
-                    {type.children.map((child) => (
-                      <label key={child.id} className="flex items-center cursor-pointer hover:bg-gray-50 p-2 rounded">
+                    {type.children.map(child => (
+                      <label
+                        key={child.id}
+                        className="flex items-center cursor-pointer hover:bg-gray-50 p-2 rounded"
+                      >
                         <input
                           type="checkbox"
                           checked={selectedTypeIds.includes(child.id)}

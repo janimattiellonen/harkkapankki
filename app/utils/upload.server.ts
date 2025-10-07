@@ -3,14 +3,14 @@ import {
   unstable_composeUploadHandlers,
   unstable_createMemoryUploadHandler,
   type UploadHandler,
-} from "@remix-run/node";
-import { writeFile, mkdir } from "fs/promises";
-import { join } from "path";
-import { existsSync } from "fs";
+} from '@remix-run/node';
+import { writeFile, mkdir } from 'fs/promises';
+import { join } from 'path';
+import { existsSync } from 'fs';
 
-const UPLOAD_DIR = join(process.cwd(), "public", "uploads");
+const UPLOAD_DIR = join(process.cwd(), 'public', 'uploads');
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"];
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
 
 // Ensure upload directory exists
 async function ensureUploadDir() {
@@ -21,7 +21,7 @@ async function ensureUploadDir() {
 
 export const imageUploadHandler: UploadHandler = async ({ name, data, filename, contentType }) => {
   // Only handle file uploads for image field
-  if (name !== "image") {
+  if (name !== 'image') {
     return undefined;
   }
 
@@ -32,14 +32,14 @@ export const imageUploadHandler: UploadHandler = async ({ name, data, filename, 
 
   // Validate file type
   if (!ALLOWED_IMAGE_TYPES.includes(contentType)) {
-    throw new Error(`Invalid file type. Allowed types: ${ALLOWED_IMAGE_TYPES.join(", ")}`);
+    throw new Error(`Invalid file type. Allowed types: ${ALLOWED_IMAGE_TYPES.join(', ')}`);
   }
 
   await ensureUploadDir();
 
   // Generate unique filename
   const timestamp = Date.now();
-  const sanitizedFilename = filename.replace(/[^a-zA-Z0-9.-]/g, "_");
+  const sanitizedFilename = filename.replace(/[^a-zA-Z0-9.-]/g, '_');
   const uniqueFilename = `${timestamp}-${sanitizedFilename}`;
   const filePath = join(UPLOAD_DIR, uniqueFilename);
 
@@ -71,8 +71,5 @@ export async function parseFormData(request: Request) {
     unstable_createMemoryUploadHandler()
   );
 
-  return await unstable_parseMultipartFormData(
-    request,
-    uploadHandler
-  );
+  return await unstable_parseMultipartFormData(request, uploadHandler);
 }

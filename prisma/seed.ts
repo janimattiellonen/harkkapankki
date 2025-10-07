@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 
 const db = new PrismaClient();
 
@@ -25,30 +25,73 @@ type ExerciseTypeData = {
 const exerciseTypes: ExerciseTypeData[] = [
   // Main categories
   { slug: 'technique', translations: { fi: 'Tekniikka', en: 'Technique' } },
-  { slug: 'supplementary', translations: { fi: 'Oheisharjoitteet', en: 'Supplementary exercises' } },
+  {
+    slug: 'supplementary',
+    translations: { fi: 'Oheisharjoitteet', en: 'Supplementary exercises' },
+  },
   { slug: 'games', translations: { fi: 'Pelit ja haasteet', en: 'Games, plays and challenges' } },
 
   // Technique subcategories
-  { slug: 'backhand', parentSlug: 'technique', translations: { fi: 'Rystyheitto', en: 'Backhand' } },
+  {
+    slug: 'backhand',
+    parentSlug: 'technique',
+    translations: { fi: 'Rystyheitto', en: 'Backhand' },
+  },
   { slug: 'sidearm', parentSlug: 'technique', translations: { fi: 'Kämmenheitto', en: 'Sidearm' } },
   { slug: 'putting', parentSlug: 'technique', translations: { fi: 'Puttaaminen', en: 'Putting' } },
   { slug: 'driving', parentSlug: 'technique', translations: { fi: 'Ajaminen', en: 'Driving' } },
 
   // Supplementary subcategories
-  { slug: 'motor-skills', parentSlug: 'supplementary', translations: { fi: 'Motoriikkaharjoitteet', en: 'Motor skills exercises' } },
-  { slug: 'strength', parentSlug: 'supplementary', translations: { fi: 'Voimaharjoitteet', en: 'Strength training exercises' } },
-  { slug: 'warm-up', parentSlug: 'supplementary', translations: { fi: 'Alkulämmittely', en: 'Warm-up exercises' } },
-  { slug: 'muscle-condition', parentSlug: 'supplementary', translations: { fi: 'Lihaskunto', en: 'Muscle condition' } },
+  {
+    slug: 'motor-skills',
+    parentSlug: 'supplementary',
+    translations: { fi: 'Motoriikkaharjoitteet', en: 'Motor skills exercises' },
+  },
+  {
+    slug: 'strength',
+    parentSlug: 'supplementary',
+    translations: { fi: 'Voimaharjoitteet', en: 'Strength training exercises' },
+  },
+  {
+    slug: 'warm-up',
+    parentSlug: 'supplementary',
+    translations: { fi: 'Alkulämmittely', en: 'Warm-up exercises' },
+  },
+  {
+    slug: 'muscle-condition',
+    parentSlug: 'supplementary',
+    translations: { fi: 'Lihaskunto', en: 'Muscle condition' },
+  },
 
   // Games subcategories
-  { slug: 'throwing-games', parentSlug: 'games', translations: { fi: 'Heittopelit', en: 'Throwing games' } },
-  { slug: 'warm-up-games', parentSlug: 'games', translations: { fi: 'Lämmittelypelit', en: 'Warm-up games' } },
-  { slug: 'putting-games', parentSlug: 'games', translations: { fi: 'Puttipelit', en: 'Putting games' } },
+  {
+    slug: 'throwing-games',
+    parentSlug: 'games',
+    translations: { fi: 'Heittopelit', en: 'Throwing games' },
+  },
+  {
+    slug: 'warm-up-games',
+    parentSlug: 'games',
+    translations: { fi: 'Lämmittelypelit', en: 'Warm-up games' },
+  },
+  {
+    slug: 'putting-games',
+    parentSlug: 'games',
+    translations: { fi: 'Puttipelit', en: 'Putting games' },
+  },
 
   // Practice session specific types
   { slug: 'introduction', translations: { fi: 'Alku', en: 'Introduction' } },
-  { slug: 'throwing-order', parentSlug: 'introduction', translations: { fi: 'Heittojärjestys', en: 'Throwing order' } },
-  { slug: 'ob-rules', parentSlug: 'introduction', translations: { fi: 'OB-säännöt', en: 'OB rules' } },
+  {
+    slug: 'throwing-order',
+    parentSlug: 'introduction',
+    translations: { fi: 'Heittojärjestys', en: 'Throwing order' },
+  },
+  {
+    slug: 'ob-rules',
+    parentSlug: 'introduction',
+    translations: { fi: 'OB-säännöt', en: 'OB rules' },
+  },
   { slug: 'closing', translations: { fi: 'Lopetus', en: 'Closing' } },
 ];
 
@@ -98,7 +141,7 @@ async function seed() {
     // Create translations
     for (const type of exerciseTypes) {
       const typeId = slugToId[type.slug];
-      
+
       // Finnish translation
       await db.exerciseTypeTranslation.create({
         data: {
@@ -121,30 +164,33 @@ async function seed() {
     // Create sample exercises
     const exercises = [
       {
-        name: "Putting Practice - Basic",
-        slug: slugify("Putting Practice - Basic"),
-        description: "Basic putting practice from different distances",
-        content: "1. Set up markers at 3m, 5m, and 7m\n2. Practice 10 putts from each distance\n3. Focus on consistent form and follow-through",
+        name: 'Putting Practice - Basic',
+        slug: slugify('Putting Practice - Basic'),
+        description: 'Basic putting practice from different distances',
+        content:
+          '1. Set up markers at 3m, 5m, and 7m\n2. Practice 10 putts from each distance\n3. Focus on consistent form and follow-through',
         duration: 15,
-        youtubeVideo: "https://youtube.com/watch?example-putting",
+        youtubeVideo: 'https://youtube.com/watch?example-putting',
         exerciseTypeId: slugToId['putting'],
       },
       {
-        name: "Approach Shot Warmup",
-        slug: slugify("Approach Shot Warmup"),
-        description: "Warming up approach shots with different discs",
-        content: "1. Practice approach shots from 20-30m\n2. Use both forehand and backhand throws\n3. Focus on landing zone accuracy",
+        name: 'Approach Shot Warmup',
+        slug: slugify('Approach Shot Warmup'),
+        description: 'Warming up approach shots with different discs',
+        content:
+          '1. Practice approach shots from 20-30m\n2. Use both forehand and backhand throws\n3. Focus on landing zone accuracy',
         duration: 20,
         youtubeVideo: null,
         exerciseTypeId: slugToId['warm-up'],
       },
       {
-        name: "Drive Form Practice",
-        slug: slugify("Drive Form Practice"),
-        description: "Working on proper drive form and technique",
-        content: "1. Start with standstill drives\n2. Progress to x-step technique\n3. Focus on reach back and follow through",
+        name: 'Drive Form Practice',
+        slug: slugify('Drive Form Practice'),
+        description: 'Working on proper drive form and technique',
+        content:
+          '1. Start with standstill drives\n2. Progress to x-step technique\n3. Focus on reach back and follow through',
         duration: 25,
-        youtubeVideo: "https://youtube.com/watch?example-drive-form",
+        youtubeVideo: 'https://youtube.com/watch?example-drive-form',
         exerciseTypeId: slugToId['backhand'],
       },
     ];
@@ -179,7 +225,22 @@ async function seed() {
     console.log('Assigning exercise types to groups...');
 
     // Exercise form group members (existing exercise types)
-    const exerciseFormTypes = ['technique', 'backhand', 'sidearm', 'putting', 'driving', 'supplementary', 'motor-skills', 'strength', 'warm-up', 'muscle-condition', 'games', 'throwing-games', 'warm-up-games', 'putting-games'];
+    const exerciseFormTypes = [
+      'technique',
+      'backhand',
+      'sidearm',
+      'putting',
+      'driving',
+      'supplementary',
+      'motor-skills',
+      'strength',
+      'warm-up',
+      'muscle-condition',
+      'games',
+      'throwing-games',
+      'warm-up-games',
+      'putting-games',
+    ];
     for (const slug of exerciseFormTypes) {
       await db.exerciseTypeGroupMember.create({
         data: {
@@ -190,7 +251,16 @@ async function seed() {
     }
 
     // Practice session form group members (includes all types + session-specific)
-    const sessionFormTypes = ['introduction', 'throwing-order', 'ob-rules', 'motor-skills', 'muscle-condition', 'putting', 'driving', 'closing'];
+    const sessionFormTypes = [
+      'introduction',
+      'throwing-order',
+      'ob-rules',
+      'motor-skills',
+      'muscle-condition',
+      'putting',
+      'driving',
+      'closing',
+    ];
     for (const slug of sessionFormTypes) {
       await db.exerciseTypeGroupMember.create({
         data: {
@@ -274,7 +344,7 @@ async function seed() {
 }
 
 seed()
-  .catch((e) => {
+  .catch(e => {
     console.error(e);
     process.exit(1);
   })

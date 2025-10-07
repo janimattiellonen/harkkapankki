@@ -7,7 +7,7 @@ process.env.DATABASE_URL = 'postgresql://postgres:postgres@localhost:5436/harkka
 import { db } from '~/utils/db.server';
 
 // Run before each test
-beforeEach(async (context) => {
+beforeEach(async context => {
   // Only clean database for tests that need it (skip for tests that don't use the database)
   // Check if the test file path includes '/services/' to determine if it needs DB cleanup
   const testPath = context.task.file?.filepath || '';

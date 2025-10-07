@@ -1,7 +1,7 @@
-import type { Exercise } from "@prisma/client";
-import * as exerciseRepo from "~/repositories/exercise.server";
-import { fetchExerciseTypePath } from "./exerciseTypes.server";
-import { slugify, makeUniqueSlug } from "~/utils/slugify";
+import type { Exercise } from '@prisma/client';
+import * as exerciseRepo from '~/repositories/exercise.server';
+import { fetchExerciseTypePath } from './exerciseTypes.server';
+import { slugify, makeUniqueSlug } from '~/utils/slugify';
 
 export type ExerciseInput = {
   name: string;
@@ -22,7 +22,10 @@ export type ExerciseFilters = {
   exerciseTypeIds?: string[];
 };
 
-export async function fetchExercises(language: string = 'en', filters?: ExerciseFilters): Promise<ExerciseWithTypePath[]> {
+export async function fetchExercises(
+  language: string = 'en',
+  filters?: ExerciseFilters
+): Promise<ExerciseWithTypePath[]> {
   const where: exerciseRepo.ExerciseWhereInput = {};
 
   // Apply search term filter
@@ -44,7 +47,7 @@ export async function fetchExercises(language: string = 'en', filters?: Exercise
 
   // Fetch exercise type paths for all exercises
   const exercisesWithPaths = await Promise.all(
-    exercises.map(async (exercise) => {
+    exercises.map(async exercise => {
       const exerciseTypePath = await fetchExerciseTypePath(exercise.exerciseTypeId, language);
       return {
         ...exercise,
@@ -56,7 +59,10 @@ export async function fetchExercises(language: string = 'en', filters?: Exercise
   return exercisesWithPaths;
 }
 
-export async function fetchExerciseById(id: string, language: string = 'en'): Promise<ExerciseWithTypePath | null> {
+export async function fetchExerciseById(
+  id: string,
+  language: string = 'en'
+): Promise<ExerciseWithTypePath | null> {
   const exercise = await exerciseRepo.findExerciseById(id);
 
   if (!exercise) {
@@ -72,7 +78,10 @@ export async function fetchExerciseById(id: string, language: string = 'en'): Pr
   };
 }
 
-export async function fetchExerciseBySlug(slug: string, language: string = 'en'): Promise<ExerciseWithTypePath | null> {
+export async function fetchExerciseBySlug(
+  slug: string,
+  language: string = 'en'
+): Promise<ExerciseWithTypePath | null> {
   const exercise = await exerciseRepo.findExerciseBySlug(slug);
 
   if (!exercise) {
@@ -116,7 +125,7 @@ export async function updateExercise(id: string, data: ExerciseInput): Promise<E
   const currentExercise = await exerciseRepo.findExerciseById(id);
 
   if (!currentExercise) {
-    throw new Error("Exercise not found");
+    throw new Error('Exercise not found');
   }
 
   // If name changed, regenerate slug

@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 
 const db = new PrismaClient();
 
@@ -15,7 +15,7 @@ async function testSlugs() {
       id: ex.id,
       name: ex.name,
       slug: ex.slug,
-      hasSlug: !!ex.slug
+      hasSlug: !!ex.slug,
     });
   });
 
@@ -33,7 +33,7 @@ async function testSlugs() {
       id: session.id,
       name: session.name,
       slug: session.slug,
-      hasSlug: !!session.slug
+      hasSlug: !!session.slug,
     });
   });
 

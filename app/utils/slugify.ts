@@ -17,17 +17,19 @@
  * slugify("Back-hand  technique") // "back-hand-technique"
  */
 export function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .trim()
-    // Replace spaces and underscores with hyphens
-    .replace(/[\s_]+/g, '-')
-    // Remove all characters that are not a-z, 0-9, hyphen, or underscore
-    .replace(/[^a-z0-9\-_]/g, '')
-    // Replace multiple consecutive hyphens with a single hyphen
-    .replace(/-+/g, '-')
-    // Remove leading and trailing hyphens
-    .replace(/^-+|-+$/g, '');
+  return (
+    text
+      .toLowerCase()
+      .trim()
+      // Replace spaces and underscores with hyphens
+      .replace(/[\s_]+/g, '-')
+      // Remove all characters that are not a-z, 0-9, hyphen, or underscore
+      .replace(/[^a-z0-9\-_]/g, '')
+      // Replace multiple consecutive hyphens with a single hyphen
+      .replace(/-+/g, '-')
+      // Remove leading and trailing hyphens
+      .replace(/^-+|-+$/g, '')
+  );
 }
 
 /**

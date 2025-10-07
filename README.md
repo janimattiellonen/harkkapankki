@@ -53,6 +53,7 @@ SELECT * FROM exercises;
 ### Using External Tools
 
 You can connect to the database using tools like pgAdmin or DBeaver with these settings:
+
 - Host: localhost
 - Port: 5434
 - Database: harkka_db

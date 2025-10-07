@@ -1,6 +1,6 @@
-import { useEffect, useState, useRef, useCallback } from "react";
-import { useSearchParams, useSubmit } from "@remix-run/react";
-import type { ExerciseTypeOption } from "~/types";
+import { useEffect, useState, useRef, useCallback } from 'react';
+import { useSearchParams, useSubmit } from '@remix-run/react';
+import type { ExerciseTypeOption } from '~/types';
 
 export type FilterState = {
   searchTerm: string;
@@ -18,25 +18,28 @@ export function useExerciseFilters({ exerciseTypes }: UseExerciseFiltersProps) {
   const isInitialMount = useRef(true);
 
   // Initialize from URL params only once
-  const [searchTerm, setSearchTerm] = useState(() => searchParams.get("q") || "");
-  const [selectedTypeIds, setSelectedTypeIds] = useState<string[]>(() =>
-    searchParams.get("types")?.split(",").filter(Boolean) || []
+  const [searchTerm, setSearchTerm] = useState(() => searchParams.get('q') || '');
+  const [selectedTypeIds, setSelectedTypeIds] = useState<string[]>(
+    () => searchParams.get('types')?.split(',').filter(Boolean) || []
   );
 
   // Sync filters to URL
-  const syncToURL = useCallback((search: string, typeIds: string[]) => {
-    const params = new URLSearchParams();
+  const syncToURL = useCallback(
+    (search: string, typeIds: string[]) => {
+      const params = new URLSearchParams();
 
-    if (search.length >= 3) {
-      params.set("q", search);
-    }
+      if (search.length >= 3) {
+        params.set('q', search);
+      }
 
-    if (typeIds.length > 0) {
-      params.set("types", typeIds.join(","));
-    }
+      if (typeIds.length > 0) {
+        params.set('types', typeIds.join(','));
+      }
 
-    submit(params, { method: "get", replace: true, preventScrollReset: true });
-  }, [submit]);
+      submit(params, { method: 'get', replace: true, preventScrollReset: true });
+    },
+    [submit]
+  );
 
   // Debounce search term and sync to URL
   useEffect(() => {
@@ -102,9 +105,7 @@ export function useExerciseFilters({ exerciseTypes }: UseExerciseFiltersProps) {
       if (childIds.length === 0) {
         // Parent with no children - toggle normally
         setSelectedTypeIds(prev =>
-          prev.includes(typeId)
-            ? prev.filter(id => id !== typeId)
-            : [...prev, typeId]
+          prev.includes(typeId) ? prev.filter(id => id !== typeId) : [...prev, typeId]
         );
       } else {
         // Parent with children - toggle all children
@@ -129,17 +130,15 @@ export function useExerciseFilters({ exerciseTypes }: UseExerciseFiltersProps) {
     } else {
       // Child type - toggle normally
       setSelectedTypeIds(prev =>
-        prev.includes(typeId)
-          ? prev.filter(id => id !== typeId)
-          : [...prev, typeId]
+        prev.includes(typeId) ? prev.filter(id => id !== typeId) : [...prev, typeId]
       );
     }
   };
 
   const clearFilters = () => {
-    setSearchTerm("");
+    setSearchTerm('');
     setSelectedTypeIds([]);
-    submit(new URLSearchParams(), { method: "get", replace: true, preventScrollReset: true });
+    submit(new URLSearchParams(), { method: 'get', replace: true, preventScrollReset: true });
   };
 
   const hasActiveFilters = searchTerm.length >= 3 || selectedTypeIds.length > 0;

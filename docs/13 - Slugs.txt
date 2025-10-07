@@ -1,0 +1,18 @@
+13 - Slugs
+
+Urls like http://localhost:5177/exercises/a3d01cc2-1d0f-47c3-a621-908e04be0ff8 are not very human friendly.
+
+Urls should look more like http://localhost:5177/exercises/approach-shot-warmup
+if the title is "Approach Shot Warmup"
+
+Plan
+
+- create a universal sluggify-function that can be re-used
+- the "sluggified" value should contain safe characters only
+    - a-Z
+    - 0-9
+    - "-", "_"
+    - if you think of other safe characters that should be included, feel free to suggest
+- the slug should be stored along the value that was used as a source for the slug itself. Create
+new table columns as needed.
+-

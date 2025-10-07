@@ -1,7 +1,7 @@
-import { Link } from "@remix-run/react";
-import { useEffect, useState } from "react";
-import type MDEditor from "@uiw/react-md-editor";
-import { rehypeYouTube } from "~/utils/rehype-youtube";
+import { Link } from '@remix-run/react';
+import { useEffect, useState } from 'react';
+import type MDEditor from '@uiw/react-md-editor';
+import { rehypeYouTube } from '~/utils/rehype-youtube';
 
 type Exercise = {
   id: string;
@@ -24,7 +24,7 @@ export default function ExerciseDetailPage({ exercise }: ExerciseDetailPageProps
   const [MarkdownComponent, setMarkdownComponent] = useState<typeof MDEditor.Markdown | null>(null);
 
   useEffect(() => {
-    import("@uiw/react-md-editor").then((mod) => {
+    import('@uiw/react-md-editor').then(mod => {
       setMarkdownComponent(() => mod.default.Markdown);
     });
   }, []);
@@ -38,9 +38,7 @@ export default function ExerciseDetailPage({ exercise }: ExerciseDetailPageProps
       <div className="flex justify-between items-center mb-4">
         <div>
           <h1 className="text-3xl font-bold">{exercise.name}</h1>
-          <p className="text-xs text-gray-500 mt-1">
-            {formatDate(exercise.createdAt)}
-          </p>
+          <p className="text-xs text-gray-500 mt-1">{formatDate(exercise.createdAt)}</p>
         </div>
         <Link
           to={`/exercises/${exercise.id}/edit`}
@@ -50,9 +48,7 @@ export default function ExerciseDetailPage({ exercise }: ExerciseDetailPageProps
         </Link>
       </div>
 
-      {exercise.description && (
-        <p className="text-gray-600 mb-6">{exercise.description}</p>
-      )}
+      {exercise.description && <p className="text-gray-600 mb-6">{exercise.description}</p>}
 
       {exercise.image && (
         <div className="mb-6">
@@ -68,10 +64,7 @@ export default function ExerciseDetailPage({ exercise }: ExerciseDetailPageProps
         <h2 className="text-xl font-semibold mb-4">Instructions</h2>
         <div className="[&_ul]:list-disc [&_ul]:ml-6 [&_ol]:list-decimal [&_ol]:ml-6 [&_li]:mb-2">
           {MarkdownComponent ? (
-            <MarkdownComponent
-              source={exercise.content}
-              rehypePlugins={[rehypeYouTube]}
-            />
+            <MarkdownComponent source={exercise.content} rehypePlugins={[rehypeYouTube]} />
           ) : (
             <div className="whitespace-pre-line">{exercise.content}</div>
           )}
@@ -80,7 +73,12 @@ export default function ExerciseDetailPage({ exercise }: ExerciseDetailPageProps
         <div className="mt-6 space-y-2">
           <div className="flex items-center text-sm text-gray-500">
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
             Duration: {exercise.duration} minutes
           </div>
@@ -88,7 +86,12 @@ export default function ExerciseDetailPage({ exercise }: ExerciseDetailPageProps
           {exercise.exerciseTypePath && (
             <div className="flex items-center text-sm text-gray-500">
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"
+                />
               </svg>
               Type: {exercise.exerciseTypePath}
             </div>
@@ -105,7 +108,7 @@ export default function ExerciseDetailPage({ exercise }: ExerciseDetailPageProps
               className="text-blue-600 hover:text-blue-800 flex items-center"
             >
               <svg className="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
               </svg>
               Watch Tutorial
             </a>

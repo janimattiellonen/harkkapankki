@@ -1,5 +1,5 @@
-import { db } from "~/utils/db.server";
-import type { Exercise } from "@prisma/client";
+import { db } from '~/utils/db.server';
+import type { Exercise } from '@prisma/client';
 
 export type ExerciseWhereInput = {
   name?: { contains: string; mode: 'insensitive' };
@@ -9,7 +9,7 @@ export type ExerciseWhereInput = {
 export function findManyExercises(where: ExerciseWhereInput) {
   return db.exercise.findMany({
     where,
-    orderBy: { name: "asc" },
+    orderBy: { name: 'asc' },
   });
 }
 

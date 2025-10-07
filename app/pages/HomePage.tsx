@@ -1,4 +1,4 @@
-import { Link } from "@remix-run/react";
+import { Link } from '@remix-run/react';
 
 type FeatureBoxProps = {
   imagePath: string;
@@ -11,18 +11,12 @@ function FeatureBox({ imagePath, title, href }: FeatureBoxProps) {
     <Link
       to={href}
       className="relative block overflow-hidden rounded-lg shadow-lg transition-transform hover:scale-105"
-      style={{ minHeight: "300px" }}
+      style={{ minHeight: '300px' }}
     >
-      <img
-        src={imagePath}
-        alt={title}
-        className="absolute inset-0 h-full w-full object-cover"
-      />
+      <img src={imagePath} alt={title} className="absolute inset-0 h-full w-full object-cover" />
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="rounded-md bg-gray-800/60 px-6 py-3 backdrop-blur-sm">
-          <h2 className="text-center text-2xl font-bold text-white">
-            {title}
-          </h2>
+          <h2 className="text-center text-2xl font-bold text-white">{title}</h2>
         </div>
       </div>
     </Link>

@@ -1,6 +1,6 @@
-import { Form } from "@remix-run/react";
-import { ExerciseForm } from "~/components/ExerciseForm";
-import type { ExerciseTypeOption } from "~/types";
+import { Form } from '@remix-run/react';
+import { ExerciseForm } from '~/components/ExerciseForm';
+import type { ExerciseTypeOption } from '~/types';
 
 type NewExercisePageProps = {
   exerciseTypes: ExerciseTypeOption[];
