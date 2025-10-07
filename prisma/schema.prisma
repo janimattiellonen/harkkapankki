@@ -135,7 +135,7 @@ model SectionDurationConfig {
   id              String   @id @default(uuid())
   section         Section  @relation(fields: [sectionId], references: [id], onDelete: Cascade)
   sectionId       String   @map("section_id")
-  sessionLength   Int
+  sessionLength   Int      @map("session_length")
   duration        Int
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @updatedAt @map("updated_at")
@@ -165,7 +165,7 @@ model PracticeSession {
   slug          String   @unique
   name          String?
   description   String?  @db.Text
-  sessionLength Int
+  sessionLength Int      @map("session_length")
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
 
