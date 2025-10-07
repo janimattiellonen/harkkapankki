@@ -85,6 +85,17 @@ Make sure to deploy the output of `npm run build`
 - `build/server`
 - `build/client`
 
+## Scripts
+
+The project includes several utility scripts for managing content and maintaining the database. See [scripts/README.md](./scripts/README.md) for detailed documentation.
+
+**Quick reference**:
+
+- `npm run insert-exercises -- <json-file> <type-id>` - Import exercise content
+- `npx tsx scripts/regenerate-slugs.ts` - Regenerate all slugs
+- `npx tsx scripts/test-slugs.ts` - Test slug generation
+- `npx tsx scripts/crawler/index.ts <html-file>` - Parse HTML content
+
 ## Styling
 
 This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever css framework you prefer. See the [Vite docs on css](https://vitejs.dev/guide/features.html#css) for more information.
