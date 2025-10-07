@@ -7,44 +7,53 @@ Phase 3 implementation adds database support for practice sessions with flexible
 ## 🗄️ New Database Models
 
 ### 1. ExerciseTypeGroup
+
 - Groups exercise types by context (exercise-form, practice-session-form)
 - Enables showing different exercise types in different forms
 - **Purpose**: "Throwing order" and "OB rules" only appear in practice sessions, not exercise forms
 
 ### 2. ExerciseTypeGroupTranslation
+
 - Multilingual names for groups
 - Follows same pattern as ExerciseTypeTranslation
 
 ### 3. ExerciseTypeGroupMember (Join Table)
+
 - Links exercise types to groups (many-to-many)
 - Same type can belong to multiple groups
 - Example: "putting" in both exercise-form and practice-session-form
 
 ### 4. Section
+
 - Practice session sections (Introduction, Warm-up, Technique, Closing)
 - `order` field for display sequence
 - `slug` for programmatic access
 
 ### 5. SectionTranslation
+
 - Multilingual section names
 - Supports fi, en (extensible)
 
 ### 6. SectionDurationConfig
+
 - Variable section durations based on session length
 - Example: Warm-up = 10 min (60 min session), 20 min (90 min session)
 - Extensible for future session lengths (120 min, etc.)
 
 ### 7. SectionExerciseType (Join Table)
+
 - Links exercise types to sections (many-to-many)
 - Example: "putting" and "driving" linked to "Technique" section
 
 ## 📊 Seeded Data
 
 ### Exercise Type Groups
+
 - `exercise-form` - Types shown in exercise creation/editing
 - `practice-session-form` - Types shown in practice session builder
 
 ### New Exercise Types
+
 - `introduction` (parent)
   - `throwing-order`
   - `ob-rules`
@@ -53,6 +62,7 @@ Phase 3 implementation adds database support for practice sessions with flexible
 - `closing` (parent)
 
 ### Sections
+
 1. **Introduction** (order: 1)
    - Duration: 5 min (both 60 & 90 min sessions)
    - Exercise types: throwing-order, ob-rules
@@ -72,20 +82,22 @@ Phase 3 implementation adds database support for practice sessions with flexible
 ## 🔍 Example Queries
 
 ### Get exercise types for exercise form:
+
 ```typescript
 const exerciseFormTypes = await db.exerciseType.findMany({
   where: {
     groupMemberships: {
-      some: { group: { slug: 'exercise-form' } }
-    }
+      some: { group: { slug: 'exercise-form' } },
+    },
   },
   include: {
-    translations: { where: { language: 'en' } }
-  }
+    translations: { where: { language: 'en' } },
+  },
 });
 ```
 
 ### Get sections with exercise types for practice session:
+
 ```typescript
 const sections = await db.section.findMany({
   orderBy: { order: 'asc' },
@@ -96,12 +108,12 @@ const sections = await db.section.findMany({
       include: {
         exerciseType: {
           include: {
-            translations: { where: { language: 'en' } }
-          }
-        }
-      }
-    }
-  }
+            translations: { where: { language: 'en' } },
+          },
+        },
+      },
+    },
+  },
 });
 ```
 

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import type { Section, SectionItem, PractiseLength } from "~/types";
+import { useState } from 'react';
+import type { Section, SectionItem, PractiseLength } from '~/types';
 
 type PractiseSessionSectionProps = {
   section: Section;
@@ -16,25 +16,24 @@ export function PractiseSessionSection({
   onAddItem,
   onRemoveItem,
 }: PractiseSessionSectionProps) {
-  const [selectedValue, setSelectedValue] = useState<string>("");
+  const [selectedValue, setSelectedValue] = useState<string>('');
 
   // Get section duration based on practise length
-  const duration = typeof section.duration === 'number'
-    ? section.duration
-    : section.duration[practiseLength];
+  const duration =
+    typeof section.duration === 'number' ? section.duration : section.duration[practiseLength];
 
   // Get available items (exclude already selected)
   const availableItems = section.items.filter(
-    (item) => !selectedItems.some((selected) => selected.value === item.value)
+    item => !selectedItems.some(selected => selected.value === item.value)
   );
 
   const handleAdd = () => {
     if (!selectedValue) return;
 
-    const item = section.items.find((i) => i.value === selectedValue);
+    const item = section.items.find(i => i.value === selectedValue);
     if (item) {
       onAddItem(item);
-      setSelectedValue("");
+      setSelectedValue('');
     }
   };
 
@@ -51,14 +50,14 @@ export function PractiseSessionSection({
       <div className="mb-3 flex gap-2">
         <select
           value={selectedValue}
-          onChange={(e) => setSelectedValue(e.target.value)}
+          onChange={e => setSelectedValue(e.target.value)}
           className="flex-1 rounded-md border border-gray-300 px-3 py-2"
           disabled={availableItems.length === 0}
         >
           <option value="">
-            {availableItems.length === 0 ? "No items available" : "Select item..."}
+            {availableItems.length === 0 ? 'No items available' : 'Select item...'}
           </option>
-          {availableItems.map((item) => (
+          {availableItems.map(item => (
             <option key={item.value} value={item.value}>
               {item.label}
             </option>
@@ -77,7 +76,7 @@ export function PractiseSessionSection({
       {/* Selected items list */}
       {selectedItems.length > 0 && (
         <ul className="space-y-2">
-          {selectedItems.map((item) => (
+          {selectedItems.map(item => (
             <li
               key={item.value}
               className="flex items-center justify-between rounded-md bg-gray-50 px-3 py-2"

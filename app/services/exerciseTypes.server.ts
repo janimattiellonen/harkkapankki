@@ -1,5 +1,5 @@
-import * as exerciseTypeRepo from "~/repositories/exerciseType.server";
-import type { ExerciseTypeOption } from "~/types";
+import * as exerciseTypeRepo from '~/repositories/exerciseType.server';
+import type { ExerciseTypeOption } from '~/types';
 
 type ExerciseTypeWithPath = {
   id: string;
@@ -7,8 +7,14 @@ type ExerciseTypeWithPath = {
   translatedPath: string;
 };
 
-export async function fetchExerciseTypePath(exerciseTypeId: string, language: string): Promise<ExerciseTypeWithPath | null> {
-  const exerciseType = await exerciseTypeRepo.findExerciseTypeWithHierarchy(exerciseTypeId, language);
+export async function fetchExerciseTypePath(
+  exerciseTypeId: string,
+  language: string
+): Promise<ExerciseTypeWithPath | null> {
+  const exerciseType = await exerciseTypeRepo.findExerciseTypeWithHierarchy(
+    exerciseTypeId,
+    language
+  );
 
   if (!exerciseType) {
     return null;
@@ -42,11 +48,14 @@ export async function fetchExerciseTypePath(exerciseTypeId: string, language: st
   return {
     id: exerciseType.id,
     slug: exerciseType.slug,
-    translatedPath: pathParts.join(" / "),
+    translatedPath: pathParts.join(' / '),
   };
 }
 
-export async function fetchExerciseTypeOptions(language: string = 'en', groupSlug?: string): Promise<ExerciseTypeOption[]> {
+export async function fetchExerciseTypeOptions(
+  language: string = 'en',
+  groupSlug?: string
+): Promise<ExerciseTypeOption[]> {
   const types = await exerciseTypeRepo.findRootExerciseTypesWithChildren(language, groupSlug);
 
   return types.map(type => ({

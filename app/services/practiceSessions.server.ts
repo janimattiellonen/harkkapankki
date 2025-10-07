@@ -1,6 +1,6 @@
-import * as practiceSessionRepo from "~/repositories/practiceSession.server";
-import type { SelectedItem } from "~/types";
-import { slugify, makeUniqueSlug } from "~/utils/slugify";
+import * as practiceSessionRepo from '~/repositories/practiceSession.server';
+import type { SelectedItem } from '~/types';
+import { slugify, makeUniqueSlug } from '~/utils/slugify';
 
 type CreatePracticeSessionInput = {
   name?: string;
@@ -21,13 +21,16 @@ export async function createPracticeSession(input: CreatePracticeSessionInput) {
 
   // Transform selectedItems into the format needed for the repository
   // Group items by section to maintain order
-  const itemsBySection = input.selectedItems.reduce((acc, item) => {
-    if (!acc[item.sectionId]) {
-      acc[item.sectionId] = [];
-    }
-    acc[item.sectionId].push(item);
-    return acc;
-  }, {} as Record<string, SelectedItem[]>);
+  const itemsBySection = input.selectedItems.reduce(
+    (acc, item) => {
+      if (!acc[item.sectionId]) {
+        acc[item.sectionId] = [];
+      }
+      acc[item.sectionId].push(item);
+      return acc;
+    },
+    {} as Record<string, SelectedItem[]>
+  );
 
   // Create section items with order
   const sectionItems = Object.entries(itemsBySection).flatMap(([sectionId, items]) =>

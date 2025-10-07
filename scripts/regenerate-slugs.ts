@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 
 const db = new PrismaClient();
 
@@ -53,9 +53,8 @@ async function regenerateSlugs() {
     const sessionSlugCounts = new Map<string, number>();
 
     for (const session of sessions) {
-      const baseName = session.name && session.name.trim() !== ''
-        ? session.name
-        : 'practice-session';
+      const baseName =
+        session.name && session.name.trim() !== '' ? session.name : 'practice-session';
 
       const baseSlug = slugify(baseName);
 
@@ -76,7 +75,6 @@ async function regenerateSlugs() {
 
     console.log(`\nUpdated ${sessions.length} practice sessions\n`);
     console.log('✅ Slug regeneration completed successfully!');
-
   } catch (error) {
     console.error('❌ Error regenerating slugs:', error);
     process.exit(1);

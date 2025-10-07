@@ -1,0 +1,15 @@
+node_modules
+/.cache
+/build
+/coverage
+/public/uploads
+/docs/junnufriba-crawler/parsed-data
+
+# Generated files
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Build outputs
+*.min.js
+*.min.css

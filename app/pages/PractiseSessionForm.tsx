@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { Form } from "@remix-run/react";
-import type { PractiseLength, SelectedItem, Section, SectionItem } from "~/types";
-import { PractiseSessionLengthSelector } from "~/components/PractiseSessionLengthSelector";
-import { PractiseSessionSection } from "~/components/PractiseSessionSection";
-import { PractiseSessionSummary } from "~/components/PractiseSessionSummary";
+import { useState } from 'react';
+import { Form } from '@remix-run/react';
+import type { PractiseLength, SelectedItem, Section, SectionItem } from '~/types';
+import { PractiseSessionLengthSelector } from '~/components/PractiseSessionLengthSelector';
+import { PractiseSessionSection } from '~/components/PractiseSessionSection';
+import { PractiseSessionSummary } from '~/components/PractiseSessionSummary';
 
 type PractiseSessionFormProps = {
   sections: Section[];
@@ -12,8 +12,8 @@ type PractiseSessionFormProps = {
 export default function PractiseSessionForm({ sections }: PractiseSessionFormProps) {
   const [practiseLength, setPractiseLength] = useState<PractiseLength>(60);
   const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([]);
-  const [name, setName] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
+  const [name, setName] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
   const [errors, setErrors] = useState<{ name?: string; items?: string }>({});
 
   // Get section duration based on practise length
@@ -26,22 +26,20 @@ export default function PractiseSessionForm({ sections }: PractiseSessionFormPro
   // Calculate total allocated time
   const calculateTotalTime = (): number => {
     return sections.reduce((total, section) => {
-      const hasSelectedItems = selectedItems.some(
-        (item) => item.sectionId === section.id
-      );
+      const hasSelectedItems = selectedItems.some(item => item.sectionId === section.id);
       return hasSelectedItems ? total + getSectionDuration(section) : total;
     }, 0);
   };
 
   // Get selected items for a specific section
   const getSectionItems = (sectionId: string): SectionItem[] => {
-    const section = sections.find((s) => s.id === sectionId);
+    const section = sections.find(s => s.id === sectionId);
     if (!section) return [];
 
     return selectedItems
-      .filter((item) => item.sectionId === sectionId)
-      .map((item) => {
-        const sectionItem = section.items.find((i) => i.value === item.itemValue);
+      .filter(item => item.sectionId === sectionId)
+      .map(item => {
+        const sectionItem = section.items.find(i => i.value === item.itemValue);
         return sectionItem!;
       })
       .filter(Boolean);
@@ -49,18 +47,13 @@ export default function PractiseSessionForm({ sections }: PractiseSessionFormPro
 
   // Add item to section
   const handleAddItem = (sectionId: string, item: SectionItem) => {
-    setSelectedItems((prev) => [
-      ...prev,
-      { sectionId, itemValue: item.value },
-    ]);
+    setSelectedItems(prev => [...prev, { sectionId, itemValue: item.value }]);
   };
 
   // Remove item from section
   const handleRemoveItem = (sectionId: string, itemValue: string) => {
-    setSelectedItems((prev) =>
-      prev.filter(
-        (item) => !(item.sectionId === sectionId && item.itemValue === itemValue)
-      )
+    setSelectedItems(prev =>
+      prev.filter(item => !(item.sectionId === sectionId && item.itemValue === itemValue))
     );
   };
 
@@ -70,11 +63,11 @@ export default function PractiseSessionForm({ sections }: PractiseSessionFormPro
     const newErrors: { name?: string; items?: string } = {};
 
     if (!name.trim()) {
-      newErrors.name = "Session name is required";
+      newErrors.name = 'Session name is required';
     }
 
     if (selectedItems.length === 0) {
-      newErrors.items = "Please select at least one item in any section";
+      newErrors.items = 'Please select at least one item in any section';
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -102,15 +95,13 @@ export default function PractiseSessionForm({ sections }: PractiseSessionFormPro
               id="name"
               name="name"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={e => setName(e.target.value)}
               className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                 errors.name ? 'border-red-500' : 'border-gray-300'
               }`}
               placeholder="e.g., Morning practice session"
             />
-            {errors.name && (
-              <p className="mt-1 text-sm text-red-600">{errors.name}</p>
-            )}
+            {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
           </div>
           <div>
             <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
@@ -120,7 +111,7 @@ export default function PractiseSessionForm({ sections }: PractiseSessionFormPro
               id="description"
               name="description"
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={e => setDescription(e.target.value)}
               rows={3}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Add any notes about this session..."
@@ -141,14 +132,14 @@ export default function PractiseSessionForm({ sections }: PractiseSessionFormPro
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           {/* Sections */}
           <div className="lg:col-span-2 space-y-4">
-            {sections.map((section) => (
+            {sections.map(section => (
               <PractiseSessionSection
                 key={section.id}
                 section={section}
                 practiseLength={practiseLength}
                 selectedItems={getSectionItems(section.id)}
-                onAddItem={(item) => handleAddItem(section.id, item)}
-                onRemoveItem={(itemValue) => handleRemoveItem(section.id, itemValue)}
+                onAddItem={item => handleAddItem(section.id, item)}
+                onRemoveItem={itemValue => handleRemoveItem(section.id, itemValue)}
               />
             ))}
           </div>
@@ -166,11 +157,7 @@ export default function PractiseSessionForm({ sections }: PractiseSessionFormPro
 
         {/* Save Button */}
         <div className="mt-6">
-          {errors.items && (
-            <p className="text-sm text-red-600 mb-2">
-              {errors.items}
-            </p>
-          )}
+          {errors.items && <p className="text-sm text-red-600 mb-2">{errors.items}</p>}
           <div className="flex justify-end">
             <button
               type="submit"

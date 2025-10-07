@@ -1,11 +1,11 @@
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import type { Exercise } from "@prisma/client";
-import { exerciseFormSchema, type ExerciseFormData } from "~/schemas/exercise";
-import { useEffect, useState } from "react";
-import type { ExerciseTypeOption } from "~/types";
-import type MDEditor from "@uiw/react-md-editor";
-import { isValidYouTubeInput } from "~/utils/youtube";
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import type { Exercise } from '@prisma/client';
+import { exerciseFormSchema, type ExerciseFormData } from '~/schemas/exercise';
+import { useEffect, useState } from 'react';
+import type { ExerciseTypeOption } from '~/types';
+import type MDEditor from '@uiw/react-md-editor';
+import { isValidYouTubeInput } from '~/utils/youtube';
 
 type SerializedExercise = Omit<Exercise, 'createdAt' | 'updatedAt'> & {
   createdAt: string;
@@ -23,11 +23,11 @@ type ExerciseFormProps = {
 
 export function ExerciseForm({
   exercise,
-  submitText = "Save",
+  submitText = 'Save',
   showSaveAndContinue = false,
   errors,
   defaultValues,
-  exerciseTypes
+  exerciseTypes,
 }: ExerciseFormProps) {
   const [MDEditorComponent, setMDEditorComponent] = useState<typeof MDEditor | null>(null);
   const [showRemoveDialog, setShowRemoveDialog] = useState(false);
@@ -35,7 +35,7 @@ export function ExerciseForm({
 
   useEffect(() => {
     // Dynamically import MDEditor only on the client side
-    import("@uiw/react-md-editor").then((mod) => {
+    import('@uiw/react-md-editor').then(mod => {
       setMDEditorComponent(() => mod.default);
     });
   }, []);
@@ -49,14 +49,18 @@ export function ExerciseForm({
     handleSubmit,
   } = useForm<ExerciseFormData>({
     resolver: zodResolver(exerciseFormSchema),
-    values: (defaultValues as ExerciseFormData | undefined) || (exercise ? {
-      name: exercise.name ?? "",
-      description: exercise.description ?? "",
-      content: exercise.content ?? "",
-      youtubeVideo: exercise.youtubeVideo ?? "",
-      duration: String(exercise.duration ?? 0),
-      exerciseTypeId: exercise.exerciseTypeId ?? "",
-    } : undefined)
+    values:
+      (defaultValues as ExerciseFormData | undefined) ||
+      (exercise
+        ? {
+            name: exercise.name ?? '',
+            description: exercise.description ?? '',
+            content: exercise.content ?? '',
+            youtubeVideo: exercise.youtubeVideo ?? '',
+            duration: String(exercise.duration ?? 0),
+            exerciseTypeId: exercise.exerciseTypeId ?? '',
+          }
+        : undefined),
   });
 
   // Set server-side errors
@@ -86,7 +90,7 @@ export function ExerciseForm({
           <input
             type="text"
             id="name"
-            {...register("name")}
+            {...register('name')}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
           />
           {formErrors.name && (
@@ -101,7 +105,7 @@ export function ExerciseForm({
           <textarea
             id="description"
             rows={3}
-            {...register("description")}
+            {...register('description')}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
           />
           {formErrors.description && (
@@ -128,10 +132,13 @@ export function ExerciseForm({
                       {
                         name: 'youtube',
                         keyCommand: 'youtube',
-                        buttonProps: { 'aria-label': 'Insert YouTube video', title: 'Insert YouTube video' },
+                        buttonProps: {
+                          'aria-label': 'Insert YouTube video',
+                          title: 'Insert YouTube video',
+                        },
                         icon: (
                           <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
-                            <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.007 2.007 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.007 2.007 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31.4 31.4 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.007 2.007 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A99.788 99.788 0 0 1 7.858 2h.193zM6.4 5.209v4.818l4.157-2.408L6.4 5.209z"/>
+                            <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.007 2.007 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.007 2.007 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31.4 31.4 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.007 2.007 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A99.788 99.788 0 0 1 7.858 2h.193zM6.4 5.209v4.818l4.157-2.408L6.4 5.209z" />
                           </svg>
                         ),
                         execute: (state, api) => {
@@ -141,7 +148,9 @@ export function ExerciseForm({
                               const modifyText = `@[youtube](${videoInput})`;
                               api.replaceSelection(modifyText);
                             } else {
-                              window.alert('Invalid YouTube URL or video ID. Please enter a valid YouTube URL (youtube.com or youtu.be) or an 11-character video ID.');
+                              window.alert(
+                                'Invalid YouTube URL or video ID. Please enter a valid YouTube URL (youtube.com or youtu.be) or an 11-character video ID.'
+                              );
                             }
                           }
                         },
@@ -154,7 +163,7 @@ export function ExerciseForm({
                     name="content"
                     rows={10}
                     value={value}
-                    onChange={(e) => onChange(e.target.value)}
+                    onChange={e => onChange(e.target.value)}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                   />
                 )}
@@ -173,18 +182,20 @@ export function ExerciseForm({
           </label>
           <select
             id="exerciseTypeId"
-            {...register("exerciseTypeId")}
+            {...register('exerciseTypeId')}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
           >
             <option value="">Select exercise type...</option>
-            {exerciseTypes.map((type) => (
+            {exerciseTypes.map(type => (
               <optgroup key={type.id} label={type.name}>
                 {/* Parent type as an option */}
                 <option value={type.id}>{type.name}</option>
-                
+
                 {/* Child types */}
-                {type.children?.map((child) => (
-                  <option key={child.id} value={child.id}>↳ {child.name}</option>
+                {type.children?.map(child => (
+                  <option key={child.id} value={child.id}>
+                    ↳ {child.name}
+                  </option>
                 ))}
               </optgroup>
             ))}
@@ -208,7 +219,15 @@ export function ExerciseForm({
           {exercise?.image && !imageToRemove && (
             <div className="mt-2 flex items-center gap-4">
               <p className="text-sm text-gray-500">
-                Current: <a href={exercise.image} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{exercise.image}</a>
+                Current:{' '}
+                <a
+                  href={exercise.image}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:underline"
+                >
+                  {exercise.image}
+                </a>
               </p>
               <button
                 type="button"
@@ -225,9 +244,7 @@ export function ExerciseForm({
           {imageToRemove && (
             <>
               <input type="hidden" name="removeImage" value="true" />
-              <p className="mt-2 text-sm text-amber-600">
-                Image will be removed when you save
-              </p>
+              <p className="mt-2 text-sm text-amber-600">Image will be removed when you save</p>
             </>
           )}
         </div>
@@ -239,7 +256,7 @@ export function ExerciseForm({
           <input
             type="text"
             id="youtubeVideo"
-            {...register("youtubeVideo")}
+            {...register('youtubeVideo')}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
           />
           {formErrors.youtubeVideo && (
@@ -256,7 +273,7 @@ export function ExerciseForm({
             id="duration"
             min="1"
             max="255"
-            {...register("duration")}
+            {...register('duration')}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
           />
           {formErrors.duration && (
@@ -290,7 +307,8 @@ export function ExerciseForm({
           <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Remove Image</h3>
             <p className="text-gray-600 mb-6">
-              Are you sure you want to remove this image? The image file will remain on the server, but it will no longer be associated with this exercise.
+              Are you sure you want to remove this image? The image file will remain on the server,
+              but it will no longer be associated with this exercise.
             </p>
             <div className="flex justify-end gap-3">
               <button

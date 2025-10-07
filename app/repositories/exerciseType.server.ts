@@ -1,4 +1,4 @@
-import { db } from "~/utils/db.server";
+import { db } from '~/utils/db.server';
 
 export function findExerciseTypeWithHierarchy(exerciseTypeId: string, language: string) {
   return db.exerciseType.findUnique({
@@ -48,15 +48,17 @@ export function findRootExerciseTypesWithChildren(language: string, groupSlug?: 
         select: { name: true },
       },
       children: {
-        where: groupSlug ? {
-          groupMemberships: {
-            some: {
-              group: {
-                slug: groupSlug,
+        where: groupSlug
+          ? {
+              groupMemberships: {
+                some: {
+                  group: {
+                    slug: groupSlug,
+                  },
+                },
               },
-            },
-          },
-        } : undefined,
+            }
+          : undefined,
         include: {
           translations: {
             where: { language },

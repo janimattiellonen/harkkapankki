@@ -1,0 +1,15 @@
+12 - Persist new practise session
+
+Database structure for practise sessions
+
+
+
+Form
+
+Required fields:
+ - Session name
+ - at least one section has 1 item
+
+
+
+

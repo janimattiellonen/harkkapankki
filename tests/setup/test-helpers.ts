@@ -30,10 +30,7 @@ export async function createExerciseType(
  * Quick setup for common test scenario: create basic exercise type hierarchy
  */
 export async function setupBasicExerciseTypes() {
-  const technique = await createExerciseType(
-    'technique',
-    { fi: 'Tekniikka', en: 'Technique' }
-  );
+  const technique = await createExerciseType('technique', { fi: 'Tekniikka', en: 'Technique' });
 
   const putting = await createExerciseType(
     'putting',

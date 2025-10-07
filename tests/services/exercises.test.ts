@@ -1,7 +1,12 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { db } from '../setup/db-setup';
 import { createExerciseType } from '../setup/test-helpers';
-import { createExercise, fetchExerciseById, updateExercise, fetchExercises } from '~/services/exercises.server';
+import {
+  createExercise,
+  fetchExerciseById,
+  updateExercise,
+  fetchExercises,
+} from '~/services/exercises.server';
 import type { ExerciseInput } from '~/services/exercises.server';
 
 describe('Exercise Service - createExercise', () => {
@@ -9,10 +14,7 @@ describe('Exercise Service - createExercise', () => {
 
   // Setup: Create exercise type before each test
   beforeEach(async () => {
-    const technique = await createExerciseType(
-      'technique',
-      { fi: 'Tekniikka', en: 'Technique' }
-    );
+    const technique = await createExerciseType('technique', { fi: 'Tekniikka', en: 'Technique' });
 
     const putting = await createExerciseType(
       'putting',
@@ -43,7 +45,9 @@ describe('Exercise Service - createExercise', () => {
     expect(createdExercise.id).toBeTruthy(); // Has a UUID
     expect(createdExercise.name).toBe('Circle Putting Drill');
     expect(createdExercise.description).toBe('Practice putting from all angles');
-    expect(createdExercise.content).toBe('1. Place 8 putts in a circle\n2. Make each putt\n3. Repeat');
+    expect(createdExercise.content).toBe(
+      '1. Place 8 putts in a circle\n2. Make each putt\n3. Repeat'
+    );
     expect(createdExercise.duration).toBe(20);
     expect(createdExercise.exerciseTypeId).toBe(puttingTypeId);
     expect(createdExercise.youtubeVideo).toBe('https://youtube.com/watch?v=example');
@@ -93,10 +97,7 @@ describe('Exercise Service - updateExercise', () => {
   let existingExerciseId: string;
 
   beforeEach(async () => {
-    const technique = await createExerciseType(
-      'technique',
-      { fi: 'Tekniikka', en: 'Technique' }
-    );
+    const technique = await createExerciseType('technique', { fi: 'Tekniikka', en: 'Technique' });
 
     const putting = await createExerciseType(
       'putting',
@@ -160,10 +161,7 @@ describe('Exercise Service - fetchExerciseById', () => {
   let exerciseId: string;
 
   beforeEach(async () => {
-    const technique = await createExerciseType(
-      'technique',
-      { fi: 'Tekniikka', en: 'Technique' }
-    );
+    const technique = await createExerciseType('technique', { fi: 'Tekniikka', en: 'Technique' });
 
     const putting = await createExerciseType(
       'putting',
@@ -204,10 +202,7 @@ describe('Exercise Service - fetchExercises', () => {
   let backhandTypeId: string;
 
   beforeEach(async () => {
-    const technique = await createExerciseType(
-      'technique',
-      { fi: 'Tekniikka', en: 'Technique' }
-    );
+    const technique = await createExerciseType('technique', { fi: 'Tekniikka', en: 'Technique' });
 
     const putting = await createExerciseType(
       'putting',
@@ -263,7 +258,7 @@ describe('Exercise Service - fetchExercises', () => {
 
   it('should filter exercises by exercise type', async () => {
     const exercises = await fetchExercises('en', {
-      exerciseTypeIds: [puttingTypeId]
+      exerciseTypeIds: [puttingTypeId],
     });
 
     expect(exercises).toHaveLength(2);

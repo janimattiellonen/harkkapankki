@@ -21,6 +21,7 @@ npm run test:coverage
 ## Test Database Setup
 
 The test database is configured in `.env.test`:
+
 ```
 DATABASE_URL="postgresql://postgres:postgres@localhost:5436/harkka_db_test"
 ```
@@ -28,11 +29,13 @@ DATABASE_URL="postgresql://postgres:postgres@localhost:5436/harkka_db_test"
 ### Initial Setup (one-time)
 
 1. Create the test database:
+
 ```bash
 PGPASSWORD=postgres psql -h localhost -p 5436 -U postgres -c "CREATE DATABASE harkka_db_test;"
 ```
 
 2. Apply migrations to test database:
+
 ```bash
 DATABASE_URL="postgresql://postgres:postgres@localhost:5436/harkka_db_test" npx prisma migrate deploy
 ```
@@ -47,10 +50,7 @@ The `tests/setup/test-helpers.ts` file provides factory functions to make test d
 import { createExerciseType, setupBasicExerciseTypes } from '../setup/test-helpers';
 
 // Create a single exercise type
-const putting = await createExerciseType(
-  'putting',
-  { fi: 'Puttaaminen', en: 'Putting' }
-);
+const putting = await createExerciseType('putting', { fi: 'Puttaaminen', en: 'Putting' });
 
 // Or use the quick setup for common scenario
 const { technique, putting, backhand } = await setupBasicExerciseTypes();
@@ -75,7 +75,9 @@ describe('Your Feature', () => {
 
   it('should do something', async () => {
     // Arrange
-    const data = { /* your test data */ };
+    const data = {
+      /* your test data */
+    };
 
     // Act
     const result = await yourFunction(data);
@@ -105,6 +107,7 @@ tests/
 ## Database Cleanup
 
 The test database is **automatically cleaned before each test** via `beforeEach` in `tests/setup/db-setup.ts`. This ensures:
+
 - No test pollution
 - Consistent starting state
 - Fast execution

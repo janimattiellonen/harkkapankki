@@ -9,7 +9,13 @@ import { parseHtmlFile } from './parse-html';
  */
 function createOutputDirectory(): string {
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-').replace('T', '_').split('.')[0];
-  const outputDir = path.join(process.cwd(), 'docs', 'junnufriba-crawler', 'parsed-data', timestamp);
+  const outputDir = path.join(
+    process.cwd(),
+    'docs',
+    'junnufriba-crawler',
+    'parsed-data',
+    timestamp
+  );
 
   fs.mkdirSync(outputDir, { recursive: true });
   console.log(`Created output directory: ${outputDir}`);
@@ -24,34 +30,36 @@ async function downloadImage(url: string, outputPath: string): Promise<void> {
   return new Promise((resolve, reject) => {
     const protocol = url.startsWith('https') ? https : http;
 
-    protocol.get(url, (response) => {
-      if (response.statusCode === 301 || response.statusCode === 302) {
-        // Handle redirect
-        const redirectUrl = response.headers.location;
-        if (redirectUrl) {
-          downloadImage(redirectUrl, outputPath).then(resolve).catch(reject);
+    protocol
+      .get(url, response => {
+        if (response.statusCode === 301 || response.statusCode === 302) {
+          // Handle redirect
+          const redirectUrl = response.headers.location;
+          if (redirectUrl) {
+            downloadImage(redirectUrl, outputPath).then(resolve).catch(reject);
+            return;
+          }
+        }
+
+        if (response.statusCode !== 200) {
+          reject(new Error(`Failed to download image: ${response.statusCode}`));
           return;
         }
-      }
 
-      if (response.statusCode !== 200) {
-        reject(new Error(`Failed to download image: ${response.statusCode}`));
-        return;
-      }
+        const fileStream = fs.createWriteStream(outputPath);
+        response.pipe(fileStream);
 
-      const fileStream = fs.createWriteStream(outputPath);
-      response.pipe(fileStream);
+        fileStream.on('finish', () => {
+          fileStream.close();
+          resolve();
+        });
 
-      fileStream.on('finish', () => {
-        fileStream.close();
-        resolve();
-      });
-
-      fileStream.on('error', (err) => {
-        fs.unlink(outputPath, () => {});
-        reject(err);
-      });
-    }).on('error', reject);
+        fileStream.on('error', err => {
+          fs.unlink(outputPath, () => {});
+          reject(err);
+        });
+      })
+      .on('error', reject);
   });
 }
 
@@ -94,7 +102,9 @@ async function main() {
 
     if (args.length === 0) {
       console.error('Usage: npx tsx scripts/crawler/index.ts <html-file-path>');
-      console.error('Example: npx tsx scripts/crawler/index.ts docs/junnufriba-crawler/rystyheitto.html');
+      console.error(
+        'Example: npx tsx scripts/crawler/index.ts docs/junnufriba-crawler/rystyheitto.html'
+      );
       process.exit(1);
     }
 
@@ -128,7 +138,7 @@ async function main() {
     const jsonData = {
       header: parsed.header,
       body: parsed.body,
-      exerciseTypeId: "",
+      exerciseTypeId: '',
     };
 
     // Save JSON data
@@ -149,7 +159,6 @@ async function main() {
     if (parsed.images.length > 0) {
       console.log(`  - ${parsed.images.length} image file(s)`);
     }
-
   } catch (error) {
     console.error('\n❌ Error:', error instanceof Error ? error.message : error);
     process.exit(1);

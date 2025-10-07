@@ -1,4 +1,4 @@
-import { db } from "~/utils/db.server";
+import { db } from '~/utils/db.server';
 
 type CreatePracticeSessionData = {
   slug: string;
@@ -62,10 +62,7 @@ export async function findPracticeSessionById(id: string, language: string) {
     where: { id },
     include: {
       sectionItems: {
-        orderBy: [
-          { sectionId: 'asc' },
-          { order: 'asc' },
-        ],
+        orderBy: [{ sectionId: 'asc' }, { order: 'asc' }],
         include: {
           section: {
             include: {
@@ -92,10 +89,7 @@ export async function findPracticeSessionBySlug(slug: string, language: string) 
     where: { slug },
     include: {
       sectionItems: {
-        orderBy: [
-          { sectionId: 'asc' },
-          { order: 'asc' },
-        ],
+        orderBy: [{ sectionId: 'asc' }, { order: 'asc' }],
         include: {
           section: {
             include: {

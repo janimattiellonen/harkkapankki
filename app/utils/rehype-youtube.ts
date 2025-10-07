@@ -40,7 +40,8 @@ export function rehypeYouTube() {
               tagName: 'div',
               properties: {
                 className: ['youtube-embed-container'],
-                style: 'position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin: 1rem 0;'
+                style:
+                  'position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; margin: 1rem 0;',
               },
               children: [
                 {
@@ -50,13 +51,14 @@ export function rehypeYouTube() {
                     src: createYouTubeEmbedUrl(videoId),
                     title: 'YouTube video player',
                     frameBorder: '0',
-                    allow: 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
+                    allow:
+                      'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
                     allowFullScreen: true,
-                    style: 'position: absolute; top: 0; left: 0; width: 100%; height: 100%;'
+                    style: 'position: absolute; top: 0; left: 0; width: 100%; height: 100%;',
                   },
-                  children: []
-                }
-              ]
+                  children: [],
+                },
+              ],
             };
 
             // Replace the paragraph with the iframe

@@ -1,4 +1,4 @@
-import type { PractiseLength } from "~/types";
+import type { PractiseLength } from '~/types';
 
 type PractiseSessionSummaryProps = {
   practiseLength: PractiseLength;
@@ -25,14 +25,8 @@ export function PractiseSessionSummary({
           <span className="font-semibold">{totalAllocated} min</span>
         </div>
         <div className="flex justify-between border-t pt-2">
-          <span className="text-gray-700">
-            {isOverTime ? 'Over:' : 'Remaining:'}
-          </span>
-          <span
-            className={`font-bold ${
-              isOverTime ? 'text-red-600' : 'text-green-600'
-            }`}
-          >
+          <span className="text-gray-700">{isOverTime ? 'Over:' : 'Remaining:'}</span>
+          <span className={`font-bold ${isOverTime ? 'text-red-600' : 'text-green-600'}`}>
             {Math.abs(remaining)} min
           </span>
         </div>
@@ -42,9 +36,7 @@ export function PractiseSessionSummary({
       <div className="mt-4">
         <div className="h-3 w-full overflow-hidden rounded-full bg-gray-200">
           <div
-            className={`h-full transition-all ${
-              isOverTime ? 'bg-red-500' : 'bg-green-500'
-            }`}
+            className={`h-full transition-all ${isOverTime ? 'bg-red-500' : 'bg-green-500'}`}
             style={{
               width: `${Math.min((totalAllocated / practiseLength) * 100, 100)}%`,
             }}

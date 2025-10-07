@@ -26,10 +26,13 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
   const result = parseData(exerciseSchema, data);
   if (!result.success) {
-    return json({
-      errors: result.errors,
-      values: data,
-    }, { status: 400 });
+    return json(
+      {
+        errors: result.errors,
+        values: data,
+      },
+      { status: 400 }
+    );
   }
 
   // Check if user wants to remove the image
@@ -77,5 +80,7 @@ export default function EditExercise() {
   const { exercise, exerciseTypes } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
 
-  return <EditExercisePage exercise={exercise} exerciseTypes={exerciseTypes} actionData={actionData}/>;
+  return (
+    <EditExercisePage exercise={exercise} exerciseTypes={exerciseTypes} actionData={actionData} />
+  );
 }

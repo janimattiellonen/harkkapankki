@@ -1,4 +1,4 @@
-import { db } from "~/utils/db.server";
+import { db } from '~/utils/db.server';
 
 export type SectionWithDetails = {
   id: string;
@@ -10,7 +10,9 @@ export type SectionWithDetails = {
   exerciseTypes: { id: string; name: string }[];
 };
 
-export async function findAllSectionsWithDetails(language: string = 'en'): Promise<SectionWithDetails[]> {
+export async function findAllSectionsWithDetails(
+  language: string = 'en'
+): Promise<SectionWithDetails[]> {
   const sections = await db.section.findMany({
     orderBy: { order: 'asc' },
     include: {

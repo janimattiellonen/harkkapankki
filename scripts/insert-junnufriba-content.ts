@@ -1,6 +1,6 @@
-import { PrismaClient } from "@prisma/client";
-import { readFile } from "fs/promises";
-import { resolve } from "path";
+import { PrismaClient } from '@prisma/client';
+import { readFile } from 'fs/promises';
+import { resolve } from 'path';
 
 const db = new PrismaClient();
 
@@ -18,25 +18,25 @@ type ValidationResult = {
 function validateExerciseData(data: unknown): ValidationResult {
   const missingProperties: string[] = [];
 
-  if (!data || typeof data !== "object") {
+  if (!data || typeof data !== 'object') {
     return {
       isValid: false,
-      missingProperties: ["data is not an object"],
+      missingProperties: ['data is not an object'],
     };
   }
 
   const exercise = data as Partial<ExerciseData>;
 
-  if (!exercise.header || typeof exercise.header !== "string") {
-    missingProperties.push("header");
+  if (!exercise.header || typeof exercise.header !== 'string') {
+    missingProperties.push('header');
   }
 
-  if (!exercise.body || typeof exercise.body !== "string") {
-    missingProperties.push("body");
+  if (!exercise.body || typeof exercise.body !== 'string') {
+    missingProperties.push('body');
   }
 
-  if (!exercise.exerciseTypeId || typeof exercise.exerciseTypeId !== "string") {
-    missingProperties.push("exerciseTypeId");
+  if (!exercise.exerciseTypeId || typeof exercise.exerciseTypeId !== 'string') {
+    missingProperties.push('exerciseTypeId');
   }
 
   return {
@@ -50,10 +50,10 @@ function slugify(text: string): string {
   return text
     .toLowerCase()
     .trim()
-    .replace(/[\s_]+/g, "-")
-    .replace(/[^a-z0-9\-_]/g, "")
-    .replace(/-+/g, "-")
-    .replace(/^-+|-+$/g, "");
+    .replace(/[\s_]+/g, '-')
+    .replace(/[^a-z0-9\-_]/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '');
 }
 
 async function insertExercises(jsonFilePath: string) {
@@ -61,17 +61,15 @@ async function insertExercises(jsonFilePath: string) {
     console.log(`Reading JSON file: ${jsonFilePath}\n`);
 
     const absolutePath = resolve(jsonFilePath);
-    const fileContent = await readFile(absolutePath, "utf-8");
+    const fileContent = await readFile(absolutePath, 'utf-8');
     const data = JSON.parse(fileContent);
 
     // Validate that data is an object with expected properties
     const validation = validateExerciseData(data);
 
     if (!validation.isValid) {
-      console.error("❌ Invalid data structure in JSON file.");
-      console.error(
-        `Missing or invalid properties: ${validation.missingProperties.join(", ")}`
-      );
+      console.error('❌ Invalid data structure in JSON file.');
+      console.error(`Missing or invalid properties: ${validation.missingProperties.join(', ')}`);
       process.exit(1);
     }
 
@@ -107,7 +105,7 @@ async function insertExercises(jsonFilePath: string) {
       },
     });
 
-    const existingSlugStrings = existingSlugs.map((e) => e.slug);
+    const existingSlugStrings = existingSlugs.map(e => e.slug);
     let finalSlug = baseSlug;
     let counter = 1;
 
@@ -143,16 +141,16 @@ async function insertExercises(jsonFilePath: string) {
     console.log(`   Slug: ${exercise.slug}`);
   } catch (error) {
     if (error instanceof Error) {
-      if (error.message.includes("ENOENT")) {
+      if (error.message.includes('ENOENT')) {
         console.error(`❌ File not found: ${jsonFilePath}`);
-      } else if (error.message.includes("JSON")) {
+      } else if (error.message.includes('JSON')) {
         console.error(`❌ Invalid JSON in file: ${jsonFilePath}`);
         console.error(`   ${error.message}`);
       } else {
-        console.error("❌ Error inserting exercise:", error.message);
+        console.error('❌ Error inserting exercise:', error.message);
       }
     } else {
-      console.error("❌ Unknown error:", error);
+      console.error('❌ Unknown error:', error);
     }
     process.exit(1);
   } finally {
@@ -164,9 +162,9 @@ async function insertExercises(jsonFilePath: string) {
 const args = process.argv.slice(2);
 
 if (args.length === 0) {
-  console.error("❌ Usage: npm run insert-junnufriba-content <path-to-json-file>");
+  console.error('❌ Usage: npm run insert-junnufriba-content <path-to-json-file>');
   console.error(
-    "\nExample: npm run insert-junnufriba-content docs/junnufriba-crawler/parsed-data/2025-10-07_09-10-16-199Z/content.json"
+    '\nExample: npm run insert-junnufriba-content docs/junnufriba-crawler/parsed-data/2025-10-07_09-10-16-199Z/content.json'
   );
   process.exit(1);
 }
