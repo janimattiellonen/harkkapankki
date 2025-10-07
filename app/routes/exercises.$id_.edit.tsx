@@ -1,20 +1,20 @@
-import { json, redirect, type ActionFunctionArgs, type LoaderFunctionArgs } from "@remix-run/node";
-import { Form, useActionData, useLoaderData } from "@remix-run/react";
-import { ExerciseForm } from "~/components/ExerciseForm";
-import { exerciseSchema } from "~/schemas/exercise";
-import { fetchExerciseById, updateExercise } from "~/services/exercises.server";
-import { fetchExerciseTypeOptions } from "~/services/exerciseTypes.server";
-import { parseData } from "~/utils/validation";
-import { parseFormData } from "~/utils/upload.server";
+import { json, redirect, type ActionFunctionArgs, type LoaderFunctionArgs } from '@remix-run/node';
+import { useActionData, useLoaderData } from '@remix-run/react';
+import EditExercisePage from '~/pages/EditExercisePage';
+import { exerciseSchema } from '~/schemas/exercise';
+import { fetchExerciseById, updateExercise } from '~/services/exercises.server';
+import { fetchExerciseTypeOptions } from '~/services/exerciseTypes.server';
+import { parseData } from '~/utils/validation';
+import { parseFormData } from '~/utils/upload.server';
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const [exercise, exerciseTypes] = await Promise.all([
     fetchExerciseById(params.id!, 'en'),
-    fetchExerciseTypeOptions('en', 'exercise-form')
+    fetchExerciseTypeOptions('en', 'exercise-form'),
   ]);
 
   if (!exercise) {
-    throw new Response("Exercise not found", { status: 404 });
+    throw new Response('Exercise not found', { status: 404 });
   }
 
   return json({ exercise, exerciseTypes });
@@ -28,22 +28,22 @@ export async function action({ request, params }: ActionFunctionArgs) {
   if (!result.success) {
     return json({
       errors: result.errors,
-      values: data
+      values: data,
     }, { status: 400 });
   }
 
   // Check if user wants to remove the image
-  const removeImage = formData.get("removeImage") === "true";
+  const removeImage = formData.get('removeImage') === 'true';
 
   // Get image path from formData if uploaded
-  const imageValue = formData.get("image");
-  const newImage = typeof imageValue === "string" && imageValue ? imageValue : null;
+  const imageValue = formData.get('image');
+  const newImage = typeof imageValue === 'string' && imageValue ? imageValue : null;
 
   // Fetch existing exercise to preserve image if not updated or removed
   const existingExercise = await fetchExerciseById(params.id!, 'en');
 
   if (!existingExercise) {
-    throw new Response("Exercise not found", { status: 404 });
+    throw new Response('Exercise not found', { status: 404 });
   }
 
   let finalImage: string | null = null;
@@ -64,10 +64,10 @@ export async function action({ request, params }: ActionFunctionArgs) {
   });
 
   // Check if user wants to stay on the page
-  const saveAndContinue = formData.get("saveAndContinue") === "true";
+  const saveAndContinue = formData.get('saveAndContinue') === 'true';
 
   if (saveAndContinue) {
-    return json({ success: true, message: "Exercise updated successfully" });
+    return json({ success: true, message: 'Exercise updated successfully' });
   }
 
   return redirect(`/exercises/${updatedExercise.slug}`);
@@ -77,24 +77,5 @@ export default function EditExercise() {
   const { exercise, exerciseTypes } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
 
-  return (
-    <div className="mx-auto max-w-3xl p-6">
-      <h1 className="mb-6 text-2xl font-bold">Edit Exercise</h1>
-      {actionData && 'success' in actionData && actionData.success && (
-        <div className="mb-4 rounded-md bg-green-50 p-4">
-          <p className="text-sm text-green-800">{actionData.message}</p>
-        </div>
-      )}
-      <Form method="post">
-        <ExerciseForm
-          exercise={exercise}
-          submitText="Update Exercise"
-          showSaveAndContinue={true}
-          errors={actionData && 'errors' in actionData ? actionData.errors : undefined}
-          defaultValues={actionData && 'values' in actionData ? actionData.values : undefined}
-          exerciseTypes={exerciseTypes}
-        />
-      </Form>
-    </div>
-  );
+  return <EditExercisePage exercise={exercise} exerciseTypes={exerciseTypes} actionData={actionData}/>;
 }

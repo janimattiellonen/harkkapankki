@@ -1,6 +1,6 @@
 import { json, redirect, type ActionFunctionArgs } from "@remix-run/node";
-import { Form, useActionData, useLoaderData } from "@remix-run/react";
-import { ExerciseForm } from "~/components/ExerciseForm";
+import { useActionData, useLoaderData } from "@remix-run/react";
+import NewExercisePage from "~/pages/NewExercisePage";
 import { exerciseSchema } from "~/schemas/exercise";
 import { createExercise } from "~/services/exercises.server";
 import { fetchExerciseTypeOptions } from "~/services/exerciseTypes.server";
@@ -39,17 +39,5 @@ export default function NewExercise() {
   const { exerciseTypes } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
 
-  return (
-    <div className="mx-auto max-w-3xl p-6">
-      <h1 className="mb-6 text-2xl font-bold">New Exercise</h1>
-      <Form method="post">
-        <ExerciseForm
-          submitText="Create Exercise"
-          errors={actionData && 'errors' in actionData ? actionData.errors : undefined}
-          defaultValues={actionData && 'values' in actionData ? actionData.values : undefined}
-          exerciseTypes={exerciseTypes}
-        />
-      </Form>
-    </div>
-  );
+  return <NewExercisePage exerciseTypes={exerciseTypes} actionData={actionData} />;
 }
