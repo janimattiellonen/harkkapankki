@@ -1,8 +1,36 @@
+/**
+ * Junnufriba HTML Crawler
+ *
+ * Parses HTML content from multiple sources and converts to database-ready format.
+ *
+ * Supports three input methods:
+ * 1. HTML file path
+ * 2. URL to a webpage
+ * 3. .txt file containing a list of paths/URLs
+ */
+
 import * as fs from 'fs';
 import * as path from 'path';
 import * as https from 'https';
 import * as http from 'http';
-import { parseHtmlFile } from './parse-html';
+import { parseHtmlFile, parseHtmlContent } from './parse-html';
+import { getSourcesToProcess, type InputSource } from './input-source';
+import { fetchUrlContent } from './fetch-url';
+
+type ExerciseData = {
+  header: string;
+  body: string;
+  exerciseTypeId: string;
+};
+
+type ParsedContent = {
+  header: string;
+  body: string;
+  images: Array<{
+    originalUrl: string;
+    localPath: string;
+  }>;
+};
 
 /**
  * Create timestamped output directory
@@ -14,11 +42,11 @@ function createOutputDirectory(): string {
     'docs',
     'junnufriba-crawler',
     'parsed-data',
-    timestamp
+    `${timestamp}Z`
   );
 
   fs.mkdirSync(outputDir, { recursive: true });
-  console.log(`Created output directory: ${outputDir}`);
+  console.log(`Created output directory: ${outputDir}\n`);
 
   return outputDir;
 }
@@ -33,7 +61,6 @@ async function downloadImage(url: string, outputPath: string): Promise<void> {
     protocol
       .get(url, response => {
         if (response.statusCode === 301 || response.statusCode === 302) {
-          // Handle redirect
           const redirectUrl = response.headers.location;
           if (redirectUrl) {
             downloadImage(redirectUrl, outputPath).then(resolve).catch(reject);
@@ -64,33 +91,86 @@ async function downloadImage(url: string, outputPath: string): Promise<void> {
 }
 
 /**
- * Download all images
+ * Download images for a parsed result
  */
 async function downloadImages(
   images: Array<{ originalUrl: string; localPath: string }>,
-  outputDir: string
+  outputDir: string,
+  sourceName: string
 ): Promise<void> {
-  console.log(`\nDownloading ${images.length} images...`);
+  if (images.length === 0) return;
+
+  console.log(`  Downloading ${images.length} images for "${sourceName}"...`);
 
   for (const [index, image] of images.entries()) {
     try {
       const outputPath = path.join(outputDir, image.localPath);
-      console.log(`  [${index + 1}/${images.length}] Downloading: ${image.originalUrl}`);
       await downloadImage(image.originalUrl, outputPath);
-      console.log(`  ✓ Saved to: ${image.localPath}`);
+      console.log(`    [${index + 1}/${images.length}] ✓ ${image.localPath}`);
     } catch (error) {
-      console.error(`  ✗ Failed to download ${image.originalUrl}:`, error);
+      console.error(`    [${index + 1}/${images.length}] ✗ Failed: ${image.originalUrl}`);
     }
   }
 }
 
 /**
- * Save JSON data to file
+ * Process a single HTML source
  */
-function saveJsonData(data: { header: string; body: string }, outputDir: string): void {
+async function processSource(source: InputSource, outputDir: string): Promise<ExerciseData> {
+  let parsed: ParsedContent;
+
+  console.log(`\nProcessing: ${source.value}`);
+  console.log(`  Type: ${source.type}`);
+
+  if (source.type === 'html-file') {
+    const absolutePath = path.isAbsolute(source.value)
+      ? source.value
+      : path.join(process.cwd(), source.value);
+    parsed = parseHtmlFile(absolutePath);
+  } else if (source.type === 'url') {
+    console.log('  Fetching URL...');
+    const html = await fetchUrlContent(source.value);
+    parsed = parseHtmlContent(html);
+  } else {
+    throw new Error(`Unsupported source type: ${source.type}`);
+  }
+
+  console.log(`  ✓ Title: "${parsed.header}"`);
+  console.log(`  ✓ Content: ${parsed.body.length} characters`);
+  console.log(`  ✓ Images: ${parsed.images.length}`);
+
+  // Download images
+  await downloadImages(parsed.images, outputDir, parsed.header);
+
+  return {
+    header: parsed.header,
+    body: parsed.body,
+    exerciseTypeId: '',
+  };
+}
+
+/**
+ * Save exercise data to JSON file
+ */
+function saveJsonData(exercises: ExerciseData[], outputDir: string): void {
   const jsonPath = path.join(outputDir, 'content.json');
-  fs.writeFileSync(jsonPath, JSON.stringify(data, null, 2), 'utf-8');
-  console.log(`\nSaved JSON data to: ${jsonPath}`);
+  fs.writeFileSync(jsonPath, JSON.stringify(exercises, null, 2), 'utf-8');
+  console.log(`\n✓ Saved JSON data to: ${jsonPath}`);
+}
+
+/**
+ * Save markdown preview files
+ */
+function saveMarkdownPreviews(exercises: ExerciseData[], outputDir: string): void {
+  exercises.forEach((exercise, index) => {
+    const filename = exercises.length > 1 ? `content-${index + 1}.md` : 'content.md';
+    const markdownPath = path.join(outputDir, filename);
+    const content = `# ${exercise.header}\n\n${exercise.body}`;
+    fs.writeFileSync(markdownPath, content, 'utf-8');
+  });
+
+  const previewFile = exercises.length > 1 ? `${exercises.length} preview files` : 'content.md';
+  console.log(`✓ Saved markdown preview: ${previewFile}`);
 }
 
 /**
@@ -101,63 +181,64 @@ async function main() {
     const args = process.argv.slice(2);
 
     if (args.length === 0) {
-      console.error('Usage: npx tsx scripts/crawler/index.ts <html-file-path>');
-      console.error(
-        'Example: npx tsx scripts/crawler/index.ts docs/junnufriba-crawler/rystyheitto.html'
-      );
+      console.error('Usage: npx tsx scripts/crawler/index.ts <source>');
+      console.error('\nSource can be:');
+      console.error('  - Path to HTML file: docs/file.html');
+      console.error('  - URL: https://example.com/page');
+      console.error('  - List file (.txt): sources.txt');
+      console.error('\nExample list file format (sources.txt):');
+      console.error('  docs/file1.html');
+      console.error('  https://example.com/page');
+      console.error('  docs/file2.html');
       process.exit(1);
     }
 
-    const htmlFilePath = args[0];
-    const absolutePath = path.isAbsolute(htmlFilePath)
-      ? htmlFilePath
-      : path.join(process.cwd(), htmlFilePath);
+    const input = args[0];
 
     console.log('='.repeat(60));
     console.log('Junnufriba HTML Crawler');
     console.log('='.repeat(60));
-    console.log(`\nProcessing: ${absolutePath}`);
 
-    // Create output directory
+    // Detect source type and get all sources to process
+    const sources = getSourcesToProcess(input);
+    console.log(`\nFound ${sources.length} source(s) to process`);
+
+    // Create single output directory for all sources
     const outputDir = createOutputDirectory();
 
-    // Parse HTML file
-    console.log('\nParsing HTML file...');
-    const parsed = parseHtmlFile(absolutePath);
-
-    console.log(`\n✓ Page title: "${parsed.header}"`);
-    console.log(`✓ Content length: ${parsed.body.length} characters`);
-    console.log(`✓ Found ${parsed.images.length} images`);
-
-    // Download images
-    if (parsed.images.length > 0) {
-      await downloadImages(parsed.images, outputDir);
+    // Process all sources
+    const exercises: ExerciseData[] = [];
+    for (const source of sources) {
+      const exercise = await processSource(source, outputDir);
+      exercises.push(exercise);
     }
 
-    // Prepare final JSON structure
-    const jsonData = {
-      header: parsed.header,
-      body: parsed.body,
-      exerciseTypeId: '',
-    };
+    // Save all data
+    saveJsonData(exercises, outputDir);
+    saveMarkdownPreviews(exercises, outputDir);
 
-    // Save JSON data
-    saveJsonData(jsonData, outputDir);
-
-    // Also save markdown for easy inspection
-    const markdownPath = path.join(outputDir, 'content.md');
-    fs.writeFileSync(markdownPath, `# ${parsed.header}\n\n${parsed.body}`, 'utf-8');
-    console.log(`Saved markdown preview to: ${markdownPath}`);
-
+    // Summary
     console.log('\n' + '='.repeat(60));
-    console.log('✓ Parsing completed successfully!');
+    console.log('✓ Crawling completed successfully!');
     console.log('='.repeat(60));
     console.log(`\nOutput directory: ${outputDir}`);
+    console.log(`\nProcessed ${exercises.length} exercise(s)`);
     console.log('\nFiles created:');
-    console.log(`  - content.json (structured data for database import)`);
-    console.log(`  - content.md (markdown preview)`);
-    if (parsed.images.length > 0) {
-      console.log(`  - ${parsed.images.length} image file(s)`);
+    console.log(`  - content.json (array of ${exercises.length} exercise(s))`);
+    if (exercises.length > 1) {
+      console.log(`  - content-1.md to content-${exercises.length}.md (previews)`);
+    } else {
+      console.log(`  - content.md (preview)`);
+    }
+
+    const totalImages = exercises.reduce(sum => {
+      // Count images in output directory
+      const files = fs.readdirSync(outputDir);
+      return sum + files.filter(f => /\.(jpg|jpeg|png|gif|webp)$/i.test(f)).length;
+    }, 0);
+
+    if (totalImages > 0) {
+      console.log(`  - ${totalImages} image file(s)`);
     }
   } catch (error) {
     console.error('\n❌ Error:', error instanceof Error ? error.message : error);

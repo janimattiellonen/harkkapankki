@@ -97,3 +97,26 @@ Each item in the json file should contain the following properties:
 If one or more of these are missing, stop and return with an error stating which properties
 are missing.
 
+
+Phase 3 - Multiple ways to provide html sources
+
+Currently the crawler scripts accepts a single html file.
+
+Allow these 3 different ways:
+1) path to html file
+2) url to a web site, which source code to use
+3) a .txt file with a list of html file paths or urls
+
+Modify the script to analyze the parameter it received and to act accordingly.
+As there are now multiple different ways of obtaining the html code, refactor
+index.ts (and other parts) to keep the main function clean, delegate to other functions
+to maintain clean code and smaller function with a dedicated task.
+
+Note that no as the script may crawl a list of sources, create one timestamped directory
+and use same content.json for all new data.
+
+Currently the JSON format assumes one single object. Let's allow the JSON format to include
+an array of objects. Make sure to update all code and docs to reflect on this change,
+
+Phase 4 - Improved unit tests
+

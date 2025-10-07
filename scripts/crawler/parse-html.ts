@@ -207,6 +207,13 @@ export function extractAndConvertContent(html: string): ParsedContent {
 }
 
 /**
+ * Parse HTML content from string
+ */
+export function parseHtmlContent(html: string): ParsedContent {
+  return extractAndConvertContent(html);
+}
+
+/**
  * Parse HTML file and extract structured data
  */
 export function parseHtmlFile(filePath: string): ParsedContent {
@@ -215,5 +222,5 @@ export function parseHtmlFile(filePath: string): ParsedContent {
   }
 
   const html = fs.readFileSync(filePath, 'utf-8');
-  return extractAndConvertContent(html);
+  return parseHtmlContent(html);
 }
