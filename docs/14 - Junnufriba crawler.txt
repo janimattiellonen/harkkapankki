@@ -71,3 +71,29 @@ In the next phase the script should accept a link to the html page and the scrip
 contents of the page and use it as a source.
 
 
+
+
+Phase 2 - Script for inserting parsed html into database
+
+We now have scripts for parsing html data in directory scripts/crawler.
+
+The results of each run is stored as a timestamped directory in docs/junnufriba-crawler/parsed-data.
+
+Next we need a script for inserting the contents of the JSON file into database.
+
+
+Each timestamped directory contains the following files:
+- content.json (which we are interested in)
+- content.md (generated content)
+
+The script should accept a path to a JSON file containing the expected
+structure (for example docs/junnufriba-crawler/parsed-data/2025-10-07_09-10-16-199Z/content.json).
+
+Each item in the json file should contain the following properties:
+- header (string)
+- body (string)
+- exerciseTypeId (uuid)
+
+If one or more of these are missing, stop and return with an error stating which properties
+are missing.
+
