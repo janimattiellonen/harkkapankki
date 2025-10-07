@@ -128,6 +128,7 @@ async function main() {
     const jsonData = {
       header: parsed.header,
       body: parsed.body,
+      exerciseTypeId: "",
     };
 
     // Save JSON data

@@ -12,7 +12,8 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
-    "test:watch": "vitest --watch"
+    "test:watch": "vitest --watch",
+    "insert-exercises": "tsx scripts/insert-junnufriba-content.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
