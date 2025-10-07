@@ -17,6 +17,7 @@ model ExerciseType {
   exercises    Exercise[]
   sectionLinks SectionExerciseType[]
   groupMemberships ExerciseTypeGroupMember[]
+  sessionItems PracticeSessionSectionItem[]
   createdAt   DateTime     @default(now()) @map("created_at")
   updatedAt   DateTime     @updatedAt @map("updated_at")
 
@@ -108,6 +109,7 @@ model Section {
   translations        SectionTranslation[]
   durationConfigs     SectionDurationConfig[]
   exerciseTypeLinks   SectionExerciseType[]
+  sessionItems        PracticeSessionSectionItem[]
 
   @@map("sections")
   @@index([order])
@@ -153,6 +155,38 @@ model SectionExerciseType {
 
   @@map("section_exercise_types")
   @@unique([sectionId, exerciseTypeId])
+  @@index([sectionId])
+  @@index([exerciseTypeId])
+}
+
+model PracticeSession {
+  id            String   @id @default(uuid())
+  name          String?
+  description   String?  @db.Text
+  sessionLength Int
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  sectionItems  PracticeSessionSectionItem[]
+
+  @@map("practice_sessions")
+}
+
+model PracticeSessionSectionItem {
+  id                String          @id @default(uuid())
+  practiceSession   PracticeSession @relation(fields: [practiceSessionId], references: [id], onDelete: Cascade)
+  practiceSessionId String          @map("practice_session_id")
+  section           Section         @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  sectionId         String          @map("section_id")
+  exerciseType      ExerciseType    @relation(fields: [exerciseTypeId], references: [id], onDelete: Cascade)
+  exerciseTypeId    String          @map("exercise_type_id")
+  order             Int
+  createdAt         DateTime        @default(now()) @map("created_at")
+  updatedAt         DateTime        @updatedAt @map("updated_at")
+
+  @@map("practice_session_section_items")
+  @@unique([practiceSessionId, sectionId, exerciseTypeId])
+  @@index([practiceSessionId])
   @@index([sectionId])
   @@index([exerciseTypeId])
 }
