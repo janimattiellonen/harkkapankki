@@ -7,7 +7,7 @@ the linter returns warnings or errors
 
 Code conventions
 
-- prefer types over interfaces
+- prefer types to interfaces
 - use native Javascript functions when possible
 - use Date.toLocaleDateString() instead of a custom made date formatting function
 - follow same naming conventions (files, functions etc) as is previously used in the project
