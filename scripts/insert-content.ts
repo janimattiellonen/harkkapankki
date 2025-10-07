@@ -1,3 +1,26 @@
+/**
+ * Insert Content Script
+ *
+ * Inserts exercise content into the database from JSON files.
+ *
+ * Usage:
+ *   npm run insert-exercises -- <path-to-json-file> <exercise-type-id>
+ *   npx tsx scripts/insert-content.ts <path-to-json-file> <exercise-type-id>
+ *
+ * Parameters:
+ *   - path-to-json-file: Path to JSON file containing exercise data
+ *   - exercise-type-id: UUID of the exercise type to associate with the exercise
+ *
+ * JSON Format:
+ *   {
+ *     "header": "Exercise Title",
+ *     "body": "Exercise content in markdown..."
+ *   }
+ *
+ * Example:
+ *   npm run insert-exercises -- ./docs/crawler/parsed-data/20240115/content.json abc-123-def
+ */
+
 import { PrismaClient } from '@prisma/client';
 import { readFile } from 'fs/promises';
 import { resolve } from 'path';

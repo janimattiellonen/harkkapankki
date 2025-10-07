@@ -1,3 +1,23 @@
+/**
+ * Regenerate Slugs Script
+ *
+ * Regenerates slugs for all exercises and practice sessions in the database.
+ *
+ * Usage:
+ *   npx tsx scripts/regenerate-slugs.ts
+ *
+ * What it does:
+ *   - Regenerates slugs for all exercises based on their names
+ *   - Regenerates slugs for all practice sessions based on their names
+ *   - Handles duplicate slugs by appending numeric suffixes (e.g., exercise, exercise-2, exercise-3)
+ *   - Updates the database with new slugs
+ *
+ * When to use:
+ *   - After importing exercises without proper slugs
+ *   - After renaming multiple items
+ *   - To ensure slug uniqueness and consistency
+ */
+
 import { PrismaClient } from '@prisma/client';
 
 const db = new PrismaClient();

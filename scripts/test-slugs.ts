@@ -1,3 +1,24 @@
+/**
+ * Test Slugs Script
+ *
+ * Tests and verifies slug generation for exercises and practice sessions.
+ *
+ * Usage:
+ *   npx tsx scripts/test-slugs.ts
+ *
+ * Output:
+ *   Displays sample records showing:
+ *   - ID
+ *   - Name
+ *   - Slug
+ *   - Whether slug exists
+ *
+ * When to use:
+ *   - To verify slugs after database operations
+ *   - To debug slug-related issues
+ *   - To check data integrity
+ */
+
 import { PrismaClient } from '@prisma/client';
 
 const db = new PrismaClient();
