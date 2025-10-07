@@ -17,6 +17,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 >
                   Exercises
                 </Link>
+                <Link
+                  to="/practise-sessions"
+                  className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md"
+                >
+                  Practise sessions
+                </Link>
               </div>
             </div>
           </div>
