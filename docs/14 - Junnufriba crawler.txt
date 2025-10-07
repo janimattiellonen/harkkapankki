@@ -1,0 +1,73 @@
+14 - Junnufriba crawler
+
+I need a script that allows me to crawl content from a website and insert the crawled data
+into the database in a specific format.
+
+Example html file containing actual content: docs/junnufriba-crawler/rystyheitto.html
+
+
+Wanted data from html:
+
+- page title
+- relevant page content
+
+
+Page title
+
+- the page title can be retreived from a <header> element which has a class name 'entry-header'
+- the page title is located inside a <main id="site-content"> element.
+
+Looking at the example file, here is the page title as html code, including the <header> element:
+
+<header class="entry-header has-text-align-center header-footer-group">
+	<div class="entry-header-inner section-inner medium">
+		<h1 class="entry-title">Rystyheitto</h1>
+	</div><!-- .entry-header-inner -->
+</header>
+
+
+Page content
+
+- page content is located in a <div class="entry-content"> element
+- page content consists basically of:
+    - <h3> elements
+    - <p> elements
+    - bullet lists (line begins with a '•') made using <p> and <br> elements
+    - <iframe> elements containing embedded youtube players
+        - example taken from example file: <iframe title="Suomen frisbeegolfliitto - Ohjaaja 1-koulutusvideot - Osa 3 - Frisbeegolfin rystyheitto paikoiltaan" width="580" height="326" src="https://www.youtube.com/embed/gCmvgiJbc5I?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="" data-origwidth="580" data-origheight="326" style="width: 580px; height: 326px;"></iframe>
+
+- when page content is parsed, we need to convert the content into markdown:
+    - <h3> elements to heading 2 titles (prefixed with '##')
+    - <p> elements into corresponding markdown
+    - makeshift bullet lists into actual markdown unordered lists
+    - embedded youtube videos into youtube tags supported by the app
+        - for example: youtube video https://youtu.be/V9vp_5fyZsI -> ## @[youtube](https://youtu.be/V9vp_5fyZsI)
+
+Here is an excerpt from the example html code:
+
+<div class="entry-content">
+    <p>Frisbeegolfin heittotekniikoiden opettaminen lähtee otteesta. Jotta kiekkoa voitaisiin heittää halutulla tavalla, tulee heittäjän otteen kiekosta olla oikeanlainen.</p>
+    ...
+</div>
+
+
+Instructions for converting content into a structured json format
+
+A structured JSON data is to be created from the collected html data. Here is an example JSON structure:
+
+{
+    header: 'Rystyheitto',
+    body: 'CONTENT OF <div class="entry-content"> WITH content converted into Markdown and using tags supported by the app'
+}
+
+
+Plan
+
+Give me a detailed plan on how you would implement this.
+
+Initially use the example file docs/junnufriba-crawler/rystyheitto.html as source.
+
+In the next phase the script should accept a link to the html page and the script should fetch the
+contents of the page and use it as a source.
+
+
