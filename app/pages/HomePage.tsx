@@ -29,13 +29,19 @@ export default function HomePage() {
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <FeatureBox
           imagePath="/app/asssets/images/exercise-plan.png"
-          title="Design a practise event"
+          title="Design a practise session"
           href="/practise-sessions/new"
         />
         <FeatureBox
-          imagePath="/app/asssets/images/piggybank.jpeg"
+          imagePath="/app/asssets/images/piggybank.png"
           title="Exercise bank"
           href="/exercises"
+        />
+
+        <FeatureBox
+          imagePath={'/app/asssets/images/exercise.png'}
+          title={'Create a new exercise'}
+          href={'/exercises/new'}
         />
       </div>
     </div>

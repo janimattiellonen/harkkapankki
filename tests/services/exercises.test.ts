@@ -6,6 +6,7 @@ import {
   fetchExerciseById,
   updateExercise,
   fetchExercises,
+  deleteExercise,
 } from '~/services/exercises.server';
 import type { ExerciseInput } from '~/services/exercises.server';
 
@@ -270,5 +271,106 @@ describe('Exercise Service - fetchExercises', () => {
 
     // Search term < 3 characters should return all results (no filter applied)
     expect(exercises).toHaveLength(3);
+  });
+});
+
+describe('Exercise Service - deleteExercise', () => {
+  let puttingTypeId: string;
+  let exerciseIds: string[] = [];
+
+  beforeEach(async () => {
+    const technique = await createExerciseType('technique', { fi: 'Tekniikka', en: 'Technique' });
+
+    const putting = await createExerciseType(
+      'putting',
+      { fi: 'Puttaaminen', en: 'Putting' },
+      technique.id
+    );
+
+    puttingTypeId = putting.id;
+
+    // Create 5 exercises for testing
+    exerciseIds = [];
+    for (let i = 1; i <= 5; i++) {
+      const exercise = await createExercise({
+        name: `Test Exercise ${i}`,
+        content: `Content for exercise ${i}`,
+        duration: 10 + i,
+        exerciseTypeId: puttingTypeId,
+      });
+      exerciseIds.push(exercise.id);
+    }
+  });
+
+  it('should delete an exercise and verify remaining exercises', async () => {
+    // Verify we have 5 exercises initially
+    const initialExercises = await db.exercise.findMany({
+      where: { id: { in: exerciseIds } },
+      orderBy: { name: 'asc' },
+    });
+    expect(initialExercises).toHaveLength(5);
+
+    // Delete the third exercise
+    const exerciseToDelete = exerciseIds[2];
+    const deletedExercise = await deleteExercise(exerciseToDelete);
+
+    // Verify the deleted exercise is returned
+    expect(deletedExercise).toBeDefined();
+    expect(deletedExercise.id).toBe(exerciseToDelete);
+    expect(deletedExercise.name).toBe('Test Exercise 3');
+
+    // Verify only 4 exercises remain in database
+    const remainingExercises = await db.exercise.findMany({
+      where: { id: { in: exerciseIds } },
+      orderBy: { name: 'asc' },
+    });
+    expect(remainingExercises).toHaveLength(4);
+
+    // Verify the correct exercises remain
+    const remainingIds = remainingExercises.map(e => e.id);
+    expect(remainingIds).toContain(exerciseIds[0]);
+    expect(remainingIds).toContain(exerciseIds[1]);
+    expect(remainingIds).not.toContain(exerciseIds[2]); // This one was deleted
+    expect(remainingIds).toContain(exerciseIds[3]);
+    expect(remainingIds).toContain(exerciseIds[4]);
+
+    // Verify the deleted exercise cannot be fetched
+    const fetchedExercise = await fetchExerciseById(exerciseToDelete, 'en');
+    expect(fetchedExercise).toBeNull();
+  });
+
+  it('should fail when trying to delete a non-existing exercise and verify all exercises remain', async () => {
+    // Verify we have 5 exercises initially
+    const initialExercises = await db.exercise.findMany({
+      where: { id: { in: exerciseIds } },
+      orderBy: { name: 'asc' },
+    });
+    expect(initialExercises).toHaveLength(5);
+
+    // Try to delete a non-existing exercise
+    const nonExistentId = 'non-existent-exercise-id';
+
+    // This should throw an error
+    await expect(deleteExercise(nonExistentId)).rejects.toThrow();
+
+    // Verify all 5 exercises still exist in database
+    const remainingExercises = await db.exercise.findMany({
+      where: { id: { in: exerciseIds } },
+      orderBy: { name: 'asc' },
+    });
+    expect(remainingExercises).toHaveLength(5);
+
+    // Verify all exercise IDs are still present
+    const remainingIds = remainingExercises.map(e => e.id);
+    exerciseIds.forEach(id => {
+      expect(remainingIds).toContain(id);
+    });
+
+    // Verify all exercise names are correct
+    expect(remainingExercises[0].name).toBe('Test Exercise 1');
+    expect(remainingExercises[1].name).toBe('Test Exercise 2');
+    expect(remainingExercises[2].name).toBe('Test Exercise 3');
+    expect(remainingExercises[3].name).toBe('Test Exercise 4');
+    expect(remainingExercises[4].name).toBe('Test Exercise 5');
   });
 });

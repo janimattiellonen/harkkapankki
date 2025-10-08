@@ -76,3 +76,9 @@ export function updateExercise(id: string, data: UpdateExerciseData): Promise<Ex
     data,
   });
 }
+
+export function deleteExercise(id: string): Promise<Exercise> {
+  return db.exercise.delete({
+    where: { id },
+  });
+}

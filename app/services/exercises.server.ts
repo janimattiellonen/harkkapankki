@@ -149,3 +149,7 @@ export async function updateExercise(id: string, data: ExerciseInput): Promise<E
     },
   });
 }
+
+export async function deleteExercise(id: string): Promise<Exercise> {
+  return exerciseRepo.deleteExercise(id);
+}

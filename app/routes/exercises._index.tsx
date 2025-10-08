@@ -8,6 +8,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const searchTerm = url.searchParams.get('q') || undefined;
   const typeIds = url.searchParams.get('types')?.split(',').filter(Boolean) || undefined;
+  const deleted = url.searchParams.get('deleted') === 'true';
 
   const filters: ExerciseFilters = {
     searchTerm,
@@ -19,10 +20,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     fetchExerciseTypeOptions('en', 'exercise-form'),
   ]);
 
-  return json({ exercises, exerciseTypes });
+  return json({ exercises, exerciseTypes, deleted });
 };
 
 export default function Exercises() {
-  const { exercises, exerciseTypes } = useLoaderData<typeof loader>();
-  return <ExercisesListPage exercises={exercises} exerciseTypes={exerciseTypes} />;
+  const { exercises, exerciseTypes, deleted } = useLoaderData<typeof loader>();
+  return (
+    <ExercisesListPage exercises={exercises} exerciseTypes={exerciseTypes} deleted={deleted} />
+  );
 }
