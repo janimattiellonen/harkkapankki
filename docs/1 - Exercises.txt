@@ -13,3 +13,29 @@ Conventions:
     - keep the required route files as clean as possible, put for, related code in components
     - put code that handles creation and editing of an exercise in services/exercises.server.ts 
     - when creating a form component for both adding and editing an exercise, try to re-use as much code as possible
+
+
+ Phase 2 - deleting exercises
+
+ We now have a button for deleting an exercise that is open for editing.
+
+ Currently the button does nothing except asks the user to confirm the deletion.
+
+ Implement deleting of an exercise.
+
+ Show an error message on the page, if deleting the exercise failed.
+
+ If the exercise was deleted successfully, show a message that the exercise was deleted.
+ The message should disappear after a configurable amount of seconds and after that,m the user should be
+ redirected back to the exercise listing page. The user should be able to dismiss the message faster,
+ the use chooses, by clicking a "Go back to the exercise page" link.
+
+Phase 3 - updated unit tests
+
+Add unit tests that verify that deleting an exercise works as expected.
+
+Create a test that first adds 5 exercises to database and then deletes one of them and checks that
+the database contains expected exercises.
+
+Create a test that first adds 5 exercises to database and then tries to delete a non-existing exercise
+and then verifies that the database still contains expected exercises.
