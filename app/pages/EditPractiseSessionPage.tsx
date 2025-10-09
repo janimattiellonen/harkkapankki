@@ -4,6 +4,7 @@ import type { PractiseLength, SelectedItem, Section, SectionItem } from '~/types
 import { PractiseSessionLengthSelector } from '~/components/PractiseSessionLengthSelector';
 import { PractiseSessionSection } from '~/components/PractiseSessionSection';
 import { PractiseSessionSummary } from '~/components/PractiseSessionSummary';
+import { useTranslation } from 'react-i18next';
 
 type PracticeSessionData = {
   id: string;
@@ -31,6 +32,7 @@ export default function EditPractiseSessionPage({
   session,
   sections,
 }: EditPractiseSessionPageProps) {
+  const { t } = useTranslation();
   // Initialize with existing session data
   const initialSelectedItems: SelectedItem[] = session.sectionItems.map(item => ({
     sectionId: item.section.id,
@@ -93,11 +95,11 @@ export default function EditPractiseSessionPage({
     const newErrors: { name?: string; items?: string } = {};
 
     if (!name.trim()) {
-      newErrors.name = 'Session name is required';
+      newErrors.name = t('sessions.sessionNameRequired');
     }
 
     if (selectedItems.length === 0) {
-      newErrors.items = 'Please select at least one item in any section';
+      newErrors.items = t('sessions.selectAtLeastOne');
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -126,14 +128,14 @@ export default function EditPractiseSessionPage({
 
   return (
     <div className="mx-auto max-w-4xl p-6">
-      <h1 className="mb-6 text-3xl font-bold">Edit Practice Session</h1>
+      <h1 className="mb-6 text-3xl font-bold">{t('sessions.edit')}</h1>
 
       <Form method="post" onSubmit={handleSubmit}>
         {/* Name and Description */}
         <div className="mb-6 space-y-4">
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-              Session Name <span className="text-red-500">*</span>
+              {t('sessions.sessionName')} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -144,13 +146,13 @@ export default function EditPractiseSessionPage({
               className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                 errors.name ? 'border-red-500' : 'border-gray-300'
               }`}
-              placeholder="e.g., Morning practice session"
+              placeholder={t('sessions.sessionPlaceholder')}
             />
             {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
           </div>
           <div>
             <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-              Description (optional)
+              {t('sessions.descriptionOptional')}
             </label>
             <textarea
               id="description"
@@ -159,7 +161,7 @@ export default function EditPractiseSessionPage({
               onChange={e => setDescription(e.target.value)}
               rows={3}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Add any notes about this session..."
+              placeholder={t('sessions.descriptionPlaceholder')}
             />
           </div>
         </div>
@@ -209,13 +211,13 @@ export default function EditPractiseSessionPage({
               onClick={handleDeleteClick}
               className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
             >
-              Delete Practise Session
+              {t('sessions.delete')}
             </button>
             <button
               type="submit"
               className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
-              Update Practice Session
+              {t('sessions.update')}
             </button>
           </div>
         </div>
@@ -225,24 +227,22 @@ export default function EditPractiseSessionPage({
       {showDeleteDialog && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-            <h2 className="text-xl font-bold mb-4">Delete Practice Session</h2>
-            <p className="text-gray-700 mb-6">
-              Are you sure you want to delete this practice session? This action cannot be undone.
-            </p>
+            <h2 className="text-xl font-bold mb-4">{t('sessions.delete')}</h2>
+            <p className="text-gray-700 mb-6">{t('sessions.deleteConfirm')}</p>
             <div className="flex justify-end gap-3">
               <button
                 type="button"
                 onClick={handleDeleteCancel}
                 className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               >
-                Cancel
+                {t('common.cancel')}
               </button>
               <button
                 type="button"
                 onClick={handleDeleteConfirm}
                 className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
               >
-                Delete
+                {t('common.delete')}
               </button>
             </div>
           </div>

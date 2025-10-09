@@ -1,4 +1,5 @@
 import { Link } from '@remix-run/react';
+import { useTranslation } from 'react-i18next';
 
 type FeatureBoxProps = {
   imagePath: string;
@@ -24,23 +25,25 @@ function FeatureBox({ imagePath, title, href }: FeatureBoxProps) {
 }
 
 export default function HomePage() {
+  const { t } = useTranslation();
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <FeatureBox
           imagePath="/app/asssets/images/exercise-plan.png"
-          title="Design a practise session"
+          title={t('home.designSession')}
           href="/practise-sessions/new"
         />
         <FeatureBox
           imagePath="/app/asssets/images/piggybank.png"
-          title="Exercise bank"
+          title={t('home.exerciseBank')}
           href="/exercises"
         />
 
         <FeatureBox
           imagePath={'/app/asssets/images/exercise.png'}
-          title={'Create a new exercise'}
+          title={t('home.createExercise')}
           href={'/exercises/new'}
         />
       </div>

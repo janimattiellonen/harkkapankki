@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { ExerciseTypeOption } from '~/types';
 
 type ExerciseFiltersProps = {
@@ -24,6 +25,7 @@ export function ExerciseFilters({
   isParentIndeterminate,
   hasActiveFilters,
 }: ExerciseFiltersProps) {
+  const { t } = useTranslation();
   const showSearchWarning = searchTerm.length > 0 && searchTerm.length < 3;
   const searchInputRef = useRef<HTMLInputElement>(null);
   const wasFocusedRef = useRef(false);
@@ -49,14 +51,14 @@ export function ExerciseFilters({
   return (
     <div className="bg-white rounded-lg shadow p-6 mb-6">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold text-gray-900">Filter Exercises</h2>
+        <h2 className="text-lg font-semibold text-gray-900">{t('exercises.filterTitle')}</h2>
         {hasActiveFilters && (
           <button
             type="button"
             onClick={onClearFilters}
             className="text-sm text-blue-600 hover:text-blue-800"
           >
-            Clear filters
+            {t('exercises.clearFilters')}
           </button>
         )}
       </div>
@@ -65,7 +67,7 @@ export function ExerciseFilters({
         {/* Search Input */}
         <div>
           <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-2">
-            Search by title
+            {t('exercises.searchByTitle')}
           </label>
           <div className="relative">
             <input
@@ -80,12 +82,12 @@ export function ExerciseFilters({
               onBlur={() => {
                 wasFocusedRef.current = false;
               }}
-              placeholder="Type at least 3 characters..."
+              placeholder={t('exercises.searchPlaceholder')}
               className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             />
           </div>
           {showSearchWarning && (
-            <p className="mt-1 text-sm text-amber-600">Type at least 3 characters to search</p>
+            <p className="mt-1 text-sm text-amber-600">{t('exercises.searchWarning')}</p>
           )}
         </div>
 
@@ -95,7 +97,7 @@ export function ExerciseFilters({
           onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
           className="text-sm text-blue-600 hover:text-blue-800 font-medium"
         >
-          {showAdvancedFilters ? 'Less filters' : 'More filters'}
+          {showAdvancedFilters ? t('exercises.lessFilters') : t('exercises.moreFilters')}
         </button>
 
         {/* Exercise Type Checkboxes */}
@@ -104,7 +106,9 @@ export function ExerciseFilters({
             showAdvancedFilters ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
           }`}
         >
-          <div className="block text-sm font-medium text-gray-700 mb-2">Exercise types</div>
+          <div className="block text-sm font-medium text-gray-700 mb-2">
+            {t('exercises.exerciseTypes')}
+          </div>
           <div className="grid grid-cols-2 gap-4">
             {exerciseTypes.map(type => (
               <div key={type.id}>

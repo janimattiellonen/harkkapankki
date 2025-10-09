@@ -59,6 +59,9 @@ export async function fetchPracticeSessionById(id: string, language: string = ge
   return practiceSessionRepo.findPracticeSessionById(id, language);
 }
 
-export async function fetchPracticeSessionBySlug(slug: string, language: string = getDefaultLocale()) {
+export async function fetchPracticeSessionBySlug(
+  slug: string,
+  language: string = getDefaultLocale()
+) {
   return practiceSessionRepo.findPracticeSessionBySlug(slug, language);
 }

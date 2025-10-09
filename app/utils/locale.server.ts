@@ -1,3 +1,3 @@
 export function getDefaultLocale(): string {
-  return process.env.APP_LOCALE || 'en';
+  return process.env.APP_LOCALE || 'fi';
 }
