@@ -23,7 +23,7 @@ type ExerciseDetailPageProps = {
 
 export default function ExerciseDetailPage({ exercise }: ExerciseDetailPageProps) {
   const [MarkdownComponent, setMarkdownComponent] = useState<typeof MDEditor.Markdown | null>(null);
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   useEffect(() => {
     import('@uiw/react-md-editor').then(mod => {
@@ -81,7 +81,7 @@ export default function ExerciseDetailPage({ exercise }: ExerciseDetailPageProps
                 d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            {t('exercises.durationInMinutes', {duration: exercise.duration})}
+            {t('exercises.durationInMinutes', { duration: exercise.duration })}
           </div>
 
           {exercise.exerciseTypePath && (
@@ -94,14 +94,14 @@ export default function ExerciseDetailPage({ exercise }: ExerciseDetailPageProps
                   d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"
                 />
               </svg>
-              Type: {exercise.exerciseTypePath}
+              {t('exercises.type')}: {exercise.exerciseTypePath}
             </div>
           )}
         </div>
 
         {exercise.youtubeVideo && (
           <div className="mt-6">
-            <h2 className="text-xl font-semibold mb-4">Video Tutorial</h2>
+            <h2 className="text-xl font-semibold mb-4">{t('exercises.videoTutorial')}</h2>
             <a
               href={exercise.youtubeVideo}
               target="_blank"
@@ -111,7 +111,7 @@ export default function ExerciseDetailPage({ exercise }: ExerciseDetailPageProps
               <svg className="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
               </svg>
-              Watch Tutorial
+              {t('exercises.watchTutorial')}
             </a>
           </div>
         )}

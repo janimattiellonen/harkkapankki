@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import type { ExerciseTypeOption } from '~/types';
 import type MDEditor from '@uiw/react-md-editor';
 import { isValidYouTubeInput } from '~/utils/youtube';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 type SerializedExercise = Omit<Exercise, 'createdAt' | 'updatedAt'> & {
   createdAt: string;
@@ -24,7 +24,7 @@ type ExerciseFormProps = {
 
 export function ExerciseForm({
   exercise,
-  submitText = 'Save',
+  submitText,
   showSaveAndContinue = false,
   errors,
   defaultValues,
@@ -180,14 +180,14 @@ export function ExerciseForm({
 
         <div>
           <label htmlFor="exerciseTypeId" className="block text-sm font-medium text-gray-700">
-            Exercise Type
+            {t('exercises.exerciseType')}
           </label>
           <select
             id="exerciseTypeId"
             {...register('exerciseTypeId')}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
           >
-            <option value="">Select exercise type...</option>
+            <option value="">{t('exercises.selectExerciseType')}</option>
             {exerciseTypes.map(type => (
               <optgroup key={type.id} label={type.name}>
                 {/* Parent type as an option */}
@@ -246,7 +246,7 @@ export function ExerciseForm({
           {imageToRemove && (
             <>
               <input type="hidden" name="removeImage" value="true" />
-              <p className="mt-2 text-sm text-amber-600">Image will be removed when you save</p>
+              <p className="mt-2 text-sm text-amber-600">{t('exercises.imageWillBeRemoved')}</p>
             </>
           )}
         </div>
@@ -268,7 +268,7 @@ export function ExerciseForm({
 
         <div>
           <label htmlFor="duration" className="block text-sm font-medium text-gray-700">
-            Duration (minutes)
+            {t('exercises.duration')}
           </label>
           <input
             type="number"
@@ -291,14 +291,14 @@ export function ExerciseForm({
               value="true"
               className="rounded-md bg-gray-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
             >
-              Save and Continue
+              {t('exercises.saveAndContinue')}
             </button>
           )}
           <button
             type="submit"
             className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
           >
-            {submitText}
+            {submitText || t('common.save')}
           </button>
         </div>
       </form>
@@ -307,11 +307,10 @@ export function ExerciseForm({
       {showRemoveDialog && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Remove Image</h3>
-            <p className="text-gray-600 mb-6">
-              Are you sure you want to remove this image? The image file will remain on the server,
-              but it will no longer be associated with this exercise.
-            </p>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              {t('exercises.removeImage')}
+            </h3>
+            <p className="text-gray-600 mb-6">{t('exercises.removeImageConfirm')}</p>
             <div className="flex justify-end gap-3">
               <button
                 type="button"
@@ -321,7 +320,7 @@ export function ExerciseForm({
                 }}
                 className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
               >
-                Cancel
+                {t('common.cancel')}
               </button>
               <button
                 type="button"
@@ -330,7 +329,7 @@ export function ExerciseForm({
                 }}
                 className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
               >
-                Remove
+                {t('exercises.remove')}
               </button>
             </div>
           </div>

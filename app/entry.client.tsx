@@ -4,10 +4,10 @@
  * For more information, see https://remix.run/file-conventions/entry.client
  */
 
-import { RemixBrowser, useRouteLoaderData } from '@remix-run/react';
+import { RemixBrowser } from '@remix-run/react';
 import { startTransition, StrictMode } from 'react';
 import { hydrateRoot } from 'react-dom/client';
-import i18next from 'i18next';
+import { createInstance } from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { getInitialNamespaces } from 'remix-i18next/client';
@@ -19,7 +19,9 @@ async function hydrate() {
   const locale = initialData?.locale || 'fi';
   const translations = initialData?.translations || {};
 
-  await i18next
+  const i18n = createInstance();
+
+  await i18n
     .use(initReactI18next)
     .use(LanguageDetector)
     .init({
@@ -40,7 +42,7 @@ async function hydrate() {
   startTransition(() => {
     hydrateRoot(
       document,
-      <I18nextProvider i18n={i18next}>
+      <I18nextProvider i18n={i18n}>
         <StrictMode>
           <RemixBrowser />
         </StrictMode>

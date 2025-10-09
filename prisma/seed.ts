@@ -3,17 +3,6 @@ import { createHash } from 'crypto';
 
 const db = new PrismaClient();
 
-// Simple slugify function for seed data
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .trim()
-    .replace(/[\s_]+/g, '-')
-    .replace(/[^a-z0-9\-_]/g, '')
-    .replace(/-+/g, '-')
-    .replace(/^-+|-+$/g, '');
-}
-
 // Generate a deterministic UUID v5 based on a slug
 // This ensures exercise types always have the same UUID
 function generateDeterministicUUID(slug: string): string {
@@ -187,7 +176,6 @@ async function seed() {
         },
       });
     }
-
 
     // Create exercise type groups
     console.log('Creating exercise type groups...');

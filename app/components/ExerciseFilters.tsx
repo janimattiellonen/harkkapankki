@@ -106,7 +106,9 @@ export function ExerciseFilters({
             showAdvancedFilters ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
           }`}
         >
-          <div className="block text-sm font-medium text-gray-700 mb-2">{t('exercises.exerciseTypes')}</div>
+          <div className="block text-sm font-medium text-gray-700 mb-2">
+            {t('exercises.exerciseTypes')}
+          </div>
           <div className="grid grid-cols-2 gap-4">
             {exerciseTypes.map(type => (
               <div key={type.id}>

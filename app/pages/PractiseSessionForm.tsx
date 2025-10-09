@@ -4,12 +4,14 @@ import type { PractiseLength, SelectedItem, Section, SectionItem } from '~/types
 import { PractiseSessionLengthSelector } from '~/components/PractiseSessionLengthSelector';
 import { PractiseSessionSection } from '~/components/PractiseSessionSection';
 import { PractiseSessionSummary } from '~/components/PractiseSessionSummary';
+import { useTranslation } from 'react-i18next';
 
 type PractiseSessionFormProps = {
   sections: Section[];
 };
 
 export default function PractiseSessionForm({ sections }: PractiseSessionFormProps) {
+  const { t } = useTranslation();
   const [practiseLength, setPractiseLength] = useState<PractiseLength>(60);
   const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([]);
   const [name, setName] = useState<string>('');
@@ -63,11 +65,11 @@ export default function PractiseSessionForm({ sections }: PractiseSessionFormPro
     const newErrors: { name?: string; items?: string } = {};
 
     if (!name.trim()) {
-      newErrors.name = 'Session name is required';
+      newErrors.name = t('sessions.sessionNameRequired');
     }
 
     if (selectedItems.length === 0) {
-      newErrors.items = 'Please select at least one item in any section';
+      newErrors.items = t('sessions.selectAtLeastOne');
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -81,14 +83,14 @@ export default function PractiseSessionForm({ sections }: PractiseSessionFormPro
 
   return (
     <div className="mx-auto max-w-4xl p-6">
-      <h1 className="mb-6 text-3xl font-bold">Design a Practice Session</h1>
+      <h1 className="mb-6 text-3xl font-bold">{t('sessions.design')}</h1>
 
       <Form method="post" onSubmit={handleSubmit}>
         {/* Name and Description */}
         <div className="mb-6 space-y-4">
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-              Session Name <span className="text-red-500">*</span>
+              {t('sessions.sessionName')} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -99,13 +101,13 @@ export default function PractiseSessionForm({ sections }: PractiseSessionFormPro
               className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                 errors.name ? 'border-red-500' : 'border-gray-300'
               }`}
-              placeholder="e.g., Morning practice session"
+              placeholder={t('sessions.sessionPlaceholder')}
             />
             {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
           </div>
           <div>
             <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-              Description (optional)
+              {t('sessions.descriptionOptional')}
             </label>
             <textarea
               id="description"
@@ -114,7 +116,7 @@ export default function PractiseSessionForm({ sections }: PractiseSessionFormPro
               onChange={e => setDescription(e.target.value)}
               rows={3}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Add any notes about this session..."
+              placeholder={t('sessions.descriptionPlaceholder')}
             />
           </div>
         </div>
@@ -163,7 +165,7 @@ export default function PractiseSessionForm({ sections }: PractiseSessionFormPro
               type="submit"
               className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
-              Save Practice Session
+              {t('sessions.save')}
             </button>
           </div>
         </div>

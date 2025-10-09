@@ -1,4 +1,5 @@
 import { Link } from '@remix-run/react';
+import { useTranslation } from 'react-i18next';
 
 type SectionItem = {
   id: string;
@@ -33,6 +34,7 @@ type PractiseSessionDetailProps = {
 };
 
 export default function PractiseSessionDetail({ session }: PractiseSessionDetailProps) {
+  const { t } = useTranslation();
   const formatDate = (dateString: Date | string, locale: string = 'fi-FI') => {
     return new Date(dateString).toLocaleDateString(locale);
   };
@@ -71,15 +73,15 @@ export default function PractiseSessionDetail({ session }: PractiseSessionDetail
               d="M15 19l-7-7 7-7"
             />
           </svg>
-          Back to Practice Sessions
+          {t('sessions.backToSessions')}
         </Link>
         <div className="flex justify-between items-start mt-2">
-          <h1 className="text-3xl font-bold">{session.name || 'Untitled Session'}</h1>
+          <h1 className="text-3xl font-bold">{session.name || t('sessions.untitledSession')}</h1>
           <Link
             to={`/practise-sessions/${session.id}/edit`}
             className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
-            Edit Practise Session
+            {t('sessions.editSession')}
           </Link>
         </div>
         <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
@@ -92,7 +94,7 @@ export default function PractiseSessionDetail({ session }: PractiseSessionDetail
                 d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
               />
             </svg>
-            Created: {formatDate(session.createdAt)}
+            {t('sessions.created')}: {formatDate(session.createdAt)}
           </div>
           <div className="flex items-center">
             <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -103,7 +105,7 @@ export default function PractiseSessionDetail({ session }: PractiseSessionDetail
                 d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            {session.sessionLength} minutes
+            {session.sessionLength} {t('common.minutes')}
           </div>
         </div>
       </div>
@@ -111,16 +113,16 @@ export default function PractiseSessionDetail({ session }: PractiseSessionDetail
       {/* Description */}
       {session.description && (
         <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-          <h2 className="text-sm font-semibold text-gray-700 mb-2">Description</h2>
+          <h2 className="text-sm font-semibold text-gray-700 mb-2">{t('sessions.description')}</h2>
           <p className="text-gray-700 whitespace-pre-wrap">{session.description}</p>
         </div>
       )}
 
       {/* Sections */}
       <div className="space-y-6">
-        <h2 className="text-xl font-semibold">Session Plan</h2>
+        <h2 className="text-xl font-semibold">{t('sessions.sessionPlan')}</h2>
         {sections.length === 0 ? (
-          <p className="text-gray-500">No exercises added to this session.</p>
+          <p className="text-gray-500">{t('sessions.noExercisesAdded')}</p>
         ) : (
           sections.map(({ section, items }) => (
             <div key={section.id} className="border rounded-lg p-4">

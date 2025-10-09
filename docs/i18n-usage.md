@@ -9,6 +9,7 @@ This application uses remix-i18next with react-i18next for internationalization.
 ## Configuration
 
 The default language is set via the `APP_LOCALE` environment variable in `.env`:
+
 ```
 APP_LOCALE="fi"
 ```
@@ -16,6 +17,7 @@ APP_LOCALE="fi"
 ## Translation Files
 
 Translation files are located in `public/locales/`:
+
 - `public/locales/fi.json` - Finnish translations
 - `public/locales/en.json` - English translations
 
@@ -46,7 +48,7 @@ export default function MyComponent() {
 const { t } = useTranslation();
 
 // Translation: "Duration: {{minutes}} minutes"
-<p>{t('exercises.durationLabel', { minutes: 30 })}</p>
+<p>{t('exercises.durationLabel', { minutes: 30 })}</p>;
 ```
 
 ### Language Switcher
@@ -98,6 +100,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 2. Use the translation in your component with `t('your.translation.key')`
 
 Example:
+
 ```json
 // fi.json
 {
@@ -119,10 +122,12 @@ Example:
 ## Available Translation Keys
 
 See the full list of translation keys in:
+
 - `public/locales/fi.json`
 - `public/locales/en.json`
 
 Current namespaces:
+
 - `navigation` - Navigation menu items
 - `exercises` - Exercise-related translations
 - `sessions` - Practice session translations
