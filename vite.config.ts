@@ -12,6 +12,9 @@ export default defineConfig({
   server: {
     port: 5177,
   },
+  optimizeDeps: {
+    exclude: ['i18next-fs-backend'],
+  },
   plugins: [
     remix({
       future: {

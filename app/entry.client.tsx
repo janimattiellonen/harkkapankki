@@ -7,37 +7,36 @@
 import { RemixBrowser } from '@remix-run/react';
 import { startTransition, StrictMode } from 'react';
 import { hydrateRoot } from 'react-dom/client';
-import { createInstance } from 'i18next';
+import { createInstance, type Resource } from 'i18next';
 import { I18nextProvider, initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
 import { getInitialNamespaces } from 'remix-i18next/client';
 import i18nextOptions from './i18nextOptions';
 
+type I18nData = {
+  locale?: string;
+  translations?: Resource;
+};
+
+declare global {
+  interface Window {
+    __i18nData?: I18nData;
+  }
+}
+
 async function hydrate() {
-  // Get the initial data from the root loader
-  const initialData = window.__remixContext?.state?.loaderData?.root;
-  const locale = initialData?.locale || 'fi';
-  const translations = initialData?.translations || {};
+  // Get translations from the script tag injected by the server
+  const i18nData = window.__i18nData || {};
+  const locale = i18nData.locale || document.documentElement.lang || 'fi';
+  const translations = i18nData.translations || {};
 
   const i18n = createInstance();
 
-  await i18n
-    .use(initReactI18next)
-    .use(LanguageDetector)
-    .init({
-      ...i18nextOptions,
-      lng: locale,
-      ns: getInitialNamespaces(),
-      resources: {
-        [locale]: {
-          translation: translations,
-        },
-      },
-      detection: {
-        order: ['htmlTag'],
-        caches: [],
-      },
-    });
+  await i18n.use(initReactI18next).init({
+    ...i18nextOptions,
+    lng: locale,
+    ns: getInitialNamespaces(),
+    resources: translations,
+  });
 
   startTransition(() => {
     hydrateRoot(

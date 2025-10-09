@@ -18,20 +18,33 @@ export const links: LinksFunction = () => [
 export async function loader({ request }: LoaderFunctionArgs) {
   const locale = await i18next.getLocale(request);
 
-  // Load translations for the current locale
+  // Load translations from file
   const translationPath = resolve(`./public/locales/${locale}.json`);
-  const translationFile = await readFile(translationPath, 'utf-8');
-  const translations = JSON.parse(translationFile);
+  const translationContent = await readFile(translationPath, 'utf-8');
+  const translationData = JSON.parse(translationContent);
 
-  return json({
-    locale,
-    translations,
-  });
+  // Structure for i18next resources format
+  const translations = {
+    [locale]: {
+      translation: translationData,
+    },
+  };
+
+  return json({ locale, translations });
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const loaderData = useLoaderData<typeof loader>();
-  const locale = loaderData?.locale ?? 'fi';
+  // Try to get loader data, but provide fallback for error pages
+  let locale = 'fi';
+  let translations = {};
+  try {
+    const loaderData = useLoaderData<typeof loader>();
+    locale = loaderData?.locale ?? 'fi';
+    translations = loaderData?.translations ?? {};
+  } catch {
+    // useLoaderData might not be available in error boundaries
+    locale = 'fi';
+  }
 
   return (
     <html lang={locale}>
@@ -40,6 +53,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <Meta />
         <Links />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.__i18nData = ${JSON.stringify({ locale, translations })};`,
+          }}
+        />
       </head>
       <body data-color-mode="light">
         {children}
