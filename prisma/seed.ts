@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { createHash } from 'crypto';
 
 const db = new PrismaClient();
 
@@ -11,6 +12,27 @@ function slugify(text: string): string {
     .replace(/[^a-z0-9\-_]/g, '')
     .replace(/-+/g, '-')
     .replace(/^-+|-+$/g, '');
+}
+
+// Generate a deterministic UUID v5 based on a slug
+// This ensures exercise types always have the same UUID
+function generateDeterministicUUID(slug: string): string {
+  // Use a namespace UUID for this project
+  const namespace = '6ba7b810-9dad-11d1-80b4-00c04fd430c8'; // DNS namespace UUID
+
+  // Create SHA-1 hash of namespace + slug
+  const hash = createHash('sha1')
+    .update(namespace + slug)
+    .digest('hex');
+
+  // Format as UUID v5 (xxxxxxxx-xxxx-5xxx-yxxx-xxxxxxxxxxxx)
+  return [
+    hash.substring(0, 8),
+    hash.substring(8, 12),
+    '5' + hash.substring(13, 16), // Version 5
+    ((parseInt(hash.substring(16, 18), 16) & 0x3f) | 0x80).toString(16) + hash.substring(18, 20), // Variant bits
+    hash.substring(20, 32),
+  ].join('-');
 }
 
 type ExerciseTypeData = {
@@ -39,7 +61,7 @@ const exerciseTypes: ExerciseTypeData[] = [
   },
   { slug: 'sidearm', parentSlug: 'technique', translations: { fi: 'Kämmenheitto', en: 'Sidearm' } },
   { slug: 'putting', parentSlug: 'technique', translations: { fi: 'Puttaaminen', en: 'Putting' } },
-  { slug: 'driving', parentSlug: 'technique', translations: { fi: 'Ajaminen', en: 'Driving' } },
+  { slug: 'driving', parentSlug: 'technique', translations: { fi: 'Heittäminen', en: 'Driving' } },
 
   // Supplementary subcategories
   {
@@ -113,28 +135,33 @@ async function seed() {
     // Create exercise types with hierarchy
     const slugToId: Record<string, string> = {};
 
+    // Generate deterministic UUIDs for all types first
+    for (const type of exerciseTypes) {
+      slugToId[type.slug] = generateDeterministicUUID(type.slug);
+    }
+
     // First create all types without parents
     for (const type of exerciseTypes) {
       if (!type.parentSlug) {
-        const created = await db.exerciseType.create({
+        await db.exerciseType.create({
           data: {
+            id: slugToId[type.slug],
             slug: type.slug,
           },
         });
-        slugToId[type.slug] = created.id;
       }
     }
 
     // Then create types with parents
     for (const type of exerciseTypes) {
       if (type.parentSlug) {
-        const created = await db.exerciseType.create({
+        await db.exerciseType.create({
           data: {
+            id: slugToId[type.slug],
             slug: type.slug,
             parentId: slugToId[type.parentSlug],
           },
         });
-        slugToId[type.slug] = created.id;
       }
     }
 
@@ -161,46 +188,6 @@ async function seed() {
       });
     }
 
-    // Create sample exercises
-    const exercises = [
-      {
-        name: 'Putting Practice - Basic',
-        slug: slugify('Putting Practice - Basic'),
-        description: 'Basic putting practice from different distances',
-        content:
-          '1. Set up markers at 3m, 5m, and 7m\n2. Practice 10 putts from each distance\n3. Focus on consistent form and follow-through',
-        duration: 15,
-        youtubeVideo: 'https://youtube.com/watch?example-putting',
-        exerciseTypeId: slugToId['putting'],
-      },
-      {
-        name: 'Approach Shot Warmup',
-        slug: slugify('Approach Shot Warmup'),
-        description: 'Warming up approach shots with different discs',
-        content:
-          '1. Practice approach shots from 20-30m\n2. Use both forehand and backhand throws\n3. Focus on landing zone accuracy',
-        duration: 20,
-        youtubeVideo: null,
-        exerciseTypeId: slugToId['warm-up'],
-      },
-      {
-        name: 'Drive Form Practice',
-        slug: slugify('Drive Form Practice'),
-        description: 'Working on proper drive form and technique',
-        content:
-          '1. Start with standstill drives\n2. Progress to x-step technique\n3. Focus on reach back and follow through',
-        duration: 25,
-        youtubeVideo: 'https://youtube.com/watch?example-drive-form',
-        exerciseTypeId: slugToId['backhand'],
-      },
-    ];
-
-    for (const exercise of exercises) {
-      const created = await db.exercise.create({
-        data: exercise,
-      });
-      console.log(`Created exercise: ${created.name}`);
-    }
 
     // Create exercise type groups
     console.log('Creating exercise type groups...');
@@ -328,9 +315,13 @@ async function seed() {
         // Warm-up section
         { sectionId: warmUpSection.id, exerciseTypeId: slugToId['motor-skills'] },
         { sectionId: warmUpSection.id, exerciseTypeId: slugToId['muscle-condition'] },
+        { sectionId: warmUpSection.id, exerciseTypeId: slugToId['strength'] },
         // Technique section
         { sectionId: techniqueSection.id, exerciseTypeId: slugToId['putting'] },
         { sectionId: techniqueSection.id, exerciseTypeId: slugToId['driving'] },
+        { sectionId: techniqueSection.id, exerciseTypeId: slugToId['backhand'] },
+        { sectionId: techniqueSection.id, exerciseTypeId: slugToId['sidearm'] },
+
         // Closing section
         { sectionId: closingSection.id, exerciseTypeId: slugToId['closing'] },
       ],

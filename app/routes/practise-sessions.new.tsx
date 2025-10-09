@@ -5,13 +5,14 @@ import PractiseSessionForm from '~/pages/PractiseSessionForm';
 import { fetchSectionsForPractiseSession } from '~/services/sections.server';
 import { createPracticeSession } from '~/services/practiceSessions.server';
 import type { SelectedItem } from '~/types';
+import { getDefaultLocale } from '~/utils/locale.server';
 
 export const meta: MetaFunction = () => {
   return [{ title: 'Design Practice Session - Harkkapankki' }];
 };
 
 export async function loader() {
-  const sections = await fetchSectionsForPractiseSession('en');
+  const sections = await fetchSectionsForPractiseSession(getDefaultLocale());
   return json({ sections });
 }
 

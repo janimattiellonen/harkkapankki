@@ -3,6 +3,7 @@ import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import PractiseSessionDetail from '~/pages/PractiseSessionDetail';
 import { fetchPracticeSessionBySlug } from '~/services/practiceSessions.server';
+import { getDefaultLocale } from '~/utils/locale.server';
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   if (!data?.session) {
@@ -12,7 +13,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 };
 
 export async function loader({ params }: LoaderFunctionArgs) {
-  const session = await fetchPracticeSessionBySlug(params.slug!, 'en');
+  const session = await fetchPracticeSessionBySlug(params.slug!, getDefaultLocale());
 
   if (!session) {
     throw new Response('Practice session not found', { status: 404 });

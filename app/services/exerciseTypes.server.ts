@@ -1,5 +1,6 @@
 import * as exerciseTypeRepo from '~/repositories/exerciseType.server';
 import type { ExerciseTypeOption } from '~/types';
+import { getDefaultLocale } from '~/utils/locale.server';
 
 type ExerciseTypeWithPath = {
   id: string;
@@ -53,7 +54,7 @@ export async function fetchExerciseTypePath(
 }
 
 export async function fetchExerciseTypeOptions(
-  language: string = 'en',
+  language: string = getDefaultLocale(),
   groupSlug?: string
 ): Promise<ExerciseTypeOption[]> {
   const types = await exerciseTypeRepo.findRootExerciseTypesWithChildren(language, groupSlug);

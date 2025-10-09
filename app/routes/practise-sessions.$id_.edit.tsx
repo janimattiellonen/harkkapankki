@@ -4,6 +4,7 @@ import { useLoaderData } from '@remix-run/react';
 import EditPractiseSessionPage from '~/pages/EditPractiseSessionPage';
 import { fetchPracticeSessionById } from '~/services/practiceSessions.server';
 import { fetchSectionsForPractiseSession } from '~/services/sections.server';
+import { getDefaultLocale } from '~/utils/locale.server';
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   if (!data?.session) {
@@ -14,8 +15,8 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const [session, sections] = await Promise.all([
-    fetchPracticeSessionById(params.id!, 'en'),
-    fetchSectionsForPractiseSession('en'),
+    fetchPracticeSessionById(params.id!, getDefaultLocale()),
+    fetchSectionsForPractiseSession(getDefaultLocale()),
   ]);
 
   if (!session) {

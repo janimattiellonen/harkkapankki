@@ -12,11 +12,12 @@ import { fetchExerciseById, updateExercise, deleteExercise } from '~/services/ex
 import { fetchExerciseTypeOptions } from '~/services/exerciseTypes.server';
 import { parseData } from '~/utils/validation';
 import { parseFormData } from '~/utils/upload.server';
+import { getDefaultLocale } from '~/utils/locale.server';
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const [exercise, exerciseTypes] = await Promise.all([
-    fetchExerciseById(params.id!, 'en'),
-    fetchExerciseTypeOptions('en', 'exercise-form'),
+    fetchExerciseById(params.id!, getDefaultLocale()),
+    fetchExerciseTypeOptions(getDefaultLocale(), 'exercise-form'),
   ]);
 
   if (!exercise) {
@@ -95,7 +96,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const newImage = typeof imageValue === 'string' && imageValue ? imageValue : null;
 
   // Fetch existing exercise to preserve image if not updated or removed
-  const existingExercise = await fetchExerciseById(params.id!, 'en');
+  const existingExercise = await fetchExerciseById(params.id!, getDefaultLocale());
 
   if (!existingExercise) {
     throw new Response('Exercise not found', { status: 404 });
