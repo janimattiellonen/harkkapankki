@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Form, useSubmit } from '@remix-run/react';
+import { useSubmit } from '@remix-run/react';
 import { ExerciseForm } from '~/components/ExerciseForm';
 import type { Exercise } from '@prisma/client';
 import type { ExerciseTypeOption } from '~/types';
@@ -56,16 +56,14 @@ export default function EditExercisePage({
         </div>
       )}
 
-      <Form method="post">
-        <ExerciseForm
-          exercise={exercise}
-          submitText={t('exercises.updateExercise')}
-          showSaveAndContinue={true}
-          errors={actionData && 'errors' in actionData ? actionData.errors : undefined}
-          defaultValues={actionData && 'values' in actionData ? actionData.values : undefined}
-          exerciseTypes={exerciseTypes}
-        />
-      </Form>
+      <ExerciseForm
+        exercise={exercise}
+        submitText={t('exercises.updateExercise')}
+        showSaveAndContinue={true}
+        errors={actionData && 'errors' in actionData ? actionData.errors : undefined}
+        defaultValues={actionData && 'values' in actionData ? actionData.values : undefined}
+        exerciseTypes={exerciseTypes}
+      />
 
       {/* Delete Button */}
       <div className="mt-6 pt-6 border-t border-gray-200">
