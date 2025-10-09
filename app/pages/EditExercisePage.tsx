@@ -3,6 +3,7 @@ import { Form, useSubmit } from '@remix-run/react';
 import { ExerciseForm } from '~/components/ExerciseForm';
 import type { Exercise } from '@prisma/client';
 import type { ExerciseTypeOption } from '~/types';
+import {useTranslation} from 'react-i18next';
 
 type SerializedExercise = Omit<Exercise, 'createdAt' | 'updatedAt'> & {
   createdAt: string;
@@ -27,6 +28,7 @@ export default function EditExercisePage({
 }: EditExercisePageProps) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const submit = useSubmit();
+  const {t} = useTranslation();
 
   const handleDeleteClick = () => {
     setShowDeleteDialog(true);
@@ -45,7 +47,7 @@ export default function EditExercisePage({
 
   return (
     <div className="mx-auto max-w-3xl p-6">
-      <h1 className="mb-6 text-2xl font-bold">Edit Exercise</h1>
+      <h1 className="mb-6 text-2xl font-bold">{t('exercises.edit')}</h1>
 
       {/* Success message for update */}
       {actionData && 'success' in actionData && actionData.success && (

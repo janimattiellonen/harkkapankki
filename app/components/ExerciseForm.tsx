@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import type { ExerciseTypeOption } from '~/types';
 import type MDEditor from '@uiw/react-md-editor';
 import { isValidYouTubeInput } from '~/utils/youtube';
+import {useTranslation} from 'react-i18next';
 
 type SerializedExercise = Omit<Exercise, 'createdAt' | 'updatedAt'> & {
   createdAt: string;
@@ -32,6 +33,7 @@ export function ExerciseForm({
   const [MDEditorComponent, setMDEditorComponent] = useState<typeof MDEditor | null>(null);
   const [showRemoveDialog, setShowRemoveDialog] = useState(false);
   const [imageToRemove, setImageToRemove] = useState<string | null>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     // Dynamically import MDEditor only on the client side
@@ -85,7 +87,7 @@ export function ExerciseForm({
       <form onSubmit={onSubmit} method="post" encType="multipart/form-data" className="space-y-4">
         <div>
           <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-            Name
+            {t('exercises.name')}
           </label>
           <input
             type="text"
@@ -100,7 +102,7 @@ export function ExerciseForm({
 
         <div>
           <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-            Description
+            {t('exercises.description')}
           </label>
           <textarea
             id="description"
@@ -115,7 +117,7 @@ export function ExerciseForm({
 
         <div>
           <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-2">
-            Content
+            {t('exercises.content')}
           </label>
           <Controller
             name="content"
@@ -207,7 +209,7 @@ export function ExerciseForm({
 
         <div>
           <label htmlFor="image" className="block text-sm font-medium text-gray-700">
-            Image
+            {t('exercises.image')}
           </label>
           <input
             type="file"
@@ -237,7 +239,7 @@ export function ExerciseForm({
                 }}
                 className="text-sm text-red-600 hover:text-red-800 font-medium"
               >
-                Remove
+                {t('exercises.remove')}
               </button>
             </div>
           )}
@@ -251,7 +253,7 @@ export function ExerciseForm({
 
         <div>
           <label htmlFor="youtubeVideo" className="block text-sm font-medium text-gray-700">
-            YouTube Video URL
+            {t('exercises.youtubeVideoUrl')}
           </label>
           <input
             type="text"

@@ -1,6 +1,9 @@
 import { Link } from '@remix-run/react';
+import { useTranslation } from 'react-i18next';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  const { t } = useTranslation();
+
   return (
     <div className="min-h-screen bg-gray-50">
       <nav className="bg-white shadow-sm">
@@ -15,13 +18,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   to="/exercises"
                   className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md"
                 >
-                  Exercises
+                  {t('navigation.exercises')}
                 </Link>
                 <Link
                   to="/practise-sessions"
                   className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md"
                 >
-                  Practise sessions
+                  {t('navigation.sessions')}
                 </Link>
               </div>
             </div>

@@ -1,0 +1,72 @@
+{
+  "navigation": {
+    "home": "Etusivu",
+    "exercises": "Harjoitteet",
+    "sessions": "Harjoituskerrat",
+    "newExercise": "Uusi harjoite",
+    "newSession": "Uusi harjoituskerta"
+  },
+  "home": {
+    "designSession": "Suunnittele harjoituskerta",
+    "exerciseBank": "Harjoitepankki",
+    "createExercise": "Luo uusi harjoite"
+  },
+  "exercises": {
+    "title": "Harjoitukset",
+    "new": "Uusi harjoitus",
+    "edit": "Muokkaa harjoitusta",
+    "delete": "Poista harjoite",
+    "deleteConfirm": "Haluatko varmasti poistaa tämän harjoitteen?",
+    "name": "Nimi",
+    "description": "Kuvaus",
+    "content": "Sisältö",
+    "durationInMinutes": "Kesto {{duration}} (minuuttia)",
+    "type": "Tyyppi",
+    "image": "Kuva",
+    "youtubeVideo": "YouTube-video",
+    "youtubeVideoUrl": "YouTube-videon osoite",
+    "notFound": "Harjoitetta ei löytynyt",
+    "deleteSuccess": "Harjoite poistettu onnistuneesti",
+    "deleteError": "Harjoitteen poistaminen epäonnistui",
+    "filterTitle": "Suodata harjoitteita",
+    "clearFilters": "Tyhjennä suodattimet",
+    "clearAllFilters": "Tyhjennä kaikki suodattimet",
+    "searchByTitle": "Hae nimellä",
+    "searchPlaceholder": "Kirjoita vähintään 3 merkkiä...",
+    "searchWarning": "Kirjoita vähintään 3 merkkiä hakeaksesi",
+    "moreFilters": "Lisää suodattimia",
+    "lessFilters": "Vähemmän suodattimia",
+    "exerciseTypes": "Harjoitetyypit",
+    "noExercisesFound": "Harjoitteita ei löytynyt",
+    "adjustFilters": "Kokeile muuttaa suodattimia löytääksesi etsimäsi.",
+    "min": "min"
+  },
+  "sessions": {
+    "title": "Harjoituskerrat",
+    "new": "Uusi harjoituskerta",
+    "edit": "Muokkaa harjoituskertaa",
+    "name": "Nimi",
+    "description": "Kuvaus",
+    "length": "Pituus",
+    "notFound": "Harjoituskertaa ei löytynyt"
+  },
+  "common": {
+    "save": "Tallenna",
+    "cancel": "Peruuta",
+    "delete": "Poista",
+    "edit": "Muokkaa",
+    "back": "Takaisin",
+    "loading": "Ladataan...",
+    "search": "Hae",
+    "filter": "Suodata",
+    "minutes": "minuuttia",
+    "yes": "Kyllä",
+    "no": "Ei"
+  },
+  "form": {
+    "required": "Tämä kenttä on pakollinen",
+    "invalidEmail": "Virheellinen sähköpostiosoite",
+    "tooShort": "Liian lyhyt",
+    "tooLong": "Liian pitkä"
+  }
+}

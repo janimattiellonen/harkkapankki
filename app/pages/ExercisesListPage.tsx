@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigation, useNavigate } from '@remix-run/react';
+import { useTranslation } from 'react-i18next';
 import { ExerciseFilters as ExerciseFiltersComponent } from '~/components/ExerciseFilters';
 import { useExerciseFilters } from '~/hooks/useExerciseFilters';
 import type { ExerciseWithTypePath } from '~/services/exercises.server';
@@ -21,6 +22,7 @@ export default function ExercisesListPage({
   exerciseTypes,
   deleted,
 }: ExercisesListPageProps) {
+  const { t } = useTranslation();
   const navigation = useNavigation();
   const navigate = useNavigate();
   const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
@@ -54,12 +56,12 @@ export default function ExercisesListPage({
   return (
     <div className="p-6">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Training Exercises</h1>
+        <h1 className="text-2xl font-bold">{t('exercises.title')}</h1>
         <Link
           to="/exercises/new"
           className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         >
-          New Exercise
+          {t('exercises.new')}
         </Link>
       </div>
 
@@ -67,7 +69,7 @@ export default function ExercisesListPage({
       {showDeleteSuccess && (
         <div className="mb-4 rounded-md bg-green-50 p-4">
           <div className="flex items-center justify-between">
-            <p className="text-sm text-green-800">Exercise deleted successfully</p>
+            <p className="text-sm text-green-800">{t('exercises.deleteSuccess')}</p>
             <button
               onClick={() => setShowDeleteSuccess(false)}
               className="text-green-600 hover:text-green-800"
@@ -140,9 +142,9 @@ export default function ExercisesListPage({
                 d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <h3 className="mt-2 text-sm font-medium text-gray-900">No exercises found</h3>
+            <h3 className="mt-2 text-sm font-medium text-gray-900">{t('exercises.noExercisesFound')}</h3>
             <p className="mt-1 text-sm text-gray-500">
-              Try adjusting your filters to find what you&apos;re looking for.
+              {t('exercises.adjustFilters')}
             </p>
             {hasActiveFilters && (
               <div className="mt-6">
@@ -151,7 +153,7 @@ export default function ExercisesListPage({
                   onClick={clearFilters}
                   className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
-                  Clear all filters
+                  {t('exercises.clearAllFilters')}
                 </button>
               </div>
             )}
@@ -205,7 +207,7 @@ export default function ExercisesListPage({
                             d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                           />
                         </svg>
-                        {exercise.duration} min
+                        {exercise.duration} {t('exercises.min')}
                       </div>
                     )}
                   </div>

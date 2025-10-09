@@ -1,0 +1,72 @@
+{
+  "navigation": {
+    "home": "Home",
+    "exercises": "Exercises",
+    "sessions": "Practice Sessions",
+    "newExercise": "New Exercise",
+    "newSession": "New Practice Session"
+  },
+  "home": {
+    "designSession": "Design a practice session",
+    "exerciseBank": "Exercise bank",
+    "createExercise": "Create a new exercise"
+  },
+  "exercises": {
+    "title": "Exercises",
+    "new": "New Exercise",
+    "edit": "Edit Exercise",
+    "delete": "Delete Exercise",
+    "deleteConfirm": "Are you sure you want to delete this exercise?",
+    "name": "Name",
+    "description": "Description",
+    "content": "Content",
+    "durationInMinutes": "Duration {{duration}} (minutes)",
+    "type": "Type",
+    "image": "Image",
+    "youtubeVideo": "YouTube Video",
+    "youtubeVideoUrl": "YouTube-video url",
+    "notFound": "Exercise not found",
+    "deleteSuccess": "Exercise deleted successfully",
+    "deleteError": "Failed to delete exercise",
+    "filterTitle": "Filter Exercises",
+    "clearFilters": "Clear filters",
+    "clearAllFilters": "Clear all filters",
+    "searchByTitle": "Search by title",
+    "searchPlaceholder": "Type at least 3 characters...",
+    "searchWarning": "Type at least 3 characters to search",
+    "moreFilters": "More filters",
+    "lessFilters": "Less filters",
+    "exerciseTypes": "Exercise types",
+    "noExercisesFound": "No exercises found",
+    "adjustFilters": "Try adjusting your filters to find what you're looking for.",
+    "min": "min"
+  },
+  "sessions": {
+    "title": "Practice Sessions",
+    "new": "New Practice Session",
+    "edit": "Edit Practice Session",
+    "name": "Name",
+    "description": "Description",
+    "length": "Length",
+    "notFound": "Practice session not found"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "loading": "Loading...",
+    "search": "Search",
+    "filter": "Filter",
+    "minutes": "minutes",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "form": {
+    "required": "This field is required",
+    "invalidEmail": "Invalid email address",
+    "tooShort": "Too short",
+    "tooLong": "Too long"
+  }
+}

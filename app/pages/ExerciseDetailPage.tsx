@@ -2,6 +2,7 @@ import { Link } from '@remix-run/react';
 import { useEffect, useState } from 'react';
 import type MDEditor from '@uiw/react-md-editor';
 import { rehypeYouTube } from '~/utils/rehype-youtube';
+import { useTranslation } from 'react-i18next';
 
 type Exercise = {
   id: string;
@@ -22,6 +23,7 @@ type ExerciseDetailPageProps = {
 
 export default function ExerciseDetailPage({ exercise }: ExerciseDetailPageProps) {
   const [MarkdownComponent, setMarkdownComponent] = useState<typeof MDEditor.Markdown | null>(null);
+  const {t} = useTranslation();
 
   useEffect(() => {
     import('@uiw/react-md-editor').then(mod => {
@@ -44,7 +46,7 @@ export default function ExerciseDetailPage({ exercise }: ExerciseDetailPageProps
           to={`/exercises/${exercise.id}/edit`}
           className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
         >
-          Edit Exercise
+          {t('exercises.edit')}
         </Link>
       </div>
 
@@ -61,7 +63,6 @@ export default function ExerciseDetailPage({ exercise }: ExerciseDetailPageProps
       )}
 
       <div className="bg-white shadow rounded-lg p-6">
-        <h2 className="text-xl font-semibold mb-4">Instructions</h2>
         <div className="[&_ul]:list-disc [&_ul]:ml-6 [&_ol]:list-decimal [&_ol]:ml-6 [&_li]:mb-2">
           {MarkdownComponent ? (
             <MarkdownComponent source={exercise.content} rehypePlugins={[rehypeYouTube]} />
@@ -80,7 +81,7 @@ export default function ExerciseDetailPage({ exercise }: ExerciseDetailPageProps
                 d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            Duration: {exercise.duration} minutes
+            {t('exercises.durationInMinutes', {duration: exercise.duration})}
           </div>
 
           {exercise.exerciseTypePath && (
