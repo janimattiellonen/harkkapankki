@@ -6,9 +6,10 @@ import { createExercise } from '~/services/exercises.server';
 import { fetchExerciseTypeOptions } from '~/services/exerciseTypes.server';
 import { parseData } from '~/utils/validation';
 import { parseFormData } from '~/utils/upload.server';
+import { getDefaultLocale } from '~/utils/locale.server';
 
 export async function loader() {
-  const exerciseTypes = await fetchExerciseTypeOptions('en', 'exercise-form');
+  const exerciseTypes = await fetchExerciseTypeOptions(getDefaultLocale(), 'exercise-form');
   return json({ exerciseTypes });
 }
 

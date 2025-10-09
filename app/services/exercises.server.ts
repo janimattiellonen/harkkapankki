@@ -2,6 +2,7 @@ import type { Exercise } from '@prisma/client';
 import * as exerciseRepo from '~/repositories/exercise.server';
 import { fetchExerciseTypePath } from './exerciseTypes.server';
 import { slugify, makeUniqueSlug } from '~/utils/slugify';
+import { getDefaultLocale } from '~/utils/locale.server';
 
 export type ExerciseInput = {
   name: string;
@@ -23,7 +24,7 @@ export type ExerciseFilters = {
 };
 
 export async function fetchExercises(
-  language: string = 'en',
+  language: string = getDefaultLocale(),
   filters?: ExerciseFilters
 ): Promise<ExerciseWithTypePath[]> {
   const where: exerciseRepo.ExerciseWhereInput = {};
@@ -61,7 +62,7 @@ export async function fetchExercises(
 
 export async function fetchExerciseById(
   id: string,
-  language: string = 'en'
+  language: string = getDefaultLocale()
 ): Promise<ExerciseWithTypePath | null> {
   const exercise = await exerciseRepo.findExerciseById(id);
 
@@ -80,7 +81,7 @@ export async function fetchExerciseById(
 
 export async function fetchExerciseBySlug(
   slug: string,
-  language: string = 'en'
+  language: string = getDefaultLocale()
 ): Promise<ExerciseWithTypePath | null> {
   const exercise = await exerciseRepo.findExerciseBySlug(slug);
 

@@ -3,6 +3,7 @@ import { useLoaderData } from '@remix-run/react';
 import ExercisesListPage from '~/pages/ExercisesListPage';
 import { fetchExercises, type ExerciseFilters } from '~/services/exercises.server';
 import { fetchExerciseTypeOptions } from '~/services/exerciseTypes.server';
+import { getDefaultLocale } from '~/utils/locale.server';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
@@ -16,8 +17,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   };
 
   const [exercises, exerciseTypes] = await Promise.all([
-    fetchExercises('en', filters),
-    fetchExerciseTypeOptions('en', 'exercise-form'),
+    fetchExercises(getDefaultLocale(), filters),
+    fetchExerciseTypeOptions(getDefaultLocale(), 'exercise-form'),
   ]);
 
   return json({ exercises, exerciseTypes, deleted });

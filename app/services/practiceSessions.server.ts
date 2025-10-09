@@ -1,6 +1,7 @@
 import * as practiceSessionRepo from '~/repositories/practiceSession.server';
 import type { SelectedItem } from '~/types';
 import { slugify, makeUniqueSlug } from '~/utils/slugify';
+import { getDefaultLocale } from '~/utils/locale.server';
 
 type CreatePracticeSessionInput = {
   name?: string;
@@ -54,10 +55,10 @@ export async function fetchPracticeSessions() {
   return practiceSessionRepo.findAllPracticeSessions();
 }
 
-export async function fetchPracticeSessionById(id: string, language: string = 'en') {
+export async function fetchPracticeSessionById(id: string, language: string = getDefaultLocale()) {
   return practiceSessionRepo.findPracticeSessionById(id, language);
 }
 
-export async function fetchPracticeSessionBySlug(slug: string, language: string = 'en') {
+export async function fetchPracticeSessionBySlug(slug: string, language: string = getDefaultLocale()) {
   return practiceSessionRepo.findPracticeSessionBySlug(slug, language);
 }
