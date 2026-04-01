@@ -135,18 +135,93 @@ export default function PractiseSessionDetail({ session }: PractiseSessionDetail
                 {section.translations[0]?.name || section.slug}
               </h3>
               <ul className="space-y-2">
-                {items.map(item => (
-                  <li key={item.id} className="flex items-start p-3 bg-gray-50 rounded-md">
-                    <span className="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-medium mr-3">
-                      {item.order}
-                    </span>
-                    <span className="text-gray-700">
-                      {item.exercise
-                        ? `${item.exerciseType.translations[0]?.name || item.exerciseType.id}: ${item.exercise.name}`
-                        : item.exerciseType.translations[0]?.name || item.exerciseType.id}
-                    </span>
-                  </li>
-                ))}
+                {(() => {
+                  // Group items by exercise type
+                  const groupedByType: Array<{
+                    typeName: string;
+                    items: SectionItem[];
+                  }> = [];
+                  for (const item of items) {
+                    const typeName =
+                      item.exerciseType.translations[0]?.name || item.exerciseType.id;
+                    const existing = groupedByType.find(g => g.typeName === typeName);
+                    if (existing) {
+                      existing.items.push(item);
+                    } else {
+                      groupedByType.push({ typeName, items: [item] });
+                    }
+                  }
+
+                  return groupedByType.map(group => {
+                    const exercisesInGroup = group.items.filter(i => i.exercise);
+
+                    // No exercises linked - show type name only
+                    if (exercisesInGroup.length === 0) {
+                      return group.items.map(item => (
+                        <li
+                          key={item.id}
+                          className="flex items-start p-3 bg-gray-50 rounded-md"
+                        >
+                          <span className="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-medium mr-3">
+                            {item.order}
+                          </span>
+                          <span className="text-gray-700">{group.typeName}</span>
+                        </li>
+                      ));
+                    }
+
+                    // Single exercise with same name as type - show once
+                    if (
+                      exercisesInGroup.length === 1 &&
+                      exercisesInGroup[0].exercise!.name === group.typeName
+                    ) {
+                      return (
+                        <li
+                          key={exercisesInGroup[0].id}
+                          className="flex items-start p-3 bg-gray-50 rounded-md"
+                        >
+                          <span className="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-medium mr-3">
+                            {exercisesInGroup[0].order}
+                          </span>
+                          <Link
+                            to={`/exercises/${exercisesInGroup[0].exercise!.slug}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:text-blue-800 hover:underline"
+                          >
+                            {group.typeName}
+                          </Link>
+                        </li>
+                      );
+                    }
+
+                    // Multiple exercises or single with different name - group under type
+                    return (
+                      <li key={group.typeName} className="p-3 bg-gray-50 rounded-md">
+                        <div className="font-medium text-gray-700 mb-2">
+                          {group.typeName}
+                        </div>
+                        <ul className="ml-4 space-y-1">
+                          {exercisesInGroup.map(item => (
+                            <li key={item.id} className="flex items-start">
+                              <span className="flex-shrink-0 w-5 h-5 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-medium mr-2">
+                                {item.order}
+                              </span>
+                              <Link
+                                to={`/exercises/${item.exercise!.slug}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 hover:text-blue-800 hover:underline"
+                              >
+                                {item.exercise!.name}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </li>
+                    );
+                  });
+                })()}
               </ul>
             </div>
           ))
