@@ -40,7 +40,7 @@ const exerciseTypes: ExerciseTypeData[] = [
     slug: 'supplementary',
     translations: { fi: 'Oheisharjoitteet', en: 'Supplementary exercises' },
   },
-  { slug: 'games', translations: { fi: 'Pelit ja haasteet', en: 'Games, plays and challenges' } },
+  { slug: 'games', translations: { fi: 'Pelit, leikit ja haasteet', en: 'Games, plays and challenges' } },
 
   // Technique subcategories
   {
