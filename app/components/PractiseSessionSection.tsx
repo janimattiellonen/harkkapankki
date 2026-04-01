@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import type { Section, SectionItem, PractiseLength } from '~/types';
+import type { Section, PractiseLength, SelectedItem } from '~/types';
+import { useTranslation } from 'react-i18next';
 
 type PractiseSessionSectionProps = {
   section: Section;
   practiseLength: PractiseLength;
-  selectedItems: SectionItem[];
-  onAddItem: (item: SectionItem) => void;
-  onRemoveItem: (itemValue: string) => void;
+  selectedItems: SelectedItem[];
+  onAddItem: (item: SelectedItem) => void;
+  onRemoveItem: (itemValue: string, exerciseId?: string) => void;
 };
 
 export function PractiseSessionSection({
@@ -16,25 +17,80 @@ export function PractiseSessionSection({
   onAddItem,
   onRemoveItem,
 }: PractiseSessionSectionProps) {
-  const [selectedValue, setSelectedValue] = useState<string>('');
+  const { t } = useTranslation();
+  const [selectedTypeValue, setSelectedTypeValue] = useState<string>('');
+  const [selectedExerciseId, setSelectedExerciseId] = useState<string>('');
 
   // Get section duration based on practise length
   const duration =
     typeof section.duration === 'number' ? section.duration : section.duration[practiseLength];
 
-  // Get available items (exclude already selected)
-  const availableItems = section.items.filter(
-    item => !selectedItems.some(selected => selected.value === item.value)
-  );
+  // Find the currently selected exercise type
+  const selectedType = section.items.find(i => i.value === selectedTypeValue);
+  const hasExercises = selectedType?.exercises && selectedType.exercises.length > 0;
+
+  // Get available exercise types (exclude already selected for types without exercises)
+  const availableTypes = section.items.filter(item => {
+    if (item.exercises && item.exercises.length > 0) {
+      // Types with exercises: always show if there are unselected exercises
+      const selectedExerciseIds = selectedItems
+        .filter(sel => sel.itemValue === item.value && sel.exerciseId)
+        .map(sel => sel.exerciseId);
+      return item.exercises.some(ex => !selectedExerciseIds.includes(ex.value));
+    }
+    // Types without exercises: hide if already selected
+    return !selectedItems.some(sel => sel.itemValue === item.value);
+  });
+
+  // Get available exercises for selected type (exclude already selected)
+  const availableExercises = hasExercises
+    ? selectedType.exercises!.filter(ex => !selectedItems.some(sel => sel.exerciseId === ex.value))
+    : [];
+
+  const handleTypeChange = (value: string) => {
+    setSelectedTypeValue(value);
+    setSelectedExerciseId('');
+  };
 
   const handleAdd = () => {
-    if (!selectedValue) return;
+    if (!selectedTypeValue) return;
 
-    const item = section.items.find(i => i.value === selectedValue);
-    if (item) {
-      onAddItem(item);
-      setSelectedValue('');
+    if (hasExercises) {
+      if (!selectedExerciseId) return;
+      const exercise = selectedType!.exercises!.find(e => e.value === selectedExerciseId);
+      if (exercise) {
+        onAddItem({
+          sectionId: section.id,
+          itemValue: selectedTypeValue,
+          exerciseId: exercise.value,
+          exerciseLabel: exercise.label,
+        });
+        setSelectedExerciseId('');
+        // Check if there are remaining exercises for this type
+        const remainingAfterAdd = availableExercises.filter(ex => ex.value !== selectedExerciseId);
+        if (remainingAfterAdd.length === 0) {
+          setSelectedTypeValue('');
+        }
+      }
+    } else {
+      onAddItem({
+        sectionId: section.id,
+        itemValue: selectedTypeValue,
+      });
+      setSelectedTypeValue('');
     }
+  };
+
+  const canAdd = hasExercises ? !!selectedExerciseId : !!selectedTypeValue;
+
+  // Build display label for selected items
+  const getItemLabel = (item: SelectedItem): string => {
+    const type = section.items.find(i => i.value === item.itemValue);
+    const typeName = type?.label || item.itemValue;
+    if (item.exerciseLabel) {
+      return `${typeName}: ${item.exerciseLabel}`;
+    }
+    return typeName;
   };
 
   return (
@@ -47,46 +103,69 @@ export function PractiseSessionSection({
       </div>
 
       {/* Item selector */}
-      <div className="mb-3 flex gap-2">
+      <div className="mb-3 flex flex-wrap gap-2">
         <select
-          value={selectedValue}
-          onChange={e => setSelectedValue(e.target.value)}
-          className="flex-1 rounded-md border border-gray-300 px-3 py-2"
-          disabled={availableItems.length === 0}
+          value={selectedTypeValue}
+          onChange={e => handleTypeChange(e.target.value)}
+          className="flex-1 min-w-0 rounded-md border border-gray-300 px-3 py-2"
+          disabled={availableTypes.length === 0}
         >
           <option value="">
-            {availableItems.length === 0 ? 'No items available' : 'Select item...'}
+            {availableTypes.length === 0
+              ? t('sections.noItemsAvailable', 'No items available')
+              : t('sections.selectItem', 'Select item...')}
           </option>
-          {availableItems.map(item => (
+          {availableTypes.map(item => (
             <option key={item.value} value={item.value}>
               {item.label}
             </option>
           ))}
         </select>
+
+        {hasExercises && (
+          <select
+            value={selectedExerciseId}
+            onChange={e => setSelectedExerciseId(e.target.value)}
+            className="flex-1 min-w-0 rounded-md border border-gray-300 px-3 py-2"
+            disabled={availableExercises.length === 0}
+          >
+            <option value="">
+              {availableExercises.length === 0
+                ? t('sections.noExercisesAvailable', 'No exercises available')
+                : t('sections.selectExercise', 'Select exercise...')}
+            </option>
+            {availableExercises.map(ex => (
+              <option key={ex.value} value={ex.value}>
+                {ex.label}
+              </option>
+            ))}
+          </select>
+        )}
+
         <button
           type="button"
           onClick={handleAdd}
-          disabled={!selectedValue}
+          disabled={!canAdd}
           className="rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
         >
-          Add
+          {t('common.add', 'Add')}
         </button>
       </div>
 
       {/* Selected items list */}
       {selectedItems.length > 0 && (
         <ul className="space-y-2">
-          {selectedItems.map(item => (
+          {selectedItems.map((item, index) => (
             <li
-              key={item.value}
+              key={`${item.itemValue}-${item.exerciseId || index}`}
               className="flex items-center justify-between rounded-md bg-gray-50 px-3 py-2"
             >
-              <span className="text-gray-700">• {item.label}</span>
+              <span className="text-gray-700">• {getItemLabel(item)}</span>
               <button
                 type="button"
-                onClick={() => onRemoveItem(item.value)}
+                onClick={() => onRemoveItem(item.itemValue, item.exerciseId)}
                 className="text-red-600 hover:text-red-800 font-bold"
-                aria-label={`Remove ${item.label}`}
+                aria-label={`Remove ${getItemLabel(item)}`}
               >
                 ×
               </button>
@@ -96,7 +175,9 @@ export function PractiseSessionSection({
       )}
 
       {selectedItems.length === 0 && (
-        <p className="text-sm text-gray-500 italic">No items selected</p>
+        <p className="text-sm text-gray-500 italic">
+          {t('sections.noItemsSelected', 'No items selected')}
+        </p>
       )}
     </div>
   );

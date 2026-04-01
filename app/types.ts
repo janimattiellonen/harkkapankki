@@ -8,9 +8,15 @@ export type ExerciseTypeOption = {
 // Practice Session Types
 export type PractiseLength = 60 | 90;
 
+export type ExerciseOption = {
+  value: string; // exercise ID
+  label: string; // exercise name
+};
+
 export type SectionItem = {
-  value: string; // UUID
+  value: string; // UUID (exerciseTypeId)
   label: string; // Human readable
+  exercises?: ExerciseOption[];
 };
 
 export type Section = {
@@ -22,5 +28,7 @@ export type Section = {
 
 export type SelectedItem = {
   sectionId: string;
-  itemValue: string;
+  itemValue: string; // exerciseTypeId
+  exerciseId?: string;
+  exerciseLabel?: string;
 };

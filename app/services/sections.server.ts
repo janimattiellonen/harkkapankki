@@ -45,6 +45,9 @@ export async function fetchSectionsForPractiseSession(
       items: section.exerciseTypes.map(type => ({
         value: type.id,
         label: type.name,
+        ...(type.exercises.length > 0 && {
+          exercises: type.exercises.map(ex => ({ value: ex.id, label: ex.name })),
+        }),
       })),
     };
   });

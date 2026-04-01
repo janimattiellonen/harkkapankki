@@ -54,6 +54,8 @@ model Exercise {
   createdAt     DateTime    @default(now()) @map("created_at")
   updatedAt     DateTime    @updatedAt @map("updated_at")
 
+  sessionItems  PracticeSessionSectionItem[]
+
   @@map("exercises")
   @@index([exerciseTypeId])
 }
@@ -182,13 +184,16 @@ model PracticeSessionSectionItem {
   sectionId         String          @map("section_id")
   exerciseType      ExerciseType    @relation(fields: [exerciseTypeId], references: [id], onDelete: Cascade)
   exerciseTypeId    String          @map("exercise_type_id")
+  exercise          Exercise?       @relation(fields: [exerciseId], references: [id], onDelete: SetNull)
+  exerciseId        String?         @map("exercise_id")
   order             Int
   createdAt         DateTime        @default(now()) @map("created_at")
   updatedAt         DateTime        @updatedAt @map("updated_at")
 
   @@map("practice_session_section_items")
-  @@unique([practiceSessionId, sectionId, exerciseTypeId])
+  @@unique([practiceSessionId, sectionId, exerciseTypeId, exerciseId])
   @@index([practiceSessionId])
   @@index([sectionId])
   @@index([exerciseTypeId])
+  @@index([exerciseId])
 }

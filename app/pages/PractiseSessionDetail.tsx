@@ -17,6 +17,11 @@ type SectionItem = {
       name: string;
     }>;
   };
+  exercise?: {
+    id: string;
+    name: string;
+    slug: string;
+  } | null;
 };
 
 type PracticeSessionData = {
@@ -136,7 +141,9 @@ export default function PractiseSessionDetail({ session }: PractiseSessionDetail
                       {item.order}
                     </span>
                     <span className="text-gray-700">
-                      {item.exerciseType.translations[0]?.name || item.exerciseType.id}
+                      {item.exercise
+                        ? `${item.exerciseType.translations[0]?.name || item.exerciseType.id}: ${item.exercise.name}`
+                        : item.exerciseType.translations[0]?.name || item.exerciseType.id}
                     </span>
                   </li>
                 ))}
