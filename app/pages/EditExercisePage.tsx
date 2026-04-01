@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useSubmit } from 'react-router';
 import { ExerciseForm } from '~/components/ExerciseForm';
-import { Button } from '~/components/Button';
 import type { Exercise } from '@prisma/client';
 import type { ExerciseTypeOption } from '~/types';
 import { useTranslation } from 'react-i18next';
@@ -68,9 +67,13 @@ export default function EditExercisePage({
 
       {/* Delete Button */}
       <div className="mt-6 pt-6 border-t border-gray-200">
-        <Button type="button" variant="danger" onClick={handleDeleteClick}>
+        <button
+          type="button"
+          onClick={handleDeleteClick}
+          className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+        >
           {t('exercises.delete')}
-        </Button>
+        </button>
       </div>
 
       {/* Delete Confirmation Dialog */}
@@ -80,12 +83,20 @@ export default function EditExercisePage({
             <h2 className="text-xl font-bold mb-4">{t('exercises.delete')}</h2>
             <p className="text-gray-700 mb-6">{t('exercises.deleteConfirmPermanent')}</p>
             <div className="flex justify-end gap-3">
-              <Button type="button" variant="secondary" onClick={handleDeleteCancel}>
+              <button
+                type="button"
+                onClick={handleDeleteCancel}
+                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              >
                 {t('common.cancel')}
-              </Button>
-              <Button type="button" variant="danger" onClick={handleDeleteConfirm}>
+              </button>
+              <button
+                type="button"
+                onClick={handleDeleteConfirm}
+                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+              >
                 {t('common.delete')}
-              </Button>
+              </button>
             </div>
           </div>
         </div>

@@ -1,5 +1,3 @@
-import * as stylex from '@stylexjs/stylex';
-
 import type { PractiseLength } from '~/types';
 
 type PractiseSessionSummaryProps = {
@@ -15,111 +13,39 @@ export function PractiseSessionSummary({
   const isOverTime = remaining < 0;
 
   return (
-    <div {...stylex.props(styles.container)}>
-      <h3 {...stylex.props(styles.heading)}>Session Summary</h3>
-      <div {...stylex.props(styles.rows)}>
-        <div {...stylex.props(styles.row)}>
-          <span {...stylex.props(styles.label)}>Practice Length:</span>
-          <span {...stylex.props(styles.value)}>{practiseLength} min</span>
+    <div className="rounded-lg border-2 border-gray-300 bg-gray-50 p-4">
+      <h3 className="mb-3 text-lg font-semibold">Session Summary</h3>
+      <div className="space-y-2">
+        <div className="flex justify-between">
+          <span className="text-gray-700">Practice Length:</span>
+          <span className="font-semibold">{practiseLength} min</span>
         </div>
-        <div {...stylex.props(styles.row)}>
-          <span {...stylex.props(styles.label)}>Total Allocated:</span>
-          <span {...stylex.props(styles.value)}>{totalAllocated} min</span>
+        <div className="flex justify-between">
+          <span className="text-gray-700">Total Allocated:</span>
+          <span className="font-semibold">{totalAllocated} min</span>
         </div>
-        <div {...stylex.props(styles.dividerRow)}>
-          <span {...stylex.props(styles.label)}>{isOverTime ? 'Over:' : 'Remaining:'}</span>
-          <span {...stylex.props(isOverTime ? styles.remainingRed : styles.remainingGreen)}>
+        <div className="flex justify-between border-t pt-2">
+          <span className="text-gray-700">{isOverTime ? 'Over:' : 'Remaining:'}</span>
+          <span className={`font-bold ${isOverTime ? 'text-red-600' : 'text-green-600'}`}>
             {Math.abs(remaining)} min
           </span>
         </div>
       </div>
 
       {/* Progress bar */}
-      <div {...stylex.props(styles.progressContainer)}>
-        <div {...stylex.props(styles.progressTrack)}>
+      <div className="mt-4">
+        <div className="h-3 w-full overflow-hidden rounded-full bg-gray-200">
           <div
-            {...stylex.props(
-              styles.progressBar(
-                `${Math.min((totalAllocated / practiseLength) * 100, 100)}%`,
-                isOverTime
-              )
-            )}
+            className={`h-full transition-all ${isOverTime ? 'bg-red-500' : 'bg-green-500'}`}
+            style={{
+              width: `${Math.min((totalAllocated / practiseLength) * 100, 100)}%`,
+            }}
           />
         </div>
-        <div {...stylex.props(styles.percentLabel)}>
+        <div className="mt-1 text-xs text-gray-600 text-center">
           {((totalAllocated / practiseLength) * 100).toFixed(0)}% allocated
         </div>
       </div>
     </div>
   );
 }
-
-const styles = stylex.create({
-  container: {
-    borderRadius: 8,
-    borderWidth: 2,
-    borderStyle: 'solid',
-    borderColor: '#d1d5db',
-    backgroundColor: '#f9fafb',
-    padding: 16,
-  },
-  heading: {
-    marginBottom: 12,
-    fontSize: 18,
-    fontWeight: 600,
-  },
-  rows: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 8,
-  },
-  row: {
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-  label: {
-    color: '#374151',
-  },
-  value: {
-    fontWeight: 600,
-  },
-  dividerRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    borderTopWidth: 1,
-    borderTopStyle: 'solid',
-    borderTopColor: '#e5e7eb',
-    paddingTop: 8,
-  },
-  remainingGreen: {
-    fontWeight: 700,
-    color: '#16a34a',
-  },
-  remainingRed: {
-    fontWeight: 700,
-    color: '#dc2626',
-  },
-  progressContainer: {
-    marginTop: 16,
-  },
-  progressTrack: {
-    height: 12,
-    width: '100%',
-    overflow: 'hidden',
-    borderRadius: 9999,
-    backgroundColor: '#e5e7eb',
-  },
-  progressBar: (width: string, isOver: boolean) => ({
-    height: '100%',
-    transitionProperty: 'all',
-    transitionDuration: '0.15s',
-    backgroundColor: isOver ? '#ef4444' : '#22c55e',
-    width,
-  }),
-  percentLabel: {
-    marginTop: 4,
-    fontSize: 12,
-    color: '#4b5563',
-    textAlign: 'center',
-  },
-});
