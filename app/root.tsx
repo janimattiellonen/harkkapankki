@@ -52,6 +52,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <Meta />
         <Links />
+        <link rel="stylesheet" href="/virtual:stylex.css" suppressHydrationWarning />
         <script
           dangerouslySetInnerHTML={{
             __html: `window.__i18nData = ${JSON.stringify({ locale, translations })};`,
@@ -62,6 +63,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         {children}
         <ScrollRestoration />
         <Scripts />
+        {process.env.NODE_ENV === 'development' && (
+          <script type="module" src="/@id/virtual:stylex:runtime" />
+        )}
       </body>
     </html>
   );
