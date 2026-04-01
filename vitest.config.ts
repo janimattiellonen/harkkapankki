@@ -7,11 +7,7 @@ export default defineConfig({
     environment: 'node',
     setupFiles: ['./tests/setup/db-setup.ts'],
     isolate: true,
-    poolOptions: {
-      threads: {
-        singleThread: true, // Avoid database connection issues
-      },
-    },
+    maxWorkers: 1, // Avoid database connection issues
   },
   resolve: {
     alias: {
