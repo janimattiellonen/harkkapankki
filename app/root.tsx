@@ -1,6 +1,5 @@
-import type { LinksFunction, LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
-import { Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from '@remix-run/react';
+import type { LinksFunction, LoaderFunctionArgs } from 'react-router';
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from 'react-router';
 import tailwindStyles from './styles/tailwind.css?url';
 import { useChangeLanguage } from 'remix-i18next/react';
 import { i18next } from './i18n.server';
@@ -30,7 +29,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     },
   };
 
-  return json({ locale, translations });
+  return { locale, translations };
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {

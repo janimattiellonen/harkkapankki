@@ -1,5 +1,5 @@
-import { json, type LoaderFunctionArgs } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import type { LoaderFunctionArgs } from 'react-router';
+import { useLoaderData } from 'react-router';
 import ExerciseDetailPage from '~/pages/ExerciseDetailPage';
 import { fetchExerciseBySlug } from '~/services/exercises.server';
 import { getDefaultLocale } from '~/utils/locale.server';
@@ -11,7 +11,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
     throw new Response('Exercise not found', { status: 404 });
   }
 
-  return json({ exercise });
+  return { exercise };
 }
 
 export default function ExerciseDetail() {

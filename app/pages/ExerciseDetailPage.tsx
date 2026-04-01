@@ -1,4 +1,4 @@
-import { Link } from '@remix-run/react';
+import { Link } from 'react-router';
 import { useEffect, useState } from 'react';
 import type MDEditor from '@uiw/react-md-editor';
 import { rehypeYouTube } from '~/utils/rehype-youtube';
@@ -14,7 +14,7 @@ type Exercise = {
   youtubeVideo?: string | null;
   duration: number;
   exerciseTypePath?: string | null;
-  createdAt: string;
+  createdAt: Date;
 };
 
 type ExerciseDetailPageProps = {
@@ -31,7 +31,7 @@ export default function ExerciseDetailPage({ exercise }: ExerciseDetailPageProps
     });
   }, []);
 
-  const formatDate = (dateString: string, locale: string = 'fi-FI') => {
+  const formatDate = (dateString: Date | string, locale: string = 'fi-FI') => {
     return new Date(dateString).toLocaleDateString(locale);
   };
 

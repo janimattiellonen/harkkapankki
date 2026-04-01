@@ -1,6 +1,10 @@
-import { json, redirect } from '@remix-run/node';
-import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import {
+  redirect,
+  type ActionFunctionArgs,
+  type LoaderFunctionArgs,
+  type MetaFunction,
+} from 'react-router';
+import { useLoaderData } from 'react-router';
 import EditPractiseSessionPage from '~/pages/EditPractiseSessionPage';
 import {
   fetchPracticeSessionById,
@@ -46,7 +50,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
     throw new Response('Practice session not found', { status: 404 });
   }
 
-  return json({ session, sections });
+  return { session, sections };
 }
 
 export default function EditPractiseSession() {

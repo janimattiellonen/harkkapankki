@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Form } from '@remix-run/react';
+import { Form } from 'react-router';
 import type { PractiseLength, SelectedItem, Section } from '~/types';
 import { PractiseSessionLengthSelector } from '~/components/PractiseSessionLengthSelector';
 import { PractiseSessionSection } from '~/components/PractiseSessionSection';

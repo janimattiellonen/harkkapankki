@@ -1,5 +1,5 @@
-import { json, type LoaderFunctionArgs } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import type { LoaderFunctionArgs } from 'react-router';
+import { useLoaderData } from 'react-router';
 import ExercisesListPage from '~/pages/ExercisesListPage';
 import { fetchExercises, type ExerciseFilters } from '~/services/exercises.server';
 import { fetchExerciseTypeOptions } from '~/services/exerciseTypes.server';
@@ -21,7 +21,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     fetchExerciseTypeOptions(getDefaultLocale(), 'exercise-form'),
   ]);
 
-  return json({ exercises, exerciseTypes, deleted });
+  return { exercises, exerciseTypes, deleted };
 };
 
 export default function Exercises() {

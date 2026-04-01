@@ -7,11 +7,11 @@ import type { ExerciseTypeOption } from '~/types';
 import type MDEditor from '@uiw/react-md-editor';
 import { isValidYouTubeInput } from '~/utils/youtube';
 import { useTranslation } from 'react-i18next';
-import { Form } from '@remix-run/react';
+import { Form } from 'react-router';
 
 type SerializedExercise = Omit<Exercise, 'createdAt' | 'updatedAt'> & {
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 type ExerciseFormProps = {

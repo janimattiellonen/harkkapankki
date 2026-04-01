@@ -1,11 +1,11 @@
 import {
-  json,
+  data,
   redirect,
   redirectDocument,
   type ActionFunctionArgs,
   type LoaderFunctionArgs,
-} from '@remix-run/node';
-import { useActionData, useLoaderData } from '@remix-run/react';
+} from 'react-router';
+import { useActionData, useLoaderData } from 'react-router';
 import EditExercisePage from '~/pages/EditExercisePage';
 import { exerciseSchema } from '~/schemas/exercise';
 import { fetchExerciseById, updateExercise, deleteExercise } from '~/services/exercises.server';
@@ -24,7 +24,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
     throw new Response('Exercise not found', { status: 404 });
   }
 
-  return json({ exercise, exerciseTypes });
+  return { exercise, exerciseTypes };
 }
 
 export async function action({ request, params }: ActionFunctionArgs) {
@@ -41,7 +41,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
         await deleteExercise(params.id!);
         return redirectDocument('/exercises?deleted=true');
       } catch (error) {
-        return json(
+        return data(
           {
             success: false,
             message: 'Failed to delete exercise. Please try again.',
@@ -63,7 +63,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
       await deleteExercise(params.id!);
       return redirectDocument('/exercises?deleted=true');
     } catch (error) {
-      return json(
+      return data(
         {
           success: false,
           message: 'Failed to delete exercise. Please try again.',
@@ -75,14 +75,14 @@ export async function action({ request, params }: ActionFunctionArgs) {
   }
 
   // Handle update action
-  const data = Object.fromEntries(formData);
+  const formDataObj = Object.fromEntries(formData);
 
-  const result = parseData(exerciseSchema, data);
+  const result = parseData(exerciseSchema, formDataObj);
   if (!result.success) {
-    return json(
+    return data(
       {
         errors: result.errors,
-        values: data,
+        values: formDataObj,
       },
       { status: 400 }
     );
@@ -123,7 +123,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const saveAndContinue = formData.get('saveAndContinue') === 'true';
 
   if (saveAndContinue) {
-    return json({ success: true, message: 'Exercise updated successfully' });
+    return { success: true, message: 'Exercise updated successfully' };
   }
 
   return redirect(`/exercises/${updatedExercise.slug}`);

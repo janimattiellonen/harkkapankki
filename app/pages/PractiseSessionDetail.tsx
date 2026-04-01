@@ -1,4 +1,4 @@
-import { Link } from '@remix-run/react';
+import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 
 type SectionItem = {
@@ -29,8 +29,8 @@ type PracticeSessionData = {
   name: string | null;
   description: string | null;
   sessionLength: number;
-  createdAt: Date | string;
-  updatedAt: Date | string;
+  createdAt: Date;
+  updatedAt: Date;
   sectionItems: SectionItem[];
 };
 
@@ -158,10 +158,7 @@ export default function PractiseSessionDetail({ session }: PractiseSessionDetail
                     // No exercises linked - show type name only
                     if (exercisesInGroup.length === 0) {
                       return group.items.map(item => (
-                        <li
-                          key={item.id}
-                          className="flex items-start p-3 bg-gray-50 rounded-md"
-                        >
+                        <li key={item.id} className="flex items-start p-3 bg-gray-50 rounded-md">
                           <span className="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-medium mr-3">
                             {item.order}
                           </span>
@@ -198,9 +195,7 @@ export default function PractiseSessionDetail({ session }: PractiseSessionDetail
                     // Multiple exercises or single with different name - group under type
                     return (
                       <li key={group.typeName} className="p-3 bg-gray-50 rounded-md">
-                        <div className="font-medium text-gray-700 mb-2">
-                          {group.typeName}
-                        </div>
+                        <div className="font-medium text-gray-700 mb-2">{group.typeName}</div>
                         <ul className="ml-4 space-y-1">
                           {exercisesInGroup.map(item => (
                             <li key={item.id} className="flex items-start">

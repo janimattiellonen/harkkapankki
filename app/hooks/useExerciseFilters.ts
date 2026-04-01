@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
-import { useSearchParams, useSubmit } from '@remix-run/react';
+import { useSearchParams, useSubmit } from 'react-router';
 import type { ExerciseTypeOption } from '~/types';
 
 export type FilterState = {

@@ -1,5 +1,5 @@
-import { json, redirect, type ActionFunctionArgs } from '@remix-run/node';
-import { useActionData, useLoaderData } from '@remix-run/react';
+import { data, redirect, type ActionFunctionArgs } from 'react-router';
+import { useActionData, useLoaderData } from 'react-router';
 import NewExercisePage from '~/pages/NewExercisePage';
 import { exerciseSchema } from '~/schemas/exercise';
 import { createExercise } from '~/services/exercises.server';
@@ -10,19 +10,19 @@ import { getDefaultLocale } from '~/utils/locale.server';
 
 export async function loader() {
   const exerciseTypes = await fetchExerciseTypeOptions(getDefaultLocale(), 'exercise-form');
-  return json({ exerciseTypes });
+  return { exerciseTypes };
 }
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await parseFormData(request);
-  const data = Object.fromEntries(formData);
+  const formDataObj = Object.fromEntries(formData);
 
-  const result = parseData(exerciseSchema, data);
+  const result = parseData(exerciseSchema, formDataObj);
   if (!result.success) {
-    return json(
+    return data(
       {
         errors: result.errors,
-        values: data,
+        values: formDataObj,
       },
       { status: 400 }
     );
