@@ -4,6 +4,7 @@ import type { PractiseLength, SelectedItem, Section } from '~/types';
 import { PractiseSessionLengthSelector } from '~/components/PractiseSessionLengthSelector';
 import { PractiseSessionSection } from '~/components/PractiseSessionSection';
 import { PractiseSessionSummary } from '~/components/PractiseSessionSummary';
+import { Button } from '~/components/Button';
 import { useTranslation } from 'react-i18next';
 
 type PracticeSessionData = {
@@ -213,19 +214,10 @@ export default function EditPractiseSessionPage({
         <div className="mt-6">
           {errors.items && <p className="text-sm text-red-600 mb-2">{errors.items}</p>}
           <div className="flex justify-between">
-            <button
-              type="button"
-              onClick={handleDeleteClick}
-              className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-            >
+            <Button type="button" variant="danger" onClick={handleDeleteClick}>
               {t('sessions.delete')}
-            </button>
-            <button
-              type="submit"
-              className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-            >
-              {t('sessions.update')}
-            </button>
+            </Button>
+            <Button type="submit">{t('sessions.update')}</Button>
           </div>
         </div>
       </Form>
@@ -237,20 +229,12 @@ export default function EditPractiseSessionPage({
             <h2 className="text-xl font-bold mb-4">{t('sessions.delete')}</h2>
             <p className="text-gray-700 mb-6">{t('sessions.deleteConfirm')}</p>
             <div className="flex justify-end gap-3">
-              <button
-                type="button"
-                onClick={handleDeleteCancel}
-                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              >
+              <Button type="button" variant="secondary" onClick={handleDeleteCancel}>
                 {t('common.cancel')}
-              </button>
-              <button
-                type="button"
-                onClick={handleDeleteConfirm}
-                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-              >
+              </Button>
+              <Button type="button" variant="danger" onClick={handleDeleteConfirm}>
                 {t('common.delete')}
-              </button>
+              </Button>
             </div>
           </div>
         </div>

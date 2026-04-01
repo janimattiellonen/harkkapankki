@@ -1,4 +1,6 @@
+import * as stylex from '@stylexjs/stylex';
 import { useTranslation } from 'react-i18next';
+import { Button } from '~/components/Button';
 
 export default function LanguageSwitcher() {
   const { i18n } = useTranslation();
@@ -9,18 +11,27 @@ export default function LanguageSwitcher() {
 
   return (
     <div className="language-switcher">
-      <button
+      <Button
+        variant="ghost"
         onClick={() => changeLanguage('fi')}
-        className={i18n.language === 'fi' ? 'active' : ''}
+        style={i18n.language === 'fi' && styles.active}
       >
         FI
-      </button>
-      <button
+      </Button>
+      <Button
+        variant="ghost"
         onClick={() => changeLanguage('en')}
-        className={i18n.language === 'en' ? 'active' : ''}
+        style={i18n.language === 'en' && styles.active}
       >
         EN
-      </button>
+      </Button>
     </div>
   );
 }
+
+const styles = stylex.create({
+  active: {
+    fontWeight: 700,
+    textDecorationLine: 'underline',
+  },
+});

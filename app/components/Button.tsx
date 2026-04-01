@@ -1,6 +1,6 @@
 import * as stylex from '@stylexjs/stylex';
 
-type ButtonVariant = 'primary' | 'secondary' | 'danger';
+type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'ghost' | 'icon';
 
 type ButtonProps = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'style'> & {
   variant?: ButtonVariant;
@@ -79,6 +79,29 @@ const styles = stylex.create({
     outlineColor: {
       default: 'transparent',
       ':focus-visible': '#ef4444',
+    },
+  },
+  ghost: {
+    backgroundColor: 'transparent',
+    color: {
+      default: '#2563eb',
+      ':hover': '#1e40af',
+    },
+    paddingBlock: 0,
+    paddingInline: 0,
+    outlineColor: {
+      default: 'transparent',
+      ':focus-visible': '#3b82f6',
+    },
+  },
+  icon: {
+    backgroundColor: 'transparent',
+    paddingBlock: 4,
+    paddingInline: 4,
+    borderRadius: 4,
+    outlineColor: {
+      default: 'transparent',
+      ':focus-visible': '#3b82f6',
     },
   },
 });
