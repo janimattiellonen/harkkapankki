@@ -21,6 +21,10 @@ export function slugify(text: string): string {
     text
       .toLowerCase()
       .trim()
+      // Replace Finnish umlauts with ASCII equivalents
+      .replace(/ä/g, 'a')
+      .replace(/ö/g, 'o')
+      .replace(/å/g, 'a')
       // Replace spaces and underscores with hyphens
       .replace(/[\s_]+/g, '-')
       // Remove all characters that are not a-z, 0-9, hyphen, or underscore

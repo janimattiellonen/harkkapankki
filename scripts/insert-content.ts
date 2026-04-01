@@ -73,6 +73,9 @@ function slugify(text: string): string {
   return text
     .toLowerCase()
     .trim()
+    .replace(/ä/g, 'a')
+    .replace(/ö/g, 'o')
+    .replace(/å/g, 'a')
     .replace(/[\s_]+/g, '-')
     .replace(/[^a-z0-9\-_]/g, '')
     .replace(/-+/g, '-')
