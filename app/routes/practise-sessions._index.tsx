@@ -1,6 +1,5 @@
-import { json } from '@remix-run/node';
-import type { MetaFunction } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import type { MetaFunction } from 'react-router';
+import { useLoaderData } from 'react-router';
 import PractiseSessionsList from '~/pages/PractiseSessionsList';
 import { fetchPracticeSessions } from '~/services/practiceSessions.server';
 
@@ -10,7 +9,7 @@ export const meta: MetaFunction = () => {
 
 export async function loader() {
   const sessions = await fetchPracticeSessions();
-  return json({ sessions });
+  return { sessions };
 }
 
 export default function PracticeSessionsIndex() {

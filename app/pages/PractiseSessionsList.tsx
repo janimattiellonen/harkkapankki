@@ -1,4 +1,4 @@
-import { Link } from '@remix-run/react';
+import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 
 type PracticeSession = {
@@ -7,7 +7,7 @@ type PracticeSession = {
   name: string | null;
   description: string | null;
   sessionLength: number;
-  createdAt: Date | string;
+  createdAt: Date;
   _count: {
     sectionItems: number;
   };

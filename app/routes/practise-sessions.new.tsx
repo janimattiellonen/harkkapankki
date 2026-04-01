@@ -1,6 +1,5 @@
-import { json, redirect } from '@remix-run/node';
-import type { ActionFunctionArgs, MetaFunction } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import { redirect, type ActionFunctionArgs, type MetaFunction } from 'react-router';
+import { useLoaderData } from 'react-router';
 import PractiseSessionForm from '~/pages/PractiseSessionForm';
 import { fetchSectionsForPractiseSession } from '~/services/sections.server';
 import { createPracticeSession } from '~/services/practiceSessions.server';
@@ -13,7 +12,7 @@ export const meta: MetaFunction = () => {
 
 export async function loader() {
   const sections = await fetchSectionsForPractiseSession(getDefaultLocale());
-  return json({ sections });
+  return { sections };
 }
 
 export async function action({ request }: ActionFunctionArgs) {

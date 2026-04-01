@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigation, useNavigate } from '@remix-run/react';
+import { Link, useNavigation, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { ExerciseFilters as ExerciseFiltersComponent } from '~/components/ExerciseFilters';
 import { useExerciseFilters } from '~/hooks/useExerciseFilters';
@@ -7,8 +7,8 @@ import type { ExerciseWithTypePath } from '~/services/exercises.server';
 import type { ExerciseTypeOption } from '~/types';
 
 type ExerciseData = Omit<ExerciseWithTypePath, 'createdAt' | 'updatedAt'> & {
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 type ExercisesListPageProps = {
@@ -47,7 +47,7 @@ export default function ExercisesListPage({
     isParentIndeterminate,
   } = useExerciseFilters({ exerciseTypes });
 
-  const formatDate = (dateString: string, locale: string = 'fi-FI') => {
+  const formatDate = (dateString: Date | string, locale: string = 'fi-FI') => {
     return new Date(dateString).toLocaleDateString(locale);
   };
 

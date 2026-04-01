@@ -1,5 +1,5 @@
 // app/routes/_index.tsx
-import type { MetaFunction } from '@remix-run/node';
+import type { MetaFunction } from 'react-router';
 import HomePage from '~/pages/HomePage';
 
 export const meta: MetaFunction = () => {
