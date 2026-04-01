@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Form } from 'react-router';
+import { Form, useSubmit } from 'react-router';
 import type { PractiseLength, SelectedItem, Section } from '~/types';
 import { PractiseSessionLengthSelector } from '~/components/PractiseSessionLengthSelector';
 import { PractiseSessionSection } from '~/components/PractiseSessionSection';
@@ -38,6 +38,7 @@ export default function EditPractiseSessionPage({
   sections,
 }: EditPractiseSessionPageProps) {
   const { t } = useTranslation();
+  const submit = useSubmit();
   // Initialize with existing session data, including exercise info if present
   const initialSelectedItems: SelectedItem[] = session.sectionItems.map(item => ({
     sectionId: item.section.id,
@@ -122,9 +123,8 @@ export default function EditPractiseSessionPage({
   };
 
   const handleDeleteConfirm = () => {
-    // TODO: Implement delete functionality
-    console.log('Delete confirmed');
     setShowDeleteDialog(false);
+    submit({ intent: 'delete' }, { method: 'post' });
   };
 
   const handleDeleteCancel = () => {

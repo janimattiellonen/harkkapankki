@@ -166,6 +166,12 @@ export async function updatePracticeSession(id: string, data: UpdatePracticeSess
   });
 }
 
+export async function deletePracticeSession(id: string) {
+  return db.practiceSession.delete({
+    where: { id },
+  });
+}
+
 export async function findPracticeSessionsBySlugs(slugs: string[]) {
   return db.practiceSession.findMany({
     where: {

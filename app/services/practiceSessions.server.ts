@@ -89,6 +89,10 @@ export async function updatePracticeSession(input: UpdatePracticeSessionInput) {
   });
 }
 
+export async function deletePracticeSession(id: string) {
+  return practiceSessionRepo.deletePracticeSession(id);
+}
+
 export async function fetchPracticeSessions() {
   return practiceSessionRepo.findAllPracticeSessions();
 }

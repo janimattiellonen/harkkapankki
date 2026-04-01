@@ -1,5 +1,7 @@
 import {
+  data,
   redirect,
+  redirectDocument,
   type ActionFunctionArgs,
   type LoaderFunctionArgs,
   type MetaFunction,
@@ -7,6 +9,7 @@ import {
 import { useLoaderData } from 'react-router';
 import EditPractiseSessionPage from '~/pages/EditPractiseSessionPage';
 import {
+  deletePracticeSession,
   fetchPracticeSessionById,
   updatePracticeSession,
 } from '~/services/practiceSessions.server';
@@ -23,6 +26,23 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 
 export async function action({ request, params }: ActionFunctionArgs) {
   const formData = await request.formData();
+  const intent = formData.get('intent');
+
+  if (intent === 'delete') {
+    try {
+      await deletePracticeSession(params.id!);
+      return redirectDocument('/practise-sessions?deleted=true');
+    } catch (error) {
+      return data(
+        {
+          success: false,
+          message: 'Failed to delete practice session. Please try again.',
+        },
+        { status: 500 }
+      );
+    }
+  }
+
   const name = formData.get('name') as string;
   const description = formData.get('description') as string;
   const sessionLength = parseInt(formData.get('sessionLength') as string, 10);
