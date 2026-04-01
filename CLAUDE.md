@@ -14,17 +14,6 @@
 - follow same naming conventions (files, functions etc) as is previously used in the project
 - prefer const over let and var when possible
 
-#Architecture
-
-- keep database related queries in own separate files. Group them by features. For example,
-  code handling storing and retrieving users should be put in an own file while functionality
-  for operating with exercises should be put in a different file.
-- keep xxx.server.ts files as "dumb" as possible and make them delegate to other files.
-
-#Routes
-
-- keep route files clean of html code when possible. Use a page component for the actual content
-
 General development
 
 - if unsure about something, ask, don't guess
