@@ -40,7 +40,10 @@ const exerciseTypes: ExerciseTypeData[] = [
     slug: 'supplementary',
     translations: { fi: 'Oheisharjoitteet', en: 'Supplementary exercises' },
   },
-  { slug: 'games', translations: { fi: 'Pelit, leikit ja haasteet', en: 'Games, plays and challenges' } },
+  {
+    slug: 'games',
+    translations: { fi: 'Pelit, leikit ja haasteet', en: 'Games, plays and challenges' },
+  },
 
   // Technique subcategories
   {
@@ -234,6 +237,9 @@ async function seed() {
       'muscle-condition',
       'putting',
       'driving',
+      'throwing-games',
+      'warm-up-games',
+      'putting-games',
       'closing',
     ];
     for (const slug of sessionFormTypes) {
@@ -253,11 +259,14 @@ async function seed() {
     const warmUpSection = await db.section.create({
       data: { slug: 'warm-up', order: 2 },
     });
+    const gamesSection = await db.section.create({
+      data: { slug: 'games', order: 3 },
+    });
     const techniqueSection = await db.section.create({
-      data: { slug: 'technique', order: 3 },
+      data: { slug: 'technique', order: 4 },
     });
     const closingSection = await db.section.create({
-      data: { slug: 'closing', order: 4 },
+      data: { slug: 'closing', order: 5 },
     });
 
     // Create section translations
@@ -267,6 +276,8 @@ async function seed() {
         { sectionId: introSection.id, language: 'en', name: 'Introduction' },
         { sectionId: warmUpSection.id, language: 'fi', name: 'Alkulämmittely' },
         { sectionId: warmUpSection.id, language: 'en', name: 'Warm-up' },
+        { sectionId: gamesSection.id, language: 'fi', name: 'Pelit, leikit ja haasteet' },
+        { sectionId: gamesSection.id, language: 'en', name: 'Games, plays and challenges' },
         { sectionId: techniqueSection.id, language: 'fi', name: 'Tekniikka' },
         { sectionId: techniqueSection.id, language: 'en', name: 'Technique' },
         { sectionId: closingSection.id, language: 'fi', name: 'Lopetus' },
@@ -284,9 +295,12 @@ async function seed() {
         // Warm-up - 10 min for 60, 20 min for 90
         { sectionId: warmUpSection.id, sessionLength: 60, duration: 10 },
         { sectionId: warmUpSection.id, sessionLength: 90, duration: 20 },
-        // Technique - 40 min for 60, 60 min for 90
-        { sectionId: techniqueSection.id, sessionLength: 60, duration: 40 },
-        { sectionId: techniqueSection.id, sessionLength: 90, duration: 60 },
+        // Games - 5 min for 60, 10 min for 90
+        { sectionId: gamesSection.id, sessionLength: 60, duration: 5 },
+        { sectionId: gamesSection.id, sessionLength: 90, duration: 10 },
+        // Technique - 35 min for 60, 50 min for 90
+        { sectionId: techniqueSection.id, sessionLength: 60, duration: 35 },
+        { sectionId: techniqueSection.id, sessionLength: 90, duration: 50 },
         // Closing - 5 min for both
         { sectionId: closingSection.id, sessionLength: 60, duration: 5 },
         { sectionId: closingSection.id, sessionLength: 90, duration: 5 },
@@ -304,6 +318,10 @@ async function seed() {
         { sectionId: warmUpSection.id, exerciseTypeId: slugToId['motor-skills'] },
         { sectionId: warmUpSection.id, exerciseTypeId: slugToId['muscle-condition'] },
         { sectionId: warmUpSection.id, exerciseTypeId: slugToId['strength'] },
+        // Games section
+        { sectionId: gamesSection.id, exerciseTypeId: slugToId['throwing-games'] },
+        { sectionId: gamesSection.id, exerciseTypeId: slugToId['warm-up-games'] },
+        { sectionId: gamesSection.id, exerciseTypeId: slugToId['putting-games'] },
         // Technique section
         { sectionId: techniqueSection.id, exerciseTypeId: slugToId['putting'] },
         { sectionId: techniqueSection.id, exerciseTypeId: slugToId['driving'] },

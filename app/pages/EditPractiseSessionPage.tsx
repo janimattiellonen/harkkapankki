@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Form } from '@remix-run/react';
-import type { PractiseLength, SelectedItem, Section, SectionItem } from '~/types';
+import type { PractiseLength, SelectedItem, Section } from '~/types';
 import { PractiseSessionLengthSelector } from '~/components/PractiseSessionLengthSelector';
 import { PractiseSessionSection } from '~/components/PractiseSessionSection';
 import { PractiseSessionSummary } from '~/components/PractiseSessionSummary';
@@ -19,7 +19,12 @@ type PracticeSessionData = {
     };
     exerciseType: {
       id: string;
+      translations: Array<{ name: string }>;
     };
+    exercise?: {
+      id: string;
+      name: string;
+    } | null;
   }>;
 };
 
@@ -33,10 +38,14 @@ export default function EditPractiseSessionPage({
   sections,
 }: EditPractiseSessionPageProps) {
   const { t } = useTranslation();
-  // Initialize with existing session data
+  // Initialize with existing session data, including exercise info if present
   const initialSelectedItems: SelectedItem[] = session.sectionItems.map(item => ({
     sectionId: item.section.id,
     itemValue: item.exerciseType.id,
+    ...(item.exercise && {
+      exerciseId: item.exercise.id,
+      exerciseLabel: item.exercise.name,
+    }),
   }));
 
   const [practiseLength, setPractiseLength] = useState<PractiseLength>(
@@ -64,28 +73,24 @@ export default function EditPractiseSessionPage({
   };
 
   // Get selected items for a specific section
-  const getSectionItems = (sectionId: string): SectionItem[] => {
-    const section = sections.find(s => s.id === sectionId);
-    if (!section) return [];
-
-    return selectedItems
-      .filter(item => item.sectionId === sectionId)
-      .map(item => {
-        const sectionItem = section.items.find(i => i.value === item.itemValue);
-        return sectionItem!;
-      })
-      .filter(Boolean);
+  const getSectionSelectedItems = (sectionId: string): SelectedItem[] => {
+    return selectedItems.filter(item => item.sectionId === sectionId);
   };
 
   // Add item to section
-  const handleAddItem = (sectionId: string, item: SectionItem) => {
-    setSelectedItems(prev => [...prev, { sectionId, itemValue: item.value }]);
+  const handleAddItem = (item: SelectedItem) => {
+    setSelectedItems(prev => [...prev, item]);
   };
 
   // Remove item from section
-  const handleRemoveItem = (sectionId: string, itemValue: string) => {
+  const handleRemoveItem = (sectionId: string, itemValue: string, exerciseId?: string) => {
     setSelectedItems(prev =>
-      prev.filter(item => !(item.sectionId === sectionId && item.itemValue === itemValue))
+      prev.filter(item => {
+        if (item.sectionId !== sectionId) return true;
+        if (item.itemValue !== itemValue) return true;
+        if (exerciseId) return item.exerciseId !== exerciseId;
+        return false;
+      })
     );
   };
 
@@ -184,9 +189,11 @@ export default function EditPractiseSessionPage({
                 key={section.id}
                 section={section}
                 practiseLength={practiseLength}
-                selectedItems={getSectionItems(section.id)}
-                onAddItem={item => handleAddItem(section.id, item)}
-                onRemoveItem={itemValue => handleRemoveItem(section.id, itemValue)}
+                selectedItems={getSectionSelectedItems(section.id)}
+                onAddItem={handleAddItem}
+                onRemoveItem={(itemValue, exerciseId) =>
+                  handleRemoveItem(section.id, itemValue, exerciseId)
+                }
               />
             ))}
           </div>

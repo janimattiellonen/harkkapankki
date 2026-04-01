@@ -7,7 +7,11 @@ export type SectionWithDetails = {
   name: string;
   description: string | null;
   durationConfigs: { sessionLength: number; duration: number }[];
-  exerciseTypes: { id: string; name: string }[];
+  exerciseTypes: {
+    id: string;
+    name: string;
+    exercises: { id: string; name: string }[];
+  }[];
 };
 
 export async function findAllSectionsWithDetails(
@@ -32,6 +36,10 @@ export async function findAllSectionsWithDetails(
                 where: { language },
                 select: { name: true },
               },
+              exercises: {
+                select: { id: true, name: true },
+                orderBy: { name: 'asc' },
+              },
             },
           },
         },
@@ -49,6 +57,10 @@ export async function findAllSectionsWithDetails(
     exerciseTypes: section.exerciseTypeLinks.map(link => ({
       id: link.exerciseType.id,
       name: link.exerciseType.translations[0]?.name || link.exerciseType.slug,
+      exercises: link.exerciseType.exercises.map(ex => ({
+        id: ex.id,
+        name: ex.name,
+      })),
     })),
   }));
 }

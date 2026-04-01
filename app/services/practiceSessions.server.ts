@@ -38,6 +38,7 @@ export async function createPracticeSession(input: CreatePracticeSessionInput) {
     items.map((item, index) => ({
       sectionId,
       exerciseTypeId: item.itemValue,
+      exerciseId: item.exerciseId || null,
       order: index + 1,
     }))
   );
@@ -75,6 +76,7 @@ export async function updatePracticeSession(input: UpdatePracticeSessionInput) {
     items.map((item, index) => ({
       sectionId,
       exerciseTypeId: item.itemValue,
+      exerciseId: item.exerciseId || null,
       order: index + 1,
     }))
   );

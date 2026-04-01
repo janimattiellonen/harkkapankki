@@ -8,6 +8,7 @@ type CreatePracticeSessionData = {
   sectionItems: Array<{
     sectionId: string;
     exerciseTypeId: string;
+    exerciseId?: string | null;
     order: number;
   }>;
 };
@@ -78,6 +79,9 @@ export async function findPracticeSessionById(id: string, language: string) {
               },
             },
           },
+          exercise: {
+            select: { id: true, name: true, slug: true },
+          },
         },
       },
     },
@@ -105,6 +109,9 @@ export async function findPracticeSessionBySlug(slug: string, language: string) 
               },
             },
           },
+          exercise: {
+            select: { id: true, name: true, slug: true },
+          },
         },
       },
     },
@@ -118,6 +125,7 @@ type UpdatePracticeSessionData = {
   sectionItems: Array<{
     sectionId: string;
     exerciseTypeId: string;
+    exerciseId?: string | null;
     order: number;
   }>;
 };
