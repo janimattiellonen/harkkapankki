@@ -296,11 +296,10 @@ describe('HTML Parser', () => {
 
       const result = extractAndConvertContent(html);
 
-      // Turndown escapes square brackets
-      expect(result.body).toContain('!\\[Test Image\\](/public/uploads/image-1.jpg)');
+      expect(result.body).toContain('![Test Image](/public/uploads/test-image-1.jpg)');
       expect(result.images).toHaveLength(1);
       expect(result.images[0].originalUrl).toBe('https://example.com/image.jpg');
-      expect(result.images[0].localPath).toBe('image-1.jpg');
+      expect(result.images[0].localPath).toBe('test-image-1.jpg');
     });
 
     it('should handle multiple images', () => {
@@ -321,8 +320,8 @@ describe('HTML Parser', () => {
       const result = extractAndConvertContent(html);
 
       expect(result.images).toHaveLength(2);
-      expect(result.images[0].localPath).toBe('image-1.png');
-      expect(result.images[1].localPath).toBe('image-2.gif');
+      expect(result.images[0].localPath).toBe('test-image-1.png');
+      expect(result.images[1].localPath).toBe('test-image-2.gif');
     });
 
     it('should use default extension if none provided', () => {
@@ -341,7 +340,7 @@ describe('HTML Parser', () => {
 
       const result = extractAndConvertContent(html);
 
-      expect(result.images[0].localPath).toBe('image-1.jpg');
+      expect(result.images[0].localPath).toBe('test-image-1.jpg');
     });
   });
 
@@ -424,8 +423,7 @@ describe('HTML Parser', () => {
       expect(result.body).toContain('@[youtube](https://youtu.be/test123)');
       expect(result.body).toMatch(/##\s+Section One/);
       expect(result.body).toMatch(/\*\s+Point one/);
-      // Turndown escapes square brackets
-      expect(result.body).toContain('!\\[Test\\](/public/uploads/image-1.jpg)');
+      expect(result.body).toContain('![Test](/public/uploads/complete-test-image-1.jpg)');
       expect(result.body).toMatch(/##\s+Subsection/);
       expect(result.images).toHaveLength(1);
     });

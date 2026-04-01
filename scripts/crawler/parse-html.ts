@@ -51,6 +51,22 @@ function convertYouTubeEmbed(iframe: cheerio.Cheerio<AnyNode>): string {
 }
 
 /**
+ * Convert a title to a slug for use in filenames
+ */
+function slugifyForFilename(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/ä/g, 'a')
+    .replace(/ö/g, 'o')
+    .replace(/å/g, 'a')
+    .replace(/[\s_]+/g, '-')
+    .replace(/[^a-z0-9\-_]/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+/**
  * Extract content and convert to markdown
  */
 export function extractAndConvertContent(html: string): ParsedContent {
@@ -60,6 +76,10 @@ export function extractAndConvertContent(html: string): ParsedContent {
   if (contentElement.length === 0) {
     throw new Error('Could not find .entry-content in HTML');
   }
+
+  // Extract title first so we can use it as image filename prefix
+  const title = extractTitle(html);
+  const titleSlug = slugifyForFilename(title);
 
   const images: Array<{ originalUrl: string; localPath: string }> = [];
 
@@ -86,7 +106,8 @@ export function extractAndConvertContent(html: string): ParsedContent {
     const src = img.attr('src');
 
     if (src) {
-      const filename = `image-${index + 1}${path.extname(src) || '.jpg'}`;
+      const cleanSrc = src.split('?')[0];
+      const filename = `${titleSlug}-image-${index + 1}${path.extname(cleanSrc) || '.jpg'}`;
       const localPath = `/public/uploads/${filename}`;
 
       images.push({
@@ -94,9 +115,9 @@ export function extractAndConvertContent(html: string): ParsedContent {
         localPath: filename, // Store just the filename for downloading
       });
 
-      // Replace img with markdown using the new path
+      // Replace img src with local path — keep as HTML so Turndown converts it properly
       const alt = img.attr('alt') || '';
-      img.replaceWith(`![${alt}](${localPath})`);
+      img.replaceWith(`<img src="${localPath}" alt="${alt}">`);
     }
   });
 
@@ -200,7 +221,7 @@ export function extractAndConvertContent(html: string): ParsedContent {
   markdown = markdown.replace(/\n{3,}/g, '\n\n').trim();
 
   return {
-    header: extractTitle(html),
+    header: title,
     body: markdown,
     images,
   };
