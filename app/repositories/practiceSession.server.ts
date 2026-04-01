@@ -111,6 +111,53 @@ export async function findPracticeSessionBySlug(slug: string, language: string) 
   });
 }
 
+type UpdatePracticeSessionData = {
+  name?: string;
+  description?: string;
+  sessionLength: number;
+  sectionItems: Array<{
+    sectionId: string;
+    exerciseTypeId: string;
+    order: number;
+  }>;
+};
+
+export async function updatePracticeSession(id: string, data: UpdatePracticeSessionData) {
+  return db.$transaction(async tx => {
+    await tx.practiceSessionSectionItem.deleteMany({
+      where: { practiceSessionId: id },
+    });
+
+    return tx.practiceSession.update({
+      where: { id },
+      data: {
+        name: data.name || null,
+        description: data.description || null,
+        sessionLength: data.sessionLength,
+        sectionItems: {
+          create: data.sectionItems,
+        },
+      },
+      include: {
+        sectionItems: {
+          include: {
+            section: {
+              include: {
+                translations: true,
+              },
+            },
+            exerciseType: {
+              include: {
+                translations: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  });
+}
+
 export async function findPracticeSessionsBySlugs(slugs: string[]) {
   return db.practiceSession.findMany({
     where: {

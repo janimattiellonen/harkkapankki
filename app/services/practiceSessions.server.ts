@@ -51,6 +51,42 @@ export async function createPracticeSession(input: CreatePracticeSessionInput) {
   });
 }
 
+type UpdatePracticeSessionInput = {
+  id: string;
+  name?: string;
+  description?: string;
+  sessionLength: number;
+  selectedItems: SelectedItem[];
+};
+
+export async function updatePracticeSession(input: UpdatePracticeSessionInput) {
+  const itemsBySection = input.selectedItems.reduce(
+    (acc, item) => {
+      if (!acc[item.sectionId]) {
+        acc[item.sectionId] = [];
+      }
+      acc[item.sectionId].push(item);
+      return acc;
+    },
+    {} as Record<string, SelectedItem[]>
+  );
+
+  const sectionItems = Object.entries(itemsBySection).flatMap(([sectionId, items]) =>
+    items.map((item, index) => ({
+      sectionId,
+      exerciseTypeId: item.itemValue,
+      order: index + 1,
+    }))
+  );
+
+  return practiceSessionRepo.updatePracticeSession(input.id, {
+    name: input.name,
+    description: input.description,
+    sessionLength: input.sessionLength,
+    sectionItems,
+  });
+}
+
 export async function fetchPracticeSessions() {
   return practiceSessionRepo.findAllPracticeSessions();
 }

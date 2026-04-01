@@ -94,7 +94,7 @@ The project includes several utility scripts for managing content and maintainin
 - `npm run insert-exercises -- <json-file> <type-id>` - Import exercise content
 - `npx tsx scripts/regenerate-slugs.ts` - Regenerate all slugs
 - `npx tsx scripts/test-slugs.ts` - Test slug generation
-- `npx tsx scripts/crawler/index.ts <html-file>` - Parse HTML content
+- `npm run crawler -- <html-file>` - Parse HTML content
 
 ## Styling
 

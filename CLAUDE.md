@@ -1,9 +1,9 @@
 #Git and versioning
 
--when commiting changes, add changed files ecplicitly
+-when commiting changes, add changed files explicitly
 
 - before commiting:
-  - run `nom run lint` and try to fix problems. Changes should never be commited and pushed to github if
+  - run `npm run lint` and try to fix problems. Changes should never be commited and pushed to github if
     the linter returns warnings or errors
   - run `npx tsc --noEmit` before committing and fix any possible issues
   - run `npm run format`

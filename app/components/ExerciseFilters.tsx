@@ -103,7 +103,7 @@ export function ExerciseFilters({
         {/* Exercise Type Checkboxes */}
         <div
           className={`overflow-hidden transition-all duration-300 ease-in-out ${
-            showAdvancedFilters ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+            showAdvancedFilters ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
           }`}
         >
           <div className="block text-sm font-medium text-gray-700 mb-2">

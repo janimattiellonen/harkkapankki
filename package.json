@@ -15,7 +15,8 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "test:watch": "vitest --watch",
-    "insert-exercises": "tsx scripts/insert-content.ts"
+    "insert-exercises": "tsx scripts/insert-content.ts",
+    "crawler": "tsx scripts/crawler/index.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
