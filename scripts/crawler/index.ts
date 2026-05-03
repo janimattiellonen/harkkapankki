@@ -16,6 +16,7 @@ import * as http from 'http';
 import { parseHtmlFile, parseHtmlContent } from './parse-html';
 import { getSourcesToProcess, type InputSource } from './input-source';
 import { fetchUrlContent } from './fetch-url';
+import { resolveUniqueFilename } from './unique-filename';
 
 type ExerciseData = {
   header: string;
@@ -31,6 +32,8 @@ type ParsedContent = {
     localPath: string;
   }>;
 };
+
+const UPLOADS_DIR = path.join(process.cwd(), 'public', 'uploads');
 
 /**
  * Create timestamped output directory
@@ -91,7 +94,35 @@ async function downloadImage(url: string, outputPath: string): Promise<void> {
 }
 
 /**
- * Download images for a parsed result
+ * Rename any image whose target filename collides with an existing file in
+ * either public/uploads/ or the timestamped output directory. Mutates both
+ * `parsed.images[].localPath` and `parsed.body` (which references the path)
+ * so the renamed filename flows all the way through to the saved markdown.
+ */
+function ensureUniqueImageFilenames(parsed: ParsedContent, outputDir: string): void {
+  for (const image of parsed.images) {
+    const original = image.localPath;
+    const finalName = resolveUniqueFilename(
+      original,
+      candidate =>
+        fs.existsSync(path.join(UPLOADS_DIR, candidate)) ||
+        fs.existsSync(path.join(outputDir, candidate))
+    );
+
+    if (finalName !== original) {
+      console.log(`  Renaming "${original}" → "${finalName}" (already exists in public/uploads/)`);
+      image.localPath = finalName;
+      const oldPath = `/public/uploads/${original}`;
+      const newPath = `/public/uploads/${finalName}`;
+      parsed.body = parsed.body.split(oldPath).join(newPath);
+    }
+  }
+}
+
+/**
+ * Download images for a parsed result. Each image is first saved to the
+ * timestamped output directory (audit trail) and then copied into
+ * public/uploads/ so the rendered exercise can serve it directly.
  */
 async function downloadImages(
   images: Array<{ originalUrl: string; localPath: string }>,
@@ -102,10 +133,13 @@ async function downloadImages(
 
   console.log(`  Downloading ${images.length} images for "${sourceName}"...`);
 
+  fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+
   for (const [index, image] of images.entries()) {
     try {
       const outputPath = path.join(outputDir, image.localPath);
       await downloadImage(image.originalUrl, outputPath);
+      fs.copyFileSync(outputPath, path.join(UPLOADS_DIR, image.localPath));
       console.log(`    [${index + 1}/${images.length}] ✓ ${image.localPath}`);
     } catch (error) {
       console.error(`    [${index + 1}/${images.length}] ✗ Failed: ${image.originalUrl}`);
@@ -138,6 +172,9 @@ async function processSource(source: InputSource, outputDir: string): Promise<Ex
   console.log(`  ✓ Title: "${parsed.header}"`);
   console.log(`  ✓ Content: ${parsed.body.length} characters`);
   console.log(`  ✓ Images: ${parsed.images.length}`);
+
+  // Resolve filename collisions against public/uploads/ before downloading
+  ensureUniqueImageFilenames(parsed, outputDir);
 
   // Download images
   await downloadImages(parsed.images, outputDir, parsed.header);

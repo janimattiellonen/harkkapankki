@@ -121,6 +121,28 @@ export function extractAndConvertContent(html: string): ParsedContent {
     }
   });
 
+  // Fall back to the WordPress featured-media image when the article body has none.
+  // The featured image lives outside .entry-content, so prepend it to the final markdown.
+  let featuredImageMarkdown = '';
+  if (images.length === 0) {
+    const featuredImg = $('figure.featured-media img').first();
+    const featuredSrc = featuredImg.attr('src');
+
+    if (featuredSrc) {
+      const cleanSrc = featuredSrc.split('?')[0];
+      const filename = `${titleSlug}-image-1${path.extname(cleanSrc) || '.jpg'}`;
+      const localPath = `/public/uploads/${filename}`;
+
+      images.push({
+        originalUrl: featuredSrc,
+        localPath: filename,
+      });
+
+      const alt = featuredImg.attr('alt') || '';
+      featuredImageMarkdown = `![${alt}](${localPath})\n\n`;
+    }
+  }
+
   // Convert bullet lists made with • to proper lists
   contentElement.find('p').each((_, elem) => {
     const p = $(elem);
@@ -216,6 +238,10 @@ export function extractAndConvertContent(html: string): ParsedContent {
     const cleanVideoId = videoId.replace(/\\_/g, '_');
     return `@[youtube](https://youtu.be/${cleanVideoId})`;
   });
+
+  if (featuredImageMarkdown) {
+    markdown = featuredImageMarkdown + markdown;
+  }
 
   // Clean up extra whitespace
   markdown = markdown.replace(/\n{3,}/g, '\n\n').trim();
