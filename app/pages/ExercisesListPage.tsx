@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import * as stylex from '@stylexjs/stylex';
+import { color } from '~/styles/tokens.stylex';
 import { Link, useNavigation, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { ExerciseFilters as ExerciseFiltersComponent } from '~/components/ExerciseFilters';
@@ -223,8 +224,8 @@ export default function ExercisesListPage({
 const dismissStyles = stylex.create({
   button: {
     color: {
-      default: '#16a34a',
-      ':hover': '#166534',
+      default: color.textSuccess,
+      ':hover': color.textSuccessHover,
     },
   },
 });

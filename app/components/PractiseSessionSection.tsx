@@ -1,4 +1,6 @@
 import * as stylex from '@stylexjs/stylex';
+import { color } from '~/styles/tokens.stylex';
+import { fontSize, fontWeight } from '~/styles/constants.stylex';
 import { useState } from 'react';
 import type { Section, PractiseLength, SelectedItem } from '~/types';
 import { Button } from '~/components/Button';
@@ -184,10 +186,10 @@ export function PractiseSessionSection({
 const removeStyles = stylex.create({
   button: {
     color: {
-      default: '#dc2626',
-      ':hover': '#991b1b',
+      default: color.textDanger,
+      ':hover': color.textDangerHover,
     },
-    fontWeight: 700,
-    fontSize: 18,
+    fontWeight: fontWeight.bold,
+    fontSize: fontSize.lg,
   },
 });

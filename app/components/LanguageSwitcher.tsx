@@ -1,4 +1,5 @@
 import * as stylex from '@stylexjs/stylex';
+import { fontWeight } from '~/styles/constants.stylex';
 import { useTranslation } from 'react-i18next';
 import { Button } from '~/components/Button';
 
@@ -31,7 +32,7 @@ export default function LanguageSwitcher() {
 
 const styles = stylex.create({
   active: {
-    fontWeight: 700,
+    fontWeight: fontWeight.bold,
     textDecorationLine: 'underline',
   },
 });

@@ -1,4 +1,5 @@
 import * as stylex from '@stylexjs/stylex';
+import { color } from '~/styles/tokens.stylex';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { Exercise } from '@prisma/client';
@@ -333,8 +334,8 @@ export function ExerciseForm({
 const formStyles = stylex.create({
   dangerGhost: {
     color: {
-      default: '#dc2626',
-      ':hover': '#991b1b',
+      default: color.textDanger,
+      ':hover': color.textDangerHover,
     },
   },
 });
