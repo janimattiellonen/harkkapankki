@@ -1,4 +1,6 @@
 import * as stylex from '@stylexjs/stylex';
+import { color } from '~/styles/tokens.stylex';
+import { borderRadius, fontSize, fontWeight, spacing } from '~/styles/constants.stylex';
 
 import type { PractiseLength } from '~/types';
 
@@ -56,70 +58,70 @@ export function PractiseSessionSummary({
 
 const styles = stylex.create({
   container: {
-    borderRadius: 8,
+    borderRadius: borderRadius.lg,
     borderWidth: 2,
     borderStyle: 'solid',
-    borderColor: '#d1d5db',
-    backgroundColor: '#f9fafb',
-    padding: 16,
+    borderColor: color.borderDefault,
+    backgroundColor: color.bgSecondary,
+    padding: spacing.md,
   },
   heading: {
-    marginBottom: 12,
-    fontSize: 18,
-    fontWeight: 600,
+    marginBottom: spacing.sm,
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.semibold,
   },
   rows: {
     display: 'flex',
     flexDirection: 'column',
-    gap: 8,
+    gap: spacing.sm,
   },
   row: {
     display: 'flex',
     justifyContent: 'space-between',
   },
   label: {
-    color: '#374151',
+    color: color.textSecondary,
   },
   value: {
-    fontWeight: 600,
+    fontWeight: fontWeight.semibold,
   },
   dividerRow: {
     display: 'flex',
     justifyContent: 'space-between',
     borderTopWidth: 1,
     borderTopStyle: 'solid',
-    borderTopColor: '#e5e7eb',
-    paddingTop: 8,
+    borderTopColor: color.borderLight,
+    paddingTop: spacing.sm,
   },
   remainingGreen: {
-    fontWeight: 700,
-    color: '#16a34a',
+    fontWeight: fontWeight.bold,
+    color: color.textSuccess,
   },
   remainingRed: {
-    fontWeight: 700,
-    color: '#dc2626',
+    fontWeight: fontWeight.bold,
+    color: color.textDanger,
   },
   progressContainer: {
-    marginTop: 16,
+    marginTop: spacing.md,
   },
   progressTrack: {
     height: 12,
     width: '100%',
     overflow: 'hidden',
-    borderRadius: 9999,
-    backgroundColor: '#e5e7eb',
+    borderRadius: borderRadius.full,
+    backgroundColor: color.progressTrack,
   },
   progressBar: (width: string, isOver: boolean) => ({
     height: '100%',
     transitionProperty: 'all',
     transitionDuration: '0.15s',
-    backgroundColor: isOver ? '#ef4444' : '#22c55e',
+    backgroundColor: isOver ? color.progressDanger : color.progressSuccess,
     width,
   }),
   percentLabel: {
-    marginTop: 4,
-    fontSize: 12,
-    color: '#4b5563',
+    marginTop: spacing.xs,
+    fontSize: fontSize.xs,
+    color: color.textMuted,
     textAlign: 'center',
   },
 });

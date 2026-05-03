@@ -1,5 +1,9 @@
+import * as stylex from '@stylexjs/stylex';
+import { color } from '~/styles/tokens.stylex';
+import { fontSize, fontWeight } from '~/styles/constants.stylex';
 import { useState } from 'react';
 import type { Section, PractiseLength, SelectedItem } from '~/types';
+import { Button } from '~/components/Button';
 import { useTranslation } from 'react-i18next';
 
 type PractiseSessionSectionProps = {
@@ -142,14 +146,9 @@ export function PractiseSessionSection({
           </select>
         )}
 
-        <button
-          type="button"
-          onClick={handleAdd}
-          disabled={!canAdd}
-          className="rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
-        >
+        <Button type="button" onClick={handleAdd} disabled={!canAdd}>
           {t('common.add', 'Add')}
-        </button>
+        </Button>
       </div>
 
       {/* Selected items list */}
@@ -161,14 +160,15 @@ export function PractiseSessionSection({
               className="flex items-center justify-between rounded-md bg-gray-50 px-3 py-2"
             >
               <span className="text-gray-700">• {getItemLabel(item)}</span>
-              <button
+              <Button
                 type="button"
+                variant="icon"
                 onClick={() => onRemoveItem(item.itemValue, item.exerciseId)}
-                className="text-red-600 hover:text-red-800 font-bold"
                 aria-label={`Remove ${getItemLabel(item)}`}
+                style={removeStyles.button}
               >
                 ×
-              </button>
+              </Button>
             </li>
           ))}
         </ul>
@@ -182,3 +182,14 @@ export function PractiseSessionSection({
     </div>
   );
 }
+
+const removeStyles = stylex.create({
+  button: {
+    color: {
+      default: color.textDanger,
+      ':hover': color.textDangerHover,
+    },
+    fontWeight: fontWeight.bold,
+    fontSize: fontSize.lg,
+  },
+});

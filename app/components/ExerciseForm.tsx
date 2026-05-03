@@ -1,3 +1,5 @@
+import * as stylex from '@stylexjs/stylex';
+import { color } from '~/styles/tokens.stylex';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { Exercise } from '@prisma/client';
@@ -8,6 +10,7 @@ import type MDEditor from '@uiw/react-md-editor';
 import { isValidYouTubeInput } from '~/utils/youtube';
 import { useTranslation } from 'react-i18next';
 import { Form } from 'react-router';
+import { Button } from '~/components/Button';
 
 type SerializedExercise = Omit<Exercise, 'createdAt' | 'updatedAt'> & {
   createdAt: Date;
@@ -229,16 +232,17 @@ export function ExerciseForm({
                   {exercise.image}
                 </a>
               </p>
-              <button
+              <Button
                 type="button"
+                variant="ghost"
                 onClick={() => {
                   setImageToRemove(exercise.image);
                   setShowRemoveDialog(true);
                 }}
-                className="text-sm text-red-600 hover:text-red-800 font-medium"
+                style={formStyles.dangerGhost}
               >
                 {t('exercises.remove')}
-              </button>
+              </Button>
             </div>
           )}
           {imageToRemove && (
@@ -283,21 +287,11 @@ export function ExerciseForm({
 
         <div className="flex justify-end gap-3">
           {showSaveAndContinue && (
-            <button
-              type="submit"
-              name="saveAndContinue"
-              value="true"
-              className="rounded-md bg-gray-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
-            >
+            <Button type="submit" name="saveAndContinue" value="true" variant="secondary">
               {t('exercises.saveAndContinue')}
-            </button>
+            </Button>
           )}
-          <button
-            type="submit"
-            className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-          >
-            {submitText || t('common.save')}
-          </button>
+          <Button type="submit">{submitText || t('common.save')}</Button>
         </div>
       </Form>
 
@@ -310,25 +304,25 @@ export function ExerciseForm({
             </h3>
             <p className="text-gray-600 mb-6">{t('exercises.removeImageConfirm')}</p>
             <div className="flex justify-end gap-3">
-              <button
+              <Button
                 type="button"
+                variant="secondary"
                 onClick={() => {
                   setShowRemoveDialog(false);
                   setImageToRemove(null);
                 }}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
               >
                 {t('common.cancel')}
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
+                variant="danger"
                 onClick={() => {
                   setShowRemoveDialog(false);
                 }}
-                className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
               >
                 {t('exercises.remove')}
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -336,3 +330,12 @@ export function ExerciseForm({
     </div>
   );
 }
+
+const formStyles = stylex.create({
+  dangerGhost: {
+    color: {
+      default: color.textDanger,
+      ':hover': color.textDangerHover,
+    },
+  },
+});

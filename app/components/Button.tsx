@@ -1,6 +1,8 @@
 import * as stylex from '@stylexjs/stylex';
+import { color } from '~/styles/tokens.stylex';
+import { borderRadius, fontSize, fontWeight, spacing } from '~/styles/constants.stylex';
 
-type ButtonVariant = 'primary' | 'secondary' | 'danger';
+type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'ghost' | 'icon';
 
 type ButtonProps = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'style'> & {
   variant?: ButtonVariant;
@@ -17,11 +19,11 @@ export function Button({ variant = 'primary', style, children, ...rest }: Button
 
 const styles = stylex.create({
   base: {
-    borderRadius: 6,
-    fontSize: 14,
-    fontWeight: 600,
-    paddingBlock: 8,
-    paddingInline: 16,
+    borderRadius: borderRadius.md,
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.semibold,
+    paddingBlock: spacing.sm,
+    paddingInline: spacing.md,
     cursor: {
       default: 'pointer',
       ':disabled': 'not-allowed',
@@ -47,38 +49,61 @@ const styles = stylex.create({
   },
   primary: {
     backgroundColor: {
-      default: '#2563eb',
-      ':hover': '#1d4ed8',
+      default: color.buttonPrimaryBg,
+      ':hover': color.buttonPrimaryBgHover,
     },
-    color: '#ffffff',
+    color: color.buttonPrimaryColor,
     outlineColor: {
       default: 'transparent',
-      ':focus-visible': '#3b82f6',
+      ':focus-visible': color.buttonPrimaryOutline,
     },
   },
   secondary: {
     backgroundColor: {
-      default: '#ffffff',
-      ':hover': '#f9fafb',
+      default: color.buttonSecondaryBg,
+      ':hover': color.buttonSecondaryBgHover,
     },
-    color: '#374151',
+    color: color.buttonSecondaryColor,
     borderWidth: 1,
     borderStyle: 'solid',
-    borderColor: '#d1d5db',
+    borderColor: color.buttonSecondaryBorder,
     outlineColor: {
       default: 'transparent',
-      ':focus-visible': '#3b82f6',
+      ':focus-visible': color.buttonSecondaryOutline,
     },
   },
   danger: {
     backgroundColor: {
-      default: '#dc2626',
-      ':hover': '#b91c1c',
+      default: color.buttonDangerBg,
+      ':hover': color.buttonDangerBgHover,
     },
-    color: '#ffffff',
+    color: color.buttonDangerColor,
     outlineColor: {
       default: 'transparent',
-      ':focus-visible': '#ef4444',
+      ':focus-visible': color.buttonDangerOutline,
+    },
+  },
+  ghost: {
+    backgroundColor: 'transparent',
+    color: {
+      default: color.textAccent,
+      ':hover': color.textAccentHover,
+    },
+    paddingBlock: 0,
+    paddingInline: 0,
+    outlineColor: {
+      default: 'transparent',
+      ':focus-visible': color.buttonPrimaryOutline,
+    },
+  },
+  icon: {
+    backgroundColor: 'transparent',
+    paddingBlock: spacing.xs,
+    paddingInline: spacing.xs,
+    borderRadius: borderRadius.sm,
+    outlineColor: {
+      default: 'transparent',
+      ':focus-visible': color.buttonPrimaryOutline,
     },
   },
 });

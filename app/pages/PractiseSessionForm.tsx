@@ -4,6 +4,7 @@ import type { PractiseLength, SelectedItem, Section } from '~/types';
 import { PractiseSessionLengthSelector } from '~/components/PractiseSessionLengthSelector';
 import { PractiseSessionSection } from '~/components/PractiseSessionSection';
 import { PractiseSessionSummary } from '~/components/PractiseSessionSummary';
+import { Button } from '~/components/Button';
 import { useTranslation } from 'react-i18next';
 
 type PractiseSessionFormProps = {
@@ -159,12 +160,7 @@ export default function PractiseSessionForm({ sections }: PractiseSessionFormPro
         <div className="mt-6">
           {errors.items && <p className="text-sm text-red-600 mb-2">{errors.items}</p>}
           <div className="flex justify-end">
-            <button
-              type="submit"
-              className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-            >
-              {t('sessions.save')}
-            </button>
+            <Button type="submit">{t('sessions.save')}</Button>
           </div>
         </div>
       </Form>

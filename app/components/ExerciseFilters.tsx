@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Button } from '~/components/Button';
 import type { ExerciseTypeOption } from '~/types';
 
 type ExerciseFiltersProps = {
@@ -53,13 +54,9 @@ export function ExerciseFilters({
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold text-gray-900">{t('exercises.filterTitle')}</h2>
         {hasActiveFilters && (
-          <button
-            type="button"
-            onClick={onClearFilters}
-            className="text-sm text-blue-600 hover:text-blue-800"
-          >
+          <Button type="button" variant="ghost" onClick={onClearFilters}>
             {t('exercises.clearFilters')}
-          </button>
+          </Button>
         )}
       </div>
 
@@ -92,13 +89,13 @@ export function ExerciseFilters({
         </div>
 
         {/* Toggle Advanced Filters */}
-        <button
+        <Button
           type="button"
+          variant="ghost"
           onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-          className="text-sm text-blue-600 hover:text-blue-800 font-medium"
         >
           {showAdvancedFilters ? t('exercises.lessFilters') : t('exercises.moreFilters')}
-        </button>
+        </Button>
 
         {/* Exercise Type Checkboxes */}
         <div

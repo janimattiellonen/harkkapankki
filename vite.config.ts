@@ -17,7 +17,7 @@ export default defineConfig({
   plugins: [
     // eslint-disable-next-line import/no-named-as-default-member
     stylexUnplugin.vite({
-      useCSSLayers: true,
+      useCSSLayers: false,
       aliases: {
         '~/*': [path.resolve(__dirname, 'app', '*')],
       },

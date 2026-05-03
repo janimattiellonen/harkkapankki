@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
+import * as stylex from '@stylexjs/stylex';
+import { color } from '~/styles/tokens.stylex';
 import { Link, useNavigation, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { ExerciseFilters as ExerciseFiltersComponent } from '~/components/ExerciseFilters';
+import { Button } from '~/components/Button';
 import { useExerciseFilters } from '~/hooks/useExerciseFilters';
 import type { ExerciseWithTypePath } from '~/services/exercises.server';
 import type { ExerciseTypeOption } from '~/types';
@@ -70,10 +73,11 @@ export default function ExercisesListPage({
         <div className="mb-4 rounded-md bg-green-50 p-4">
           <div className="flex items-center justify-between">
             <p className="text-sm text-green-800">{t('exercises.deleteSuccess')}</p>
-            <button
+            <Button
+              variant="icon"
               onClick={() => setShowDeleteSuccess(false)}
-              className="text-green-600 hover:text-green-800"
               aria-label="Dismiss"
+              style={dismissStyles.button}
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                 <path
@@ -82,7 +86,7 @@ export default function ExercisesListPage({
                   clipRule="evenodd"
                 />
               </svg>
-            </button>
+            </Button>
           </div>
         </div>
       )}
@@ -148,13 +152,9 @@ export default function ExercisesListPage({
             <p className="mt-1 text-sm text-gray-500">{t('exercises.adjustFilters')}</p>
             {hasActiveFilters && (
               <div className="mt-6">
-                <button
-                  type="button"
-                  onClick={clearFilters}
-                  className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                >
+                <Button type="button" onClick={clearFilters}>
                   {t('exercises.clearAllFilters')}
-                </button>
+                </Button>
               </div>
             )}
           </div>
@@ -220,3 +220,12 @@ export default function ExercisesListPage({
     </div>
   );
 }
+
+const dismissStyles = stylex.create({
+  button: {
+    color: {
+      default: color.textSuccess,
+      ':hover': color.textSuccessHover,
+    },
+  },
+});
