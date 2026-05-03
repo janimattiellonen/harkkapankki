@@ -342,6 +342,81 @@ describe('HTML Parser', () => {
 
       expect(result.images[0].localPath).toBe('test-image-1.jpg');
     });
+
+    it('should fall back to featured-media image when entry-content has no images', () => {
+      const html = `
+        <html>
+          <body>
+            <header class="entry-header">
+              <h1 class="entry-title">Test</h1>
+            </header>
+            <figure class="featured-media">
+              <div class="featured-media-inner section-inner">
+                <img src="https://example.com/featured.jpeg" alt="Featured photo">
+              </div>
+            </figure>
+            <div class="entry-content">
+              <p>Body text with no images.</p>
+            </div>
+          </body>
+        </html>
+      `;
+
+      const result = extractAndConvertContent(html);
+
+      expect(result.images).toHaveLength(1);
+      expect(result.images[0].originalUrl).toBe('https://example.com/featured.jpeg');
+      expect(result.images[0].localPath).toBe('test-image-1.jpeg');
+      expect(result.body).toContain('![Featured photo](/public/uploads/test-image-1.jpeg)');
+      expect(result.body).toContain('Body text with no images.');
+    });
+
+    it('should ignore featured-media image when entry-content already has images', () => {
+      const html = `
+        <html>
+          <body>
+            <header class="entry-header">
+              <h1 class="entry-title">Test</h1>
+            </header>
+            <figure class="featured-media">
+              <div class="featured-media-inner section-inner">
+                <img src="https://example.com/featured.jpg" alt="Featured">
+              </div>
+            </figure>
+            <div class="entry-content">
+              <img src="https://example.com/body.jpg" alt="Body">
+              <p>Body text.</p>
+            </div>
+          </body>
+        </html>
+      `;
+
+      const result = extractAndConvertContent(html);
+
+      expect(result.images).toHaveLength(1);
+      expect(result.images[0].originalUrl).toBe('https://example.com/body.jpg');
+      expect(result.body).toContain('![Body](/public/uploads/test-image-1.jpg)');
+      expect(result.body).not.toContain('featured.jpg');
+    });
+
+    it('should not add an image when neither featured-media nor body has one', () => {
+      const html = `
+        <html>
+          <body>
+            <header class="entry-header">
+              <h1 class="entry-title">Test</h1>
+            </header>
+            <div class="entry-content">
+              <p>Just text.</p>
+            </div>
+          </body>
+        </html>
+      `;
+
+      const result = extractAndConvertContent(html);
+
+      expect(result.images).toEqual([]);
+    });
   });
 
   describe('parseHtmlContent', () => {
