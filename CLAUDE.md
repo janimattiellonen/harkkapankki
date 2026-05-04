@@ -1,4 +1,4 @@
-#Git and versioning
+# Git and versioning
 
 -when commiting changes, add changed files explicitly
 

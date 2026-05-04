@@ -16,3 +16,6 @@ node_modules
 
 # Crawler parsed data
 /docs/junnufriba-crawler/parsed-data/
+
+# Claude Code config (personal, per-developer)
+.claude/
