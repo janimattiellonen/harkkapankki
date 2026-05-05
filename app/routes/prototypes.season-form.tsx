@@ -288,7 +288,7 @@ export default function SeasonFormPrototype() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div>
               <label htmlFor="defaultDayOfWeek" className="mb-1 block text-sm font-medium">
                 Default day of week
