@@ -8,7 +8,7 @@ export const meta: MetaFunction = () => {
 };
 
 export async function loader() {
-  const sessions = await fetchPracticeSessions();
+  const sessions = await fetchPracticeSessions({ standaloneOnly: true });
   return { sessions };
 }
 

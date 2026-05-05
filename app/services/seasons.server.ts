@@ -62,6 +62,10 @@ export async function fetchSeasonBySlug(slug: string) {
   return seasonRepo.findSeasonBySlug(slug);
 }
 
+export async function fetchSeasonById(id: string) {
+  return seasonRepo.findSeasonById(id);
+}
+
 type SectionsWithDetails = Awaited<ReturnType<typeof sectionRepo.findAllSectionsWithDetails>>;
 
 export async function fetchAddSessionsContext(slug: string, language: string) {

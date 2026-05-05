@@ -9,7 +9,8 @@
   "home": {
     "designSession": "Suunnittele harjoituskerta",
     "exerciseBank": "Harkkapankki",
-    "createExercise": "Luo uusi harjoitus"
+    "createExercise": "Luo uusi harjoitus",
+    "seasons": "Kaudet"
   },
   "exercises": {
     "title": "Harjoitukset",
@@ -82,7 +83,14 @@
     "sessionPlaceholder": "esim. Aamuharjoitus",
     "descriptionPlaceholder": "Lisää muistiinpanoja harjoituksesta...",
     "item": "kohde",
-    "items": "kohdetta"
+    "items": "kohdetta",
+    "scheduledDateOptional": "Ajankohta — päivä (valinnainen)",
+    "scheduledTimeOptional": "Ajankohta — kellonaika (valinnainen)",
+    "scheduled": "Ajankohta",
+    "partOfSeason": "Osa kautta",
+    "backToSeason": "Takaisin kauteen {{name}}",
+    "standaloneBanner": "Tämä lista näyttää vain yksittäiset harjoituskerrat. Kausiin sidotut harjoituskerrat löytyvät kausinäkymästä.",
+    "standaloneBannerLink": "Avaa kausinäkymä"
   },
   "seasons": {
     "title": "Kaudet",

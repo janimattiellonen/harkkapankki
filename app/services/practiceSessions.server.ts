@@ -7,6 +7,8 @@ type CreatePracticeSessionInput = {
   name?: string;
   description?: string;
   sessionLength: number;
+  seasonId?: string | null;
+  scheduledAt?: Date | null;
   selectedItems: SelectedItem[];
 };
 
@@ -48,6 +50,8 @@ export async function createPracticeSession(input: CreatePracticeSessionInput) {
     name: input.name,
     description: input.description,
     sessionLength: input.sessionLength,
+    seasonId: input.seasonId ?? null,
+    scheduledAt: input.scheduledAt ?? null,
     sectionItems,
   });
 }
@@ -57,6 +61,7 @@ type UpdatePracticeSessionInput = {
   name?: string;
   description?: string;
   sessionLength: number;
+  scheduledAt?: Date | null;
   selectedItems: SelectedItem[];
 };
 
@@ -85,6 +90,7 @@ export async function updatePracticeSession(input: UpdatePracticeSessionInput) {
     name: input.name,
     description: input.description,
     sessionLength: input.sessionLength,
+    scheduledAt: input.scheduledAt ?? null,
     sectionItems,
   });
 }
@@ -93,8 +99,14 @@ export async function deletePracticeSession(id: string) {
   return practiceSessionRepo.deletePracticeSession(id);
 }
 
-export async function fetchPracticeSessions() {
-  return practiceSessionRepo.findAllPracticeSessions();
+type FetchPracticeSessionsOptions = {
+  standaloneOnly?: boolean;
+};
+
+export async function fetchPracticeSessions(options: FetchPracticeSessionsOptions = {}) {
+  return practiceSessionRepo.findAllPracticeSessions({
+    standaloneOnly: options.standaloneOnly,
+  });
 }
 
 export async function fetchPracticeSessionById(id: string, language: string = getDefaultLocale()) {

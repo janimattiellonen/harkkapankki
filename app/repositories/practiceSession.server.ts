@@ -69,8 +69,13 @@ export async function createPracticeSessionTx(
   });
 }
 
-export async function findAllPracticeSessions() {
+type FindPracticeSessionsOptions = {
+  standaloneOnly?: boolean;
+};
+
+export async function findAllPracticeSessions(options: FindPracticeSessionsOptions = {}) {
   return db.practiceSession.findMany({
+    where: options.standaloneOnly ? { seasonId: null } : undefined,
     orderBy: {
       createdAt: 'desc',
     },
@@ -88,6 +93,9 @@ export async function findPracticeSessionById(id: string, language: string) {
   return db.practiceSession.findUnique({
     where: { id },
     include: {
+      season: {
+        select: { slug: true, name: true },
+      },
       sectionItems: {
         orderBy: [{ sectionId: 'asc' }, { order: 'asc' }],
         include: {
@@ -118,6 +126,9 @@ export async function findPracticeSessionBySlug(slug: string, language: string) 
   return db.practiceSession.findUnique({
     where: { slug },
     include: {
+      season: {
+        select: { slug: true, name: true },
+      },
       sectionItems: {
         orderBy: [{ sectionId: 'asc' }, { order: 'asc' }],
         include: {
@@ -148,6 +159,7 @@ type UpdatePracticeSessionData = {
   name?: string;
   description?: string;
   sessionLength: number;
+  scheduledAt?: Date | null;
   sectionItems: Array<{
     sectionId: string;
     exerciseTypeId: string;
@@ -168,6 +180,7 @@ export async function updatePracticeSession(id: string, data: UpdatePracticeSess
         name: data.name || null,
         description: data.description || null,
         sessionLength: data.sessionLength,
+        scheduledAt: data.scheduledAt ?? null,
         sectionItems: {
           create: data.sectionItems,
         },
