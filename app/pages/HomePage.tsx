@@ -46,6 +46,12 @@ export default function HomePage() {
           title={t('home.createExercise')}
           href={'/exercises/new'}
         />
+
+        <FeatureBox
+          imagePath="/app/asssets/images/exercise-plan.png"
+          title={t('home.seasons')}
+          href="/seasons"
+        />
       </div>
     </div>
   );

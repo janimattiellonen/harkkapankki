@@ -1,17 +1,20 @@
 import { useState } from 'react';
-import { Form, useSubmit } from 'react-router';
+import { Form, Link, useSubmit } from 'react-router';
 import type { PractiseLength, SelectedItem, Section } from '~/types';
 import { PractiseSessionLengthSelector } from '~/components/PractiseSessionLengthSelector';
 import { PractiseSessionSection } from '~/components/PractiseSessionSection';
 import { PractiseSessionSummary } from '~/components/PractiseSessionSummary';
 import { Button } from '~/components/Button';
 import { useTranslation } from 'react-i18next';
+import { utcToHelsinkiDateString, utcToHelsinkiTimeString } from '~/utils/timezone';
 
 type PracticeSessionData = {
   id: string;
   name: string | null;
   description: string | null;
   sessionLength: number;
+  scheduledAt: Date | string | null;
+  season: { slug: string; name: string } | null;
   sectionItems: Array<{
     id: string;
     order: number;
@@ -33,6 +36,17 @@ type EditPractiseSessionPageProps = {
   session: PracticeSessionData;
   sections: Section[];
 };
+
+function scheduledAtToInputs(value: Date | string | null): { date: string; time: string } {
+  if (!value) {
+    return { date: '', time: '' };
+  }
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) {
+    return { date: '', time: '' };
+  }
+  return { date: utcToHelsinkiDateString(d), time: utcToHelsinkiTimeString(d) };
+}
 
 export default function EditPractiseSessionPage({
   session,
@@ -56,6 +70,9 @@ export default function EditPractiseSessionPage({
   const [selectedItems, setSelectedItems] = useState<SelectedItem[]>(initialSelectedItems);
   const [name, setName] = useState<string>(session.name || '');
   const [description, setDescription] = useState<string>(session.description || '');
+  const initialScheduled = scheduledAtToInputs(session.scheduledAt);
+  const [scheduledDate, setScheduledDate] = useState<string>(initialScheduled.date);
+  const [scheduledTime, setScheduledTime] = useState<string>(initialScheduled.time);
   const [errors, setErrors] = useState<{ name?: string; items?: string }>({});
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
@@ -88,9 +105,15 @@ export default function EditPractiseSessionPage({
   const handleRemoveItem = (sectionId: string, itemValue: string, exerciseId?: string) => {
     setSelectedItems(prev =>
       prev.filter(item => {
-        if (item.sectionId !== sectionId) return true;
-        if (item.itemValue !== itemValue) return true;
-        if (exerciseId) return item.exerciseId !== exerciseId;
+        if (item.sectionId !== sectionId) {
+          return true;
+        }
+        if (item.itemValue !== itemValue) {
+          return true;
+        }
+        if (exerciseId) {
+          return item.exerciseId !== exerciseId;
+        }
         return false;
       })
     );
@@ -137,6 +160,18 @@ export default function EditPractiseSessionPage({
       <h1 className="mb-6 text-3xl font-bold">{t('sessions.edit')}</h1>
 
       <Form method="post" onSubmit={handleSubmit}>
+        {session.season && (
+          <div className="mb-6 rounded border border-blue-200 bg-blue-50 p-3 text-sm text-blue-900">
+            {t('sessions.partOfSeason')}{' '}
+            <Link
+              to={`/seasons/${session.season.slug}`}
+              className="font-semibold underline hover:text-blue-700"
+            >
+              {session.season.name}
+            </Link>
+          </div>
+        )}
+
         {/* Name and Description */}
         <div className="mb-6 space-y-4">
           <div>
@@ -169,6 +204,40 @@ export default function EditPractiseSessionPage({
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder={t('sessions.descriptionPlaceholder')}
             />
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+              <label
+                htmlFor="scheduledDate"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                {t('sessions.scheduledDateOptional')}
+              </label>
+              <input
+                type="date"
+                id="scheduledDate"
+                name="scheduledDate"
+                value={scheduledDate}
+                onChange={e => setScheduledDate(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="scheduledTime"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                {t('sessions.scheduledTimeOptional')}
+              </label>
+              <input
+                type="time"
+                id="scheduledTime"
+                name="scheduledTime"
+                value={scheduledTime}
+                onChange={e => setScheduledTime(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
           </div>
         </div>
 

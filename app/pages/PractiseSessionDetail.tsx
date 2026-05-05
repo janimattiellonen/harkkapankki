@@ -29,6 +29,8 @@ type PracticeSessionData = {
   name: string | null;
   description: string | null;
   sessionLength: number;
+  scheduledAt: Date | string | null;
+  season: { slug: string; name: string } | null;
   createdAt: Date;
   updatedAt: Date;
   sectionItems: SectionItem[];
@@ -67,7 +69,7 @@ export default function PractiseSessionDetail({ session }: PractiseSessionDetail
       {/* Header */}
       <div className="mb-6">
         <Link
-          to="/practise-sessions"
+          to={session.season ? `/seasons/${session.season.slug}` : '/practise-sessions'}
           className="text-blue-600 hover:text-blue-800 mb-4 inline-flex items-center"
         >
           <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -78,7 +80,9 @@ export default function PractiseSessionDetail({ session }: PractiseSessionDetail
               d="M15 19l-7-7 7-7"
             />
           </svg>
-          {t('sessions.backToSessions')}
+          {session.season
+            ? t('sessions.backToSeason', { name: session.season.name })
+            : t('sessions.backToSessions')}
         </Link>
         <div className="flex justify-between items-start mt-2">
           <h1 className="text-3xl font-bold">{session.name || t('sessions.untitledSession')}</h1>
@@ -112,6 +116,19 @@ export default function PractiseSessionDetail({ session }: PractiseSessionDetail
             </svg>
             {session.sessionLength} {t('common.minutes')}
           </div>
+          {session.scheduledAt && (
+            <div className="flex items-center">
+              <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+              {t('sessions.scheduled')}: {new Date(session.scheduledAt).toLocaleString('fi-FI')}
+            </div>
+          )}
         </div>
       </div>
 

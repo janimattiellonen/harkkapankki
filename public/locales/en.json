@@ -9,7 +9,8 @@
   "home": {
     "designSession": "Design a practice session",
     "exerciseBank": "Exercise bank",
-    "createExercise": "Create a new exercise"
+    "createExercise": "Create a new exercise",
+    "seasons": "Seasons"
   },
   "exercises": {
     "title": "Exercises",
@@ -82,7 +83,14 @@
     "sessionPlaceholder": "e.g., Morning practice session",
     "descriptionPlaceholder": "Add any notes about this session...",
     "item": "item",
-    "items": "items"
+    "items": "items",
+    "scheduledDateOptional": "Scheduled date (optional)",
+    "scheduledTimeOptional": "Scheduled time (optional)",
+    "scheduled": "Scheduled",
+    "partOfSeason": "Part of season",
+    "backToSeason": "Back to season {{name}}",
+    "standaloneBanner": "This list shows standalone practice sessions only. Season-linked sessions live under their season.",
+    "standaloneBannerLink": "Open seasons"
   },
   "seasons": {
     "title": "Seasons",

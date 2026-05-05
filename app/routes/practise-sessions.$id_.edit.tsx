@@ -16,6 +16,7 @@ import {
 import { fetchSectionsForPractiseSession } from '~/services/sections.server';
 import type { SelectedItem } from '~/types';
 import { getDefaultLocale } from '~/utils/locale.server';
+import { helsinkiWallClockToUtc } from '~/utils/timezone';
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   if (!data?.session) {
@@ -48,12 +49,17 @@ export async function action({ request, params }: ActionFunctionArgs) {
   const sessionLength = parseInt(formData.get('sessionLength') as string, 10);
   const selectedItemsJson = formData.get('selectedItems') as string;
   const selectedItems: SelectedItem[] = JSON.parse(selectedItemsJson);
+  const scheduledDate = (formData.get('scheduledDate') as string | null) || '';
+  const scheduledTime = (formData.get('scheduledTime') as string | null) || '';
+  const scheduledAt =
+    scheduledDate && scheduledTime ? helsinkiWallClockToUtc(scheduledDate, scheduledTime) : null;
 
   const session = await updatePracticeSession({
     id: params.id!,
     name: name || undefined,
     description: description || undefined,
     sessionLength,
+    scheduledAt,
     selectedItems,
   });
 

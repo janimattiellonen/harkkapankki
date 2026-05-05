@@ -35,6 +35,13 @@ export default function PractiseSessionsList({ sessions }: PractiseSessionsListP
         </Link>
       </div>
 
+      <div className="mb-6 rounded border border-blue-200 bg-blue-50 p-4 text-sm text-blue-900">
+        {t('sessions.standaloneBanner')}{' '}
+        <Link to="/seasons" className="font-semibold underline hover:text-blue-700">
+          {t('sessions.standaloneBannerLink')}
+        </Link>
+      </div>
+
       {sessions.length === 0 ? (
         <div className="text-center py-12 bg-gray-50 rounded-lg">
           <svg

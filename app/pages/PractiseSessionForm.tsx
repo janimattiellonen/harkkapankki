@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Form } from 'react-router';
+import { Form, Link } from 'react-router';
 import type { PractiseLength, SelectedItem, Section } from '~/types';
 import { PractiseSessionLengthSelector } from '~/components/PractiseSessionLengthSelector';
 import { PractiseSessionSection } from '~/components/PractiseSessionSection';
@@ -7,16 +7,33 @@ import { PractiseSessionSummary } from '~/components/PractiseSessionSummary';
 import { Button } from '~/components/Button';
 import { useTranslation } from 'react-i18next';
 
-type PractiseSessionFormProps = {
-  sections: Section[];
+type SeasonBadge = {
+  slug: string;
+  name: string;
 };
 
-export default function PractiseSessionForm({ sections }: PractiseSessionFormProps) {
+type PractiseSessionFormProps = {
+  sections: Section[];
+  defaultScheduledDate?: string;
+  defaultScheduledTime?: string;
+  seasonBadge?: SeasonBadge;
+  hiddenSeasonId?: string;
+};
+
+export default function PractiseSessionForm({
+  sections,
+  defaultScheduledDate,
+  defaultScheduledTime,
+  seasonBadge,
+  hiddenSeasonId,
+}: PractiseSessionFormProps) {
   const { t } = useTranslation();
   const [practiseLength, setPractiseLength] = useState<PractiseLength>(60);
   const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([]);
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
+  const [scheduledDate, setScheduledDate] = useState<string>(defaultScheduledDate ?? '');
+  const [scheduledTime, setScheduledTime] = useState<string>(defaultScheduledTime ?? '');
   const [errors, setErrors] = useState<{ name?: string; items?: string }>({});
 
   // Get section duration based on practise length
@@ -48,9 +65,15 @@ export default function PractiseSessionForm({ sections }: PractiseSessionFormPro
   const handleRemoveItem = (sectionId: string, itemValue: string, exerciseId?: string) => {
     setSelectedItems(prev =>
       prev.filter(item => {
-        if (item.sectionId !== sectionId) return true;
-        if (item.itemValue !== itemValue) return true;
-        if (exerciseId) return item.exerciseId !== exerciseId;
+        if (item.sectionId !== sectionId) {
+          return true;
+        }
+        if (item.itemValue !== itemValue) {
+          return true;
+        }
+        if (exerciseId) {
+          return item.exerciseId !== exerciseId;
+        }
         return false;
       })
     );
@@ -83,6 +106,19 @@ export default function PractiseSessionForm({ sections }: PractiseSessionFormPro
       <h1 className="mb-6 text-3xl font-bold">{t('sessions.design')}</h1>
 
       <Form method="post" onSubmit={handleSubmit}>
+        {seasonBadge && (
+          <div className="mb-6 rounded border border-blue-200 bg-blue-50 p-3 text-sm text-blue-900">
+            {t('sessions.partOfSeason')}{' '}
+            <Link
+              to={`/seasons/${seasonBadge.slug}`}
+              className="font-semibold underline hover:text-blue-700"
+            >
+              {seasonBadge.name}
+            </Link>
+          </div>
+        )}
+        {hiddenSeasonId && <input type="hidden" name="seasonId" value={hiddenSeasonId} />}
+
         {/* Name and Description */}
         <div className="mb-6 space-y-4">
           <div>
@@ -115,6 +151,40 @@ export default function PractiseSessionForm({ sections }: PractiseSessionFormPro
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder={t('sessions.descriptionPlaceholder')}
             />
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+              <label
+                htmlFor="scheduledDate"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                {t('sessions.scheduledDateOptional')}
+              </label>
+              <input
+                type="date"
+                id="scheduledDate"
+                name="scheduledDate"
+                value={scheduledDate}
+                onChange={e => setScheduledDate(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="scheduledTime"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                {t('sessions.scheduledTimeOptional')}
+              </label>
+              <input
+                type="time"
+                id="scheduledTime"
+                name="scheduledTime"
+                value={scheduledTime}
+                onChange={e => setScheduledTime(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
           </div>
         </div>
 

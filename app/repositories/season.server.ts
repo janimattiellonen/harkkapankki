@@ -49,6 +49,13 @@ export async function findAllSeasons() {
   });
 }
 
+export async function findSeasonById(id: string) {
+  return db.season.findUnique({
+    where: { id },
+    select: { id: true, slug: true, name: true },
+  });
+}
+
 export async function findSeasonBySlug(slug: string) {
   return db.season.findUnique({
     where: { slug },
