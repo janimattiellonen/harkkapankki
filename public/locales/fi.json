@@ -139,6 +139,19 @@
       "7": "Sunnuntai"
     }
   },
+  "hints": {
+    "banner_one": "{{count}} vinkki kauden suunnitteluun.",
+    "banner_other": "{{count}} vinkkiä kauden suunnitteluun.",
+    "bannerLink": "Avaa kattavuus",
+    "heading": "Vinkit",
+    "staleHeading": "Tyyppejä, joita ei ole näkynyt aikoihin",
+    "staleItem": "{{name}} — viimeisimmästä esiintymästä on {{count}} harjoituskertaa.",
+    "repeatHeading": "Saman harjoituksen toistoja",
+    "repeatItem_one": "{{name}} esiintyi peräkkäisissä harjoituksissa (väli {{gap}}).",
+    "repeatItem_other": "{{name}} esiintyi {{gap}} harjoituksen sisällä.",
+    "diversityHeading": "Yksipuoliset osiot",
+    "diversityItem": "Osio \"{{section}}\" käytti vain tyyppiä \"{{type}}\" {{count}} harjoituksen ajan."
+  },
   "coverage": {
     "title": "Kattavuus — {{season}}",
     "subtitle_one": "{{count}} harjoituskerran perusteella",

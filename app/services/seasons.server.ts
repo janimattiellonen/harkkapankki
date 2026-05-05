@@ -13,6 +13,7 @@ import {
   generateProgrammeForBatch,
   type GeneratorWarning,
 } from '~/services/sessionAutoGenerator.server';
+import { computeSeasonHints, type SeasonHints } from '~/services/seasonHints.server';
 
 export async function createSeason(input: SeasonFormData) {
   const baseSlug = slugify(input.name);
@@ -66,6 +67,38 @@ export async function fetchSeasonById(id: string) {
   return seasonRepo.findSeasonById(id);
 }
 
+export async function fetchSeasonHints(
+  slug: string,
+  language: string
+): Promise<SeasonHints | null> {
+  const [season, sections] = await Promise.all([
+    seasonRepo.findSeasonBySlugWithCoverage(slug, language),
+    sectionRepo.findAllSectionsWithDetails(language),
+  ]);
+  if (!season) {
+    return null;
+  }
+  return computeSeasonHints({
+    sessions: season.practiceSessions.map(session => ({
+      id: session.id,
+      slug: session.slug,
+      scheduledAt: session.scheduledAt,
+      sectionItems: session.sectionItems.map(item => ({
+        sectionId: item.sectionId,
+        exerciseTypeId: item.exerciseTypeId,
+        exerciseId: item.exerciseId,
+        typeName: item.exerciseType.translations[0]?.name ?? item.exerciseType.slug,
+        exerciseName: item.exercise?.name ?? null,
+      })),
+    })),
+    sections: sections.map(section => ({
+      id: section.id,
+      name: section.name,
+      eligibleTypeIds: section.exerciseTypes.map(t => t.id),
+    })),
+  });
+}
+
 type CoverageTypeRow = {
   id: string;
   name: string;
@@ -92,6 +125,7 @@ export type SeasonCoverage = {
   totalSessions: number;
   perType: CoverageTypeRow[];
   perSection: CoverageSectionRow[];
+  hints: SeasonHints;
 };
 
 export async function fetchSeasonCoverage(
@@ -217,11 +251,33 @@ export async function fetchSeasonCoverage(
     })
     .sort((a, b) => a.order - b.order);
 
+  const hintsInput = {
+    sessions: season.practiceSessions.map(session => ({
+      id: session.id,
+      slug: session.slug,
+      scheduledAt: session.scheduledAt,
+      sectionItems: session.sectionItems.map(item => ({
+        sectionId: item.sectionId,
+        exerciseTypeId: item.exerciseTypeId,
+        exerciseId: item.exerciseId,
+        typeName: item.exerciseType.translations[0]?.name ?? item.exerciseType.slug,
+        exerciseName: item.exercise?.name ?? null,
+      })),
+    })),
+    sections: sections.map(section => ({
+      id: section.id,
+      name: section.name,
+      eligibleTypeIds: section.exerciseTypes.map(t => t.id),
+    })),
+  };
+  const hints = computeSeasonHints(hintsInput);
+
   return {
     season: { slug: season.slug, name: season.name },
     totalSessions: season.practiceSessions.length,
     perType,
     perSection,
+    hints,
   };
 }
 

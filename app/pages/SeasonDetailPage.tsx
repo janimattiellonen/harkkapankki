@@ -2,6 +2,7 @@ import { Form, Link, useNavigation, useSearchParams } from 'react-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '~/components/Button';
+import type { SeasonHints } from '~/services/seasonHints.server';
 
 type SeasonPracticeSession = {
   id: string;
@@ -28,15 +29,19 @@ type SeasonDetailData = {
 
 type SeasonDetailPageProps = {
   season: SeasonDetailData;
+  hints: SeasonHints | null;
 };
 
-export default function SeasonDetailPage({ season }: SeasonDetailPageProps) {
+export default function SeasonDetailPage({ season, hints }: SeasonDetailPageProps) {
   const { t } = useTranslation();
   const navigation = useNavigation();
   const [searchParams] = useSearchParams();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const warningCount = Number(searchParams.get('warnings') ?? '0');
+  const totalHints = hints
+    ? hints.staleTypes.length + hints.recentRepeats.length + hints.lowDiversitySections.length
+    : 0;
   const isDeleting = navigation.state !== 'idle' && navigation.formData?.get('intent') === 'delete';
 
   const formatDate = (value: Date | string | null) =>
@@ -115,6 +120,18 @@ export default function SeasonDetailPage({ season }: SeasonDetailPageProps) {
           className="mb-4 rounded border border-amber-500 bg-amber-50 p-4 text-amber-900"
         >
           {t('addSessions.warningBanner', { count: warningCount })}
+        </div>
+      )}
+
+      {totalHints > 0 && (
+        <div className="mb-4 rounded border border-amber-300 bg-amber-50 p-4 text-amber-900 flex items-center justify-between gap-4">
+          <span>{t('hints.banner', { count: totalHints })}</span>
+          <Link
+            to={`/seasons/${season.slug}/coverage`}
+            className="font-semibold underline hover:text-amber-800 whitespace-nowrap"
+          >
+            {t('hints.bannerLink')}
+          </Link>
         </div>
       )}
 

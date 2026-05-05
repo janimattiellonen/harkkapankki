@@ -139,6 +139,19 @@
       "7": "Sunday"
     }
   },
+  "hints": {
+    "banner_one": "{{count}} hint for season planning.",
+    "banner_other": "{{count}} hints for season planning.",
+    "bannerLink": "Open coverage",
+    "heading": "Hints",
+    "staleHeading": "Types not seen in a while",
+    "staleItem": "{{name}} — {{count}} sessions since last use.",
+    "repeatHeading": "Recently repeated drills",
+    "repeatItem_one": "{{name}} appeared in back-to-back sessions (gap {{gap}}).",
+    "repeatItem_other": "{{name}} reappeared within {{gap}} sessions.",
+    "diversityHeading": "Sections lacking variety",
+    "diversityItem": "Section \"{{section}}\" used only \"{{type}}\" across {{count}} sessions."
+  },
   "coverage": {
     "title": "Coverage — {{season}}",
     "subtitle_one": "Based on {{count}} session",
