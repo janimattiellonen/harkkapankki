@@ -1,5 +1,15 @@
 import type { LinksFunction, LoaderFunctionArgs } from 'react-router';
-import { Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from 'react-router';
+import {
+  Link,
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  isRouteErrorResponse,
+  useLoaderData,
+  useRouteError,
+} from 'react-router';
 import tailwindStyles from './styles/tailwind.css?url';
 import { useChangeLanguage } from 'remix-i18next/react';
 import { i18next } from './i18n.server';
@@ -78,6 +88,65 @@ export default function App() {
   return (
     <AppLayout>
       <Outlet />
+    </AppLayout>
+  );
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+
+  if (isRouteErrorResponse(error) && error.status === 404) {
+    return (
+      <AppLayout>
+        <div className="mx-auto max-w-2xl p-6 text-center">
+          <p className="text-sm font-semibold text-blue-600">404</p>
+          <h1 className="mt-2 text-3xl font-bold text-gray-900">Sivua ei löytynyt</h1>
+          <p className="mt-2 text-gray-600">
+            Etsimääsi sivua ei löytynyt. Linkki saattaa olla vanhentunut tai resurssi on poistettu.
+          </p>
+          <div className="mt-6 flex justify-center gap-3">
+            <Link
+              to="/"
+              className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+            >
+              Etusivulle
+            </Link>
+            <Link
+              to="/seasons"
+              className="inline-flex items-center rounded-md border border-gray-300 px-4 py-2 text-sm font-medium hover:bg-gray-50"
+            >
+              Kaudet
+            </Link>
+          </div>
+        </div>
+      </AppLayout>
+    );
+  }
+
+  const message =
+    isRouteErrorResponse(error) && typeof error.data === 'string'
+      ? error.data
+      : error instanceof Error
+        ? error.message
+        : 'Tapahtui odottamaton virhe.';
+
+  const status = isRouteErrorResponse(error) ? error.status : 500;
+
+  return (
+    <AppLayout>
+      <div className="mx-auto max-w-2xl p-6 text-center">
+        <p className="text-sm font-semibold text-red-600">{status}</p>
+        <h1 className="mt-2 text-3xl font-bold text-gray-900">Jokin meni pieleen</h1>
+        <p className="mt-2 text-gray-600">{message}</p>
+        <div className="mt-6 flex justify-center">
+          <Link
+            to="/"
+            className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+          >
+            Etusivulle
+          </Link>
+        </div>
+      </div>
     </AppLayout>
   );
 }
