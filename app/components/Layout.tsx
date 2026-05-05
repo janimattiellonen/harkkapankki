@@ -13,16 +13,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <Link to="/" className="flex items-center">
                 <span className="text-xl font-bold">Harkkapankki</span>
               </Link>
-              <div className="ml-6 flex items-center space-x-4">
+              <div className="ml-2 sm:ml-6 flex items-center space-x-1 sm:space-x-4">
                 <Link
                   to="/exercises"
-                  className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md"
+                  className="text-gray-700 hover:text-gray-900 px-2 sm:px-3 py-2 rounded-md text-sm sm:text-base"
                 >
                   {t('navigation.exercises', 'Harjoitukset')}
                 </Link>
                 <Link
                   to="/practise-sessions"
-                  className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md"
+                  className="text-gray-700 hover:text-gray-900 px-2 sm:px-3 py-2 rounded-md text-sm sm:text-base"
                 >
                   {t('navigation.sessions', 'Harjoituskerrat')}
                 </Link>

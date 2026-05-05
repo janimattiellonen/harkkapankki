@@ -59,7 +59,7 @@ export default function SeasonForm({ defaults, errors, submitText, cancelHref }:
 
   return (
     <Form method="post" onSubmit={handleSubmit} noValidate>
-      <fieldset className="mb-6 rounded border border-gray-200 p-4">
+      <fieldset className="mb-6 rounded border border-gray-200 p-4 min-w-0">
         <legend className="px-2 text-lg font-semibold">{t('seasons.detailsSection')}</legend>
 
         <div className="mb-4">
