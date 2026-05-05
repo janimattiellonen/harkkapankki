@@ -131,6 +131,29 @@
       "7": "Sunnuntai"
     }
   },
+  "addSessions": {
+    "title": "Lisää harjoituskertoja",
+    "subtitle": "Generoi yksi tai useampi harjoituskerta kaudelle \"{{season}}\"",
+    "section": "Alkukerrat",
+    "howMany": "Kuinka monta harjoituskertaa luodaan?",
+    "regenerate": "Luo uudelleen oletuksilla",
+    "date": "Päivämäärä",
+    "startTime": "Alkamisaika",
+    "endTime": "Loppumisaika",
+    "remove": "Poista",
+    "rowDate": "Harjoituskerta {{index}} päivämäärä",
+    "rowStartTime": "Harjoituskerta {{index}} alkamisaika",
+    "rowEndTime": "Harjoituskerta {{index}} loppumisaika",
+    "removeRow": "Poista harjoituskerta {{index}}",
+    "empty": "Ei harjoituskertoja. Aseta kappalemäärä yllä.",
+    "atLeastOne": "Ainakin yksi harjoituskerta vaaditaan",
+    "allFieldsRequired": "Kaikki kentät ovat pakollisia",
+    "endAfterStart": "Loppumisajan tulee olla alkamisajan jälkeen",
+    "submit": "Luo harjoituskerrat",
+    "cta": "Lisää harjoituskertoja",
+    "warningBanner_one": "{{count}} osio sai vain tyypin (ei harjoitetta) — harjoituspankki ei kattanut riittävästi tähän erään.",
+    "warningBanner_other": "{{count}} osiota saivat vain tyypin (ei harjoitetta) — harjoituspankki ei kattanut riittävästi tähän erään."
+  },
   "common": {
     "save": "Tallenna",
     "cancel": "Peruuta",
