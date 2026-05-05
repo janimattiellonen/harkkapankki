@@ -139,6 +139,23 @@
       "7": "Sunnuntai"
     }
   },
+  "coverage": {
+    "title": "Kattavuus — {{season}}",
+    "subtitle_one": "{{count}} harjoituskerran perusteella",
+    "subtitle_other": "{{count}} harjoituskerran perusteella",
+    "emptyState": "Tällä kaudella ei ole vielä harjoituskertoja. Lisää harjoituskertoja ja kattavuus näkyy täällä.",
+    "perTypeHeading": "Harjoitustyyppien käyttö",
+    "perSectionHeading": "Osioittain",
+    "colType": "Tyyppi",
+    "colAppearances": "Esiintymät",
+    "colUniqueDrills": "Eri harjoitukset",
+    "colTypeOnly": "Vain tyyppi",
+    "colLastSeen": "Viimeksi",
+    "neverUsed": "Ei käytössä",
+    "noEligibleTypes": "Tähän osioon ei ole liitetty yhtään harjoitustyyppiä.",
+    "sectionCoverageRatio": "{{used}}/{{total}} käytössä",
+    "cta": "Kattavuus"
+  },
   "addSessions": {
     "title": "Lisää harjoituskertoja",
     "subtitle": "Generoi yksi tai useampi harjoituskerta kaudelle \"{{season}}\"",

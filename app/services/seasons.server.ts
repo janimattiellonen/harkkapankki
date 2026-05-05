@@ -66,6 +66,165 @@ export async function fetchSeasonById(id: string) {
   return seasonRepo.findSeasonById(id);
 }
 
+type CoverageTypeRow = {
+  id: string;
+  name: string;
+  appearances: number;
+  lastSeen: Date | null;
+  fallbackOnlyCount: number;
+  uniqueExerciseCount: number;
+};
+
+type CoverageSectionRow = {
+  id: string;
+  name: string;
+  order: number;
+  types: Array<{
+    id: string;
+    name: string;
+    appearances: number;
+    lastSeen: Date | null;
+  }>;
+};
+
+export type SeasonCoverage = {
+  season: { slug: string; name: string };
+  totalSessions: number;
+  perType: CoverageTypeRow[];
+  perSection: CoverageSectionRow[];
+};
+
+export async function fetchSeasonCoverage(
+  slug: string,
+  language: string
+): Promise<SeasonCoverage | null> {
+  const [season, sections] = await Promise.all([
+    seasonRepo.findSeasonBySlugWithCoverage(slug, language),
+    sectionRepo.findAllSectionsWithDetails(language),
+  ]);
+  if (!season) {
+    return null;
+  }
+
+  type Aggregate = {
+    id: string;
+    name: string;
+    appearances: number;
+    lastSeen: Date | null;
+    fallbackOnlyCount: number;
+    exerciseIds: Set<string>;
+  };
+
+  const perTypeMap = new Map<string, Aggregate>();
+  const perSectionTypeMap = new Map<
+    string,
+    Map<string, { id: string; name: string; appearances: number; lastSeen: Date | null }>
+  >();
+
+  for (const section of sections) {
+    const inner = new Map<
+      string,
+      { id: string; name: string; appearances: number; lastSeen: Date | null }
+    >();
+    for (const type of section.exerciseTypes) {
+      inner.set(type.id, { id: type.id, name: type.name, appearances: 0, lastSeen: null });
+    }
+    perSectionTypeMap.set(section.id, inner);
+  }
+
+  for (const session of season.practiceSessions) {
+    const sessionDate = session.scheduledAt;
+    for (const item of session.sectionItems) {
+      const typeName = item.exerciseType.translations[0]?.name ?? item.exerciseType.slug;
+      const existing = perTypeMap.get(item.exerciseTypeId);
+      if (existing) {
+        existing.appearances += 1;
+        if (sessionDate && (!existing.lastSeen || sessionDate > existing.lastSeen)) {
+          existing.lastSeen = sessionDate;
+        }
+        if (item.exerciseId === null) {
+          existing.fallbackOnlyCount += 1;
+        } else {
+          existing.exerciseIds.add(item.exerciseId);
+        }
+      } else {
+        perTypeMap.set(item.exerciseTypeId, {
+          id: item.exerciseTypeId,
+          name: typeName,
+          appearances: 1,
+          lastSeen: sessionDate,
+          fallbackOnlyCount: item.exerciseId === null ? 1 : 0,
+          exerciseIds: new Set(item.exerciseId === null ? [] : [item.exerciseId]),
+        });
+      }
+
+      const sectionRow = perSectionTypeMap.get(item.sectionId);
+      if (sectionRow) {
+        const typeRow = sectionRow.get(item.exerciseTypeId);
+        if (typeRow) {
+          typeRow.appearances += 1;
+          if (sessionDate && (!typeRow.lastSeen || sessionDate > typeRow.lastSeen)) {
+            typeRow.lastSeen = sessionDate;
+          }
+        }
+      }
+    }
+  }
+
+  for (const section of sections) {
+    for (const type of section.exerciseTypes) {
+      if (!perTypeMap.has(type.id)) {
+        perTypeMap.set(type.id, {
+          id: type.id,
+          name: type.name,
+          appearances: 0,
+          lastSeen: null,
+          fallbackOnlyCount: 0,
+          exerciseIds: new Set<string>(),
+        });
+      }
+    }
+  }
+
+  const perType: CoverageTypeRow[] = Array.from(perTypeMap.values())
+    .map(t => ({
+      id: t.id,
+      name: t.name,
+      appearances: t.appearances,
+      lastSeen: t.lastSeen,
+      fallbackOnlyCount: t.fallbackOnlyCount,
+      uniqueExerciseCount: t.exerciseIds.size,
+    }))
+    .sort((a, b) => {
+      if (a.appearances !== b.appearances) {
+        return b.appearances - a.appearances;
+      }
+      return a.name.localeCompare(b.name);
+    });
+
+  const perSection: CoverageSectionRow[] = sections
+    .map(section => {
+      const inner = perSectionTypeMap.get(section.id);
+      const types = inner
+        ? Array.from(inner.values()).sort((a, b) => {
+            if (a.appearances !== b.appearances) {
+              return b.appearances - a.appearances;
+            }
+            return a.name.localeCompare(b.name);
+          })
+        : [];
+      return { id: section.id, name: section.name, order: section.order, types };
+    })
+    .sort((a, b) => a.order - b.order);
+
+  return {
+    season: { slug: season.slug, name: season.name },
+    totalSessions: season.practiceSessions.length,
+    perType,
+    perSection,
+  };
+}
+
 type SectionsWithDetails = Awaited<ReturnType<typeof sectionRepo.findAllSectionsWithDetails>>;
 
 export async function fetchAddSessionsContext(slug: string, language: string) {
