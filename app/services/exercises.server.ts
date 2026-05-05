@@ -2,7 +2,7 @@ import type { Exercise } from '@prisma/client';
 import { queryExercises, type ExerciseWhereInput } from '~/repositories/queryExercises.server';
 import { queryExerciseById } from '~/repositories/queryExerciseById.server';
 import { queryExerciseBySlug } from '~/repositories/queryExerciseBySlug.server';
-import { queryExercisesBySlugs } from '~/repositories/queryExercisesBySlugs.server';
+import { queryExercisesBySlugPrefix } from '~/repositories/queryExercisesBySlugPrefix.server';
 import { queryCreateExercise } from '~/repositories/queryCreateExercise.server';
 import { queryUpdateExercise } from '~/repositories/queryUpdateExercise.server';
 import { queryDeleteExercise } from '~/repositories/queryDeleteExercise.server';
@@ -111,7 +111,7 @@ export async function createExercise(data: ExerciseInput): Promise<Exercise> {
   const baseSlug = slugify(data.name);
 
   // Check for existing slugs to ensure uniqueness
-  const existingSlugs = await queryExercisesBySlugs([baseSlug]);
+  const existingSlugs = await queryExercisesBySlugPrefix(baseSlug);
   const existingSlugStrings = existingSlugs.map(e => e.slug);
   const uniqueSlug = makeUniqueSlug(baseSlug, existingSlugStrings);
 
@@ -139,7 +139,7 @@ export async function updateExercise(id: string, data: ExerciseInput): Promise<E
   let slug: string | undefined;
   if (currentExercise.name !== data.name) {
     const baseSlug = slugify(data.name);
-    const existingSlugs = await queryExercisesBySlugs([baseSlug]);
+    const existingSlugs = await queryExercisesBySlugPrefix(baseSlug);
     // Filter out the current exercise's slug from the existing slugs
     const existingSlugStrings = existingSlugs
       .filter(e => e.slug !== currentExercise.slug)

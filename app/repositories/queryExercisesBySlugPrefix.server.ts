@@ -1,10 +1,10 @@
 import { db } from '~/utils/db.server';
 
-export async function queryPracticeSessionsBySlugs(slugs: string[]) {
-  return db.practiceSession.findMany({
+export async function queryExercisesBySlugPrefix(prefix: string) {
+  return db.exercise.findMany({
     where: {
       slug: {
-        in: slugs,
+        startsWith: prefix,
       },
     },
     select: {

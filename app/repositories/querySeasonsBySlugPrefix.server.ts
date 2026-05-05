@@ -1,10 +1,10 @@
 import { db } from '~/utils/db.server';
 
-export async function querySeasonsBySlugs(slugs: string[]) {
+export async function querySeasonsBySlugPrefix(prefix: string) {
   return db.season.findMany({
     where: {
       slug: {
-        in: slugs,
+        startsWith: prefix,
       },
     },
     select: {

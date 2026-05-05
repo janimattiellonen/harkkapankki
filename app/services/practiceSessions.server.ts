@@ -2,7 +2,7 @@ import { queryCreatePracticeSession } from '~/repositories/queryCreatePracticeSe
 import { queryPracticeSessions } from '~/repositories/queryPracticeSessions.server';
 import { queryPracticeSessionById } from '~/repositories/queryPracticeSessionById.server';
 import { queryPracticeSessionBySlug } from '~/repositories/queryPracticeSessionBySlug.server';
-import { queryPracticeSessionsBySlugs } from '~/repositories/queryPracticeSessionsBySlugs.server';
+import { queryPracticeSessionsBySlugPrefix } from '~/repositories/queryPracticeSessionsBySlugPrefix.server';
 import { queryUpdatePracticeSession } from '~/repositories/queryUpdatePracticeSession.server';
 import { queryDeletePracticeSession } from '~/repositories/queryDeletePracticeSession.server';
 import type { SelectedItem } from '~/types';
@@ -24,7 +24,7 @@ export async function createPracticeSession(input: CreatePracticeSessionInput) {
   const baseSlug = slugify(baseName);
 
   // Check for existing slugs to ensure uniqueness
-  const existingSlugs = await queryPracticeSessionsBySlugs([baseSlug]);
+  const existingSlugs = await queryPracticeSessionsBySlugPrefix(baseSlug);
   const existingSlugStrings = existingSlugs.map(s => s.slug);
   const uniqueSlug = makeUniqueSlug(baseSlug, existingSlugStrings);
 
