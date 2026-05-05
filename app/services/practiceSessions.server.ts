@@ -1,4 +1,10 @@
-import * as practiceSessionRepo from '~/repositories/practiceSession.server';
+import { queryCreatePracticeSession } from '~/repositories/queryCreatePracticeSession.server';
+import { queryPracticeSessions } from '~/repositories/queryPracticeSessions.server';
+import { queryPracticeSessionById } from '~/repositories/queryPracticeSessionById.server';
+import { queryPracticeSessionBySlug } from '~/repositories/queryPracticeSessionBySlug.server';
+import { queryPracticeSessionsBySlugs } from '~/repositories/queryPracticeSessionsBySlugs.server';
+import { queryUpdatePracticeSession } from '~/repositories/queryUpdatePracticeSession.server';
+import { queryDeletePracticeSession } from '~/repositories/queryDeletePracticeSession.server';
 import type { SelectedItem } from '~/types';
 import { slugify, makeUniqueSlug } from '~/utils/slugify';
 import { getDefaultLocale } from '~/utils/locale.server';
@@ -18,7 +24,7 @@ export async function createPracticeSession(input: CreatePracticeSessionInput) {
   const baseSlug = slugify(baseName);
 
   // Check for existing slugs to ensure uniqueness
-  const existingSlugs = await practiceSessionRepo.findPracticeSessionsBySlugs([baseSlug]);
+  const existingSlugs = await queryPracticeSessionsBySlugs([baseSlug]);
   const existingSlugStrings = existingSlugs.map(s => s.slug);
   const uniqueSlug = makeUniqueSlug(baseSlug, existingSlugStrings);
 
@@ -45,7 +51,7 @@ export async function createPracticeSession(input: CreatePracticeSessionInput) {
     }))
   );
 
-  return practiceSessionRepo.createPracticeSession({
+  return queryCreatePracticeSession({
     slug: uniqueSlug,
     name: input.name,
     description: input.description,
@@ -86,7 +92,7 @@ export async function updatePracticeSession(input: UpdatePracticeSessionInput) {
     }))
   );
 
-  return practiceSessionRepo.updatePracticeSession(input.id, {
+  return queryUpdatePracticeSession(input.id, {
     name: input.name,
     description: input.description,
     sessionLength: input.sessionLength,
@@ -96,7 +102,7 @@ export async function updatePracticeSession(input: UpdatePracticeSessionInput) {
 }
 
 export async function deletePracticeSession(id: string) {
-  return practiceSessionRepo.deletePracticeSession(id);
+  return queryDeletePracticeSession(id);
 }
 
 type FetchPracticeSessionsOptions = {
@@ -104,18 +110,18 @@ type FetchPracticeSessionsOptions = {
 };
 
 export async function fetchPracticeSessions(options: FetchPracticeSessionsOptions = {}) {
-  return practiceSessionRepo.findAllPracticeSessions({
+  return queryPracticeSessions({
     standaloneOnly: options.standaloneOnly,
   });
 }
 
 export async function fetchPracticeSessionById(id: string, language: string = getDefaultLocale()) {
-  return practiceSessionRepo.findPracticeSessionById(id, language);
+  return queryPracticeSessionById(id, language);
 }
 
 export async function fetchPracticeSessionBySlug(
   slug: string,
   language: string = getDefaultLocale()
 ) {
-  return practiceSessionRepo.findPracticeSessionBySlug(slug, language);
+  return queryPracticeSessionBySlug(slug, language);
 }

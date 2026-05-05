@@ -1,9 +1,14 @@
-import * as seasonRepo from '~/repositories/season.server';
-import * as sectionRepo from '~/repositories/section.server';
-import {
-  createPracticeSessionTx,
-  findPracticeSessionsBySlugPrefix,
-} from '~/repositories/practiceSession.server';
+import { queryCreateSeason } from '~/repositories/queryCreateSeason.server';
+import { querySeasons } from '~/repositories/querySeasons.server';
+import { querySeasonById } from '~/repositories/querySeasonById.server';
+import { querySeasonBySlug } from '~/repositories/querySeasonBySlug.server';
+import { querySeasonBySlugWithCoverage } from '~/repositories/querySeasonBySlugWithCoverage.server';
+import { queryUpdateSeason } from '~/repositories/queryUpdateSeason.server';
+import { queryDeleteSeason } from '~/repositories/queryDeleteSeason.server';
+import { querySeasonsBySlugs } from '~/repositories/querySeasonsBySlugs.server';
+import { querySectionsWithDetails } from '~/repositories/querySectionsWithDetails.server';
+import { queryCreatePracticeSessionTx } from '~/repositories/queryCreatePracticeSessionTx.server';
+import { queryPracticeSessionsBySlugPrefix } from '~/repositories/queryPracticeSessionsBySlugPrefix.server';
 import { db } from '~/utils/db.server';
 import type { SeasonFormData } from '~/schemas/season';
 import type { AddSessionsRow } from '~/schemas/addSessions';
@@ -17,13 +22,13 @@ import { computeSeasonHints, type SeasonHints } from '~/services/seasonHints.ser
 
 export async function createSeason(input: SeasonFormData) {
   const baseSlug = slugify(input.name);
-  const existingSlugs = await seasonRepo.findSeasonsBySlugs([baseSlug]);
+  const existingSlugs = await querySeasonsBySlugs([baseSlug]);
   const uniqueSlug = makeUniqueSlug(
     baseSlug,
     existingSlugs.map(s => s.slug)
   );
 
-  return seasonRepo.createSeason({
+  return queryCreateSeason({
     slug: uniqueSlug,
     name: input.name,
     description: input.description,
@@ -40,7 +45,7 @@ type UpdateSeasonInput = SeasonFormData & {
 };
 
 export async function updateSeason(input: UpdateSeasonInput) {
-  return seasonRepo.updateSeason(input.id, {
+  return queryUpdateSeason(input.id, {
     name: input.name,
     description: input.description,
     startDate: input.startDate ? new Date(input.startDate) : null,
@@ -52,19 +57,19 @@ export async function updateSeason(input: UpdateSeasonInput) {
 }
 
 export async function deleteSeason(id: string) {
-  return seasonRepo.deleteSeason(id);
+  return queryDeleteSeason(id);
 }
 
 export async function fetchSeasons() {
-  return seasonRepo.findAllSeasons();
+  return querySeasons();
 }
 
 export async function fetchSeasonBySlug(slug: string) {
-  return seasonRepo.findSeasonBySlug(slug);
+  return querySeasonBySlug(slug);
 }
 
 export async function fetchSeasonById(id: string) {
-  return seasonRepo.findSeasonById(id);
+  return querySeasonById(id);
 }
 
 export async function fetchSeasonHints(
@@ -72,8 +77,8 @@ export async function fetchSeasonHints(
   language: string
 ): Promise<SeasonHints | null> {
   const [season, sections] = await Promise.all([
-    seasonRepo.findSeasonBySlugWithCoverage(slug, language),
-    sectionRepo.findAllSectionsWithDetails(language),
+    querySeasonBySlugWithCoverage(slug, language),
+    querySectionsWithDetails(language),
   ]);
   if (!season) {
     return null;
@@ -133,8 +138,8 @@ export async function fetchSeasonCoverage(
   language: string
 ): Promise<SeasonCoverage | null> {
   const [season, sections] = await Promise.all([
-    seasonRepo.findSeasonBySlugWithCoverage(slug, language),
-    sectionRepo.findAllSectionsWithDetails(language),
+    querySeasonBySlugWithCoverage(slug, language),
+    querySectionsWithDetails(language),
   ]);
   if (!season) {
     return null;
@@ -281,12 +286,12 @@ export async function fetchSeasonCoverage(
   };
 }
 
-type SectionsWithDetails = Awaited<ReturnType<typeof sectionRepo.findAllSectionsWithDetails>>;
+type SectionsWithDetails = Awaited<ReturnType<typeof querySectionsWithDetails>>;
 
 export async function fetchAddSessionsContext(slug: string, language: string) {
   const [season, sections] = await Promise.all([
-    seasonRepo.findSeasonBySlug(slug),
-    sectionRepo.findAllSectionsWithDetails(language),
+    querySeasonBySlug(slug),
+    querySectionsWithDetails(language),
   ]);
   if (!season) {
     return null;
@@ -327,7 +332,7 @@ export async function createSessionsForSeason(input: CreateSessionsForSeasonInpu
 
   const baseSlug = input.season.slug;
   const proposedSlugs = input.rows.map(row => `${baseSlug}-${row.date}`);
-  const existing = await findPracticeSessionsBySlugPrefix(baseSlug);
+  const existing = await queryPracticeSessionsBySlugPrefix(baseSlug);
   const taken = new Set(existing.map(e => e.slug));
 
   const finalSlugs: string[] = [];
@@ -341,7 +346,7 @@ export async function createSessionsForSeason(input: CreateSessionsForSeasonInpu
       const row = input.rows[i];
       const scheduledAt = helsinkiWallClockToUtc(row.date, row.startTime);
       const sessionLength = diffMinutes(row);
-      await createPracticeSessionTx(tx, {
+      await queryCreatePracticeSessionTx(tx, {
         slug: finalSlugs[i],
         sessionLength,
         seasonId: input.season.id,

@@ -1,4 +1,5 @@
-import * as exerciseTypeRepo from '~/repositories/exerciseType.server';
+import { queryExerciseTypeWithHierarchy } from '~/repositories/queryExerciseTypeWithHierarchy.server';
+import { queryRootExerciseTypesWithChildren } from '~/repositories/queryRootExerciseTypesWithChildren.server';
 import type { ExerciseTypeOption } from '~/types';
 import { getDefaultLocale } from '~/utils/locale.server';
 
@@ -12,10 +13,7 @@ export async function fetchExerciseTypePath(
   exerciseTypeId: string,
   language: string
 ): Promise<ExerciseTypeWithPath | null> {
-  const exerciseType = await exerciseTypeRepo.findExerciseTypeWithHierarchy(
-    exerciseTypeId,
-    language
-  );
+  const exerciseType = await queryExerciseTypeWithHierarchy(exerciseTypeId, language);
 
   if (!exerciseType) {
     return null;
@@ -57,7 +55,7 @@ export async function fetchExerciseTypeOptions(
   language: string = getDefaultLocale(),
   groupSlug?: string
 ): Promise<ExerciseTypeOption[]> {
-  const types = await exerciseTypeRepo.findRootExerciseTypesWithChildren(language, groupSlug);
+  const types = await queryRootExerciseTypesWithChildren(language, groupSlug);
 
   return types.map(type => ({
     id: type.id,
