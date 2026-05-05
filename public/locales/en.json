@@ -139,6 +139,23 @@
       "7": "Sunday"
     }
   },
+  "coverage": {
+    "title": "Coverage — {{season}}",
+    "subtitle_one": "Based on {{count}} session",
+    "subtitle_other": "Based on {{count}} sessions",
+    "emptyState": "This season has no practice sessions yet. Add sessions and coverage stats will appear here.",
+    "perTypeHeading": "Exercise type usage",
+    "perSectionHeading": "By section",
+    "colType": "Type",
+    "colAppearances": "Appearances",
+    "colUniqueDrills": "Unique drills",
+    "colTypeOnly": "Type-only",
+    "colLastSeen": "Last seen",
+    "neverUsed": "Never used",
+    "noEligibleTypes": "No exercise types are linked to this section.",
+    "sectionCoverageRatio": "{{used}}/{{total}} used",
+    "cta": "Coverage"
+  },
   "addSessions": {
     "title": "Add practice sessions",
     "subtitle": "Generate one or more practice sessions for season \"{{season}}\"",

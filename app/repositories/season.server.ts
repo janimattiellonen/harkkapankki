@@ -74,6 +74,43 @@ export async function findSeasonBySlug(slug: string) {
   });
 }
 
+export async function findSeasonBySlugWithCoverage(slug: string, language: string) {
+  return db.season.findUnique({
+    where: { slug },
+    include: {
+      practiceSessions: {
+        orderBy: [{ scheduledAt: 'asc' }, { createdAt: 'asc' }],
+        select: {
+          id: true,
+          slug: true,
+          name: true,
+          scheduledAt: true,
+          sectionItems: {
+            select: {
+              sectionId: true,
+              exerciseTypeId: true,
+              exerciseId: true,
+              exerciseType: {
+                select: {
+                  id: true,
+                  slug: true,
+                  translations: {
+                    where: { language },
+                    select: { name: true },
+                  },
+                },
+              },
+              exercise: {
+                select: { id: true, slug: true, name: true },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
 export async function updateSeason(id: string, data: UpdateSeasonData) {
   return db.season.update({
     where: { id },

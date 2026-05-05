@@ -119,14 +119,22 @@ export default function SeasonDetailPage({ season }: SeasonDetailPageProps) {
       )}
 
       <div>
-        <div className="mb-3 flex items-center justify-between">
+        <div className="mb-3 flex items-center justify-between gap-3 flex-wrap">
           <h2 className="text-xl font-semibold">{t('seasons.practiceSessions')}</h2>
-          <Link
-            to={`/seasons/${season.slug}/add-sessions`}
-            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          >
-            {t('addSessions.cta')}
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              to={`/seasons/${season.slug}/coverage`}
+              className="inline-flex items-center rounded border border-gray-300 px-3 py-2 text-sm font-medium hover:bg-gray-50"
+            >
+              {t('coverage.cta')}
+            </Link>
+            <Link
+              to={`/seasons/${season.slug}/add-sessions`}
+              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              {t('addSessions.cta')}
+            </Link>
+          </div>
         </div>
         {season.practiceSessions.length === 0 ? (
           <p className="text-gray-500">{t('seasons.noPracticeSessions')}</p>
