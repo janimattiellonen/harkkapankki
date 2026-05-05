@@ -36,6 +36,61 @@ export default function SeasonCoveragePage({ coverage }: SeasonCoveragePageProps
         </div>
       ) : (
         <div className="space-y-10">
+          {(coverage.hints.staleTypes.length > 0 ||
+            coverage.hints.recentRepeats.length > 0 ||
+            coverage.hints.lowDiversitySections.length > 0) && (
+            <section className="rounded border border-amber-300 bg-amber-50 p-4">
+              <h2 className="mb-3 text-xl font-semibold text-amber-900">{t('hints.heading')}</h2>
+              <div className="space-y-4 text-sm text-amber-900">
+                {coverage.hints.staleTypes.length > 0 && (
+                  <div>
+                    <h3 className="font-semibold">{t('hints.staleHeading')}</h3>
+                    <ul className="mt-1 list-disc list-inside">
+                      {coverage.hints.staleTypes.map(hint => (
+                        <li key={hint.typeId}>
+                          {t('hints.staleItem', {
+                            name: hint.typeName,
+                            count: hint.sessionsSinceLastUse,
+                          })}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {coverage.hints.recentRepeats.length > 0 && (
+                  <div>
+                    <h3 className="font-semibold">{t('hints.repeatHeading')}</h3>
+                    <ul className="mt-1 list-disc list-inside">
+                      {coverage.hints.recentRepeats.map((hint, idx) => (
+                        <li key={`${hint.exerciseId}-${idx}`}>
+                          {t('hints.repeatItem', {
+                            name: hint.exerciseName,
+                            gap: hint.gap,
+                          })}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {coverage.hints.lowDiversitySections.length > 0 && (
+                  <div>
+                    <h3 className="font-semibold">{t('hints.diversityHeading')}</h3>
+                    <ul className="mt-1 list-disc list-inside">
+                      {coverage.hints.lowDiversitySections.map(hint => (
+                        <li key={hint.sectionId}>
+                          {t('hints.diversityItem', {
+                            section: hint.sectionName,
+                            type: hint.uniqueTypeName,
+                            count: hint.sessionsInSection,
+                          })}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </section>
+          )}
           <section>
             <h2 className="mb-3 text-xl font-semibold">{t('coverage.perTypeHeading')}</h2>
             <div className="overflow-x-auto rounded border border-gray-200">

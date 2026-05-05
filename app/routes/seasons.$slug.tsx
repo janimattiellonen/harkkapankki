@@ -7,7 +7,8 @@ import {
 } from 'react-router';
 import { useLoaderData } from 'react-router';
 import SeasonDetailPage from '~/pages/SeasonDetailPage';
-import { deleteSeason, fetchSeasonBySlug } from '~/services/seasons.server';
+import { deleteSeason, fetchSeasonBySlug, fetchSeasonHints } from '~/services/seasons.server';
+import { getDefaultLocale } from '~/utils/locale.server';
 
 export const meta: MetaFunction<typeof loader> = ({ data: loaderData }) => {
   if (!loaderData?.season) {
@@ -17,11 +18,14 @@ export const meta: MetaFunction<typeof loader> = ({ data: loaderData }) => {
 };
 
 export async function loader({ params }: LoaderFunctionArgs) {
-  const season = await fetchSeasonBySlug(params.slug!);
+  const [season, hints] = await Promise.all([
+    fetchSeasonBySlug(params.slug!),
+    fetchSeasonHints(params.slug!, getDefaultLocale()),
+  ]);
   if (!season) {
     throw new Response('Season not found', { status: 404 });
   }
-  return { season };
+  return { season, hints };
 }
 
 export async function action({ request, params }: ActionFunctionArgs) {
@@ -51,6 +55,6 @@ export async function action({ request, params }: ActionFunctionArgs) {
 }
 
 export default function SeasonDetailRoute() {
-  const { season } = useLoaderData<typeof loader>();
-  return <SeasonDetailPage season={season} />;
+  const { season, hints } = useLoaderData<typeof loader>();
+  return <SeasonDetailPage season={season} hints={hints} />;
 }
