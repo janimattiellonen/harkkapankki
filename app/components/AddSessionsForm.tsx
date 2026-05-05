@@ -70,7 +70,7 @@ function buildInitialRows(count: number, season: SeasonDefaults): SessionRow[] {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const seasonStart = season.startDate ? new Date(season.startDate) : null;
-  const fromDate = seasonStart && seasonStart > today ? seasonStart : today;
+  const fromDate = seasonStart ?? today;
   let cursor = nextOccurrenceOfWeekday(fromDate, dayOfWeek);
 
   const rows: SessionRow[] = [];
