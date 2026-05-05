@@ -38,9 +38,13 @@ type EditPractiseSessionPageProps = {
 };
 
 function scheduledAtToInputs(value: Date | string | null): { date: string; time: string } {
-  if (!value) return { date: '', time: '' };
+  if (!value) {
+    return { date: '', time: '' };
+  }
   const d = new Date(value);
-  if (Number.isNaN(d.getTime())) return { date: '', time: '' };
+  if (Number.isNaN(d.getTime())) {
+    return { date: '', time: '' };
+  }
   return { date: utcToHelsinkiDateString(d), time: utcToHelsinkiTimeString(d) };
 }
 
@@ -101,9 +105,15 @@ export default function EditPractiseSessionPage({
   const handleRemoveItem = (sectionId: string, itemValue: string, exerciseId?: string) => {
     setSelectedItems(prev =>
       prev.filter(item => {
-        if (item.sectionId !== sectionId) return true;
-        if (item.itemValue !== itemValue) return true;
-        if (exerciseId) return item.exerciseId !== exerciseId;
+        if (item.sectionId !== sectionId) {
+          return true;
+        }
+        if (item.itemValue !== itemValue) {
+          return true;
+        }
+        if (exerciseId) {
+          return item.exerciseId !== exerciseId;
+        }
         return false;
       })
     );

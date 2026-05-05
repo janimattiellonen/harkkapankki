@@ -102,7 +102,9 @@ export default function AddSessionsForm({
 
   const handleCountChange = (raw: string) => {
     const next = Number(raw);
-    if (!Number.isFinite(next) || next < MIN_SESSIONS || next > MAX_SESSIONS) return;
+    if (!Number.isFinite(next) || next < MIN_SESSIONS || next > MAX_SESSIONS) {
+      return;
+    }
     setCount(next);
     if (next > rows.length) {
       const additional = next - rows.length;
@@ -140,7 +142,9 @@ export default function AddSessionsForm({
   const handleStartTimeChange = (id: string, newStart: string) => {
     setRows(prev =>
       prev.map(r => {
-        if (r.id !== id) return r;
+        if (r.id !== id) {
+          return r;
+        }
         const duration = diffMinutes(r.startTime, r.endTime);
         return {
           ...r,

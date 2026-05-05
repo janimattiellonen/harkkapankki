@@ -57,10 +57,14 @@ export function PractiseSessionSection({
   };
 
   const handleAdd = () => {
-    if (!selectedTypeValue) return;
+    if (!selectedTypeValue) {
+      return;
+    }
 
     if (hasExercises) {
-      if (!selectedExerciseId) return;
+      if (!selectedExerciseId) {
+        return;
+      }
       const exercise = selectedType!.exercises!.find(e => e.value === selectedExerciseId);
       if (exercise) {
         onAddItem({

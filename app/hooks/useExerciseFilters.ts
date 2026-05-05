@@ -86,14 +86,18 @@ export function useExerciseFilters({ exerciseTypes }: UseExerciseFiltersProps) {
   // Check if a parent type is selected (all children selected)
   const isParentSelected = (parentId: string): boolean => {
     const childIds = getChildIds(parentId);
-    if (childIds.length === 0) return selectedTypeIds.includes(parentId);
+    if (childIds.length === 0) {
+      return selectedTypeIds.includes(parentId);
+    }
     return childIds.every(id => selectedTypeIds.includes(id));
   };
 
   // Check if parent is indeterminate (some but not all children selected)
   const isParentIndeterminate = (parentId: string): boolean => {
     const childIds = getChildIds(parentId);
-    if (childIds.length === 0) return false;
+    if (childIds.length === 0) {
+      return false;
+    }
     const selectedChildren = childIds.filter(id => selectedTypeIds.includes(id));
     return selectedChildren.length > 0 && selectedChildren.length < childIds.length;
   };

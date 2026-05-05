@@ -54,7 +54,9 @@ export function generateProgrammeForBatch({
     const excluded = new Set<string>();
     for (let j = Math.max(0, i - 2); j < i; j++) {
       for (const item of sessions[j].items) {
-        if (item.exerciseId) excluded.add(item.exerciseId);
+        if (item.exerciseId) {
+          excluded.add(item.exerciseId);
+        }
       }
     }
 
@@ -70,7 +72,9 @@ export function generateProgrammeForBatch({
       let picked: { typeId: string; exerciseId: string } | null = null;
 
       for (const type of shuffledTypes) {
-        if (type.exerciseIds.length === 0) continue;
+        if (type.exerciseIds.length === 0) {
+          continue;
+        }
         const shuffledExercises = shuffle(type.exerciseIds, rng);
         for (const exerciseId of shuffledExercises) {
           if (!excluded.has(exerciseId)) {
@@ -78,7 +82,9 @@ export function generateProgrammeForBatch({
             break;
           }
         }
-        if (picked) break;
+        if (picked) {
+          break;
+        }
       }
 
       if (picked) {

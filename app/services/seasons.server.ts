@@ -73,7 +73,9 @@ export async function fetchAddSessionsContext(slug: string, language: string) {
     seasonRepo.findSeasonBySlug(slug),
     sectionRepo.findAllSectionsWithDetails(language),
   ]);
-  if (!season) return null;
+  if (!season) {
+    return null;
+  }
   return { season, sections };
 }
 

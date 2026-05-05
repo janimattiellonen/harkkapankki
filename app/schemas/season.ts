@@ -39,7 +39,9 @@ export const seasonSchema = z
           .optional()
           .refine(
             val => {
-              if (val === undefined) return true;
+              if (val === undefined) {
+                return true;
+              }
               const num = Number(val);
               return Number.isInteger(num) && num >= 1 && num <= 7;
             },
@@ -70,7 +72,9 @@ export const seasonSchema = z
   })
   .refine(
     data => {
-      if (!data.startDate || !data.endDate) return true;
+      if (!data.startDate || !data.endDate) {
+        return true;
+      }
       return data.endDate >= data.startDate;
     },
     {

@@ -65,9 +65,15 @@ export default function PractiseSessionForm({
   const handleRemoveItem = (sectionId: string, itemValue: string, exerciseId?: string) => {
     setSelectedItems(prev =>
       prev.filter(item => {
-        if (item.sectionId !== sectionId) return true;
-        if (item.itemValue !== itemValue) return true;
-        if (exerciseId) return item.exerciseId !== exerciseId;
+        if (item.sectionId !== sectionId) {
+          return true;
+        }
+        if (item.itemValue !== itemValue) {
+          return true;
+        }
+        if (exerciseId) {
+          return item.exerciseId !== exerciseId;
+        }
         return false;
       })
     );
