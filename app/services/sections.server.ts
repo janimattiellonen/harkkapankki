@@ -1,11 +1,11 @@
-import * as sectionRepo from '~/repositories/section.server';
+import { querySectionsWithDetails } from '~/repositories/querySectionsWithDetails.server';
 import type { Section, PractiseLength } from '~/types';
 import { getDefaultLocale } from '~/utils/locale.server';
 
 export async function fetchSectionsForPractiseSession(
   language: string = getDefaultLocale()
 ): Promise<Section[]> {
-  const dbSections = await sectionRepo.findAllSectionsWithDetails(language);
+  const dbSections = await querySectionsWithDetails(language);
 
   return dbSections.map(section => {
     // Build duration: either a single number or an object with 60/90 keys

@@ -1,5 +1,11 @@
 import type { Exercise } from '@prisma/client';
-import * as exerciseRepo from '~/repositories/exercise.server';
+import { queryExercises, type ExerciseWhereInput } from '~/repositories/queryExercises.server';
+import { queryExerciseById } from '~/repositories/queryExerciseById.server';
+import { queryExerciseBySlug } from '~/repositories/queryExerciseBySlug.server';
+import { queryExercisesBySlugs } from '~/repositories/queryExercisesBySlugs.server';
+import { queryCreateExercise } from '~/repositories/queryCreateExercise.server';
+import { queryUpdateExercise } from '~/repositories/queryUpdateExercise.server';
+import { queryDeleteExercise } from '~/repositories/queryDeleteExercise.server';
 import { fetchExerciseTypePath } from './exerciseTypes.server';
 import { slugify, makeUniqueSlug } from '~/utils/slugify';
 import { getDefaultLocale } from '~/utils/locale.server';
@@ -27,7 +33,7 @@ export async function fetchExercises(
   language: string = getDefaultLocale(),
   filters?: ExerciseFilters
 ): Promise<ExerciseWithTypePath[]> {
-  const where: exerciseRepo.ExerciseWhereInput = {};
+  const where: ExerciseWhereInput = {};
 
   // Apply search term filter
   if (filters?.searchTerm && filters.searchTerm.length >= 3) {
@@ -44,7 +50,7 @@ export async function fetchExercises(
     };
   }
 
-  const exercises = await exerciseRepo.findManyExercises(where);
+  const exercises = await queryExercises(where);
 
   // Fetch exercise type paths for all exercises
   const exercisesWithPaths = await Promise.all(
@@ -64,7 +70,7 @@ export async function fetchExerciseById(
   id: string,
   language: string = getDefaultLocale()
 ): Promise<ExerciseWithTypePath | null> {
-  const exercise = await exerciseRepo.findExerciseById(id);
+  const exercise = await queryExerciseById(id);
 
   if (!exercise) {
     return null;
@@ -83,7 +89,7 @@ export async function fetchExerciseBySlug(
   slug: string,
   language: string = getDefaultLocale()
 ): Promise<ExerciseWithTypePath | null> {
-  const exercise = await exerciseRepo.findExerciseBySlug(slug);
+  const exercise = await queryExerciseBySlug(slug);
 
   if (!exercise) {
     return null;
@@ -105,11 +111,11 @@ export async function createExercise(data: ExerciseInput): Promise<Exercise> {
   const baseSlug = slugify(data.name);
 
   // Check for existing slugs to ensure uniqueness
-  const existingSlugs = await exerciseRepo.findExercisesBySlugs([baseSlug]);
+  const existingSlugs = await queryExercisesBySlugs([baseSlug]);
   const existingSlugStrings = existingSlugs.map(e => e.slug);
   const uniqueSlug = makeUniqueSlug(baseSlug, existingSlugStrings);
 
-  return exerciseRepo.createExercise({
+  return queryCreateExercise({
     ...rest,
     slug: uniqueSlug,
     duration: Number(rest.duration),
@@ -123,7 +129,7 @@ export async function updateExercise(id: string, data: ExerciseInput): Promise<E
   const { exerciseTypeId, ...rest } = data;
 
   // Get the current exercise to check if name changed
-  const currentExercise = await exerciseRepo.findExerciseById(id);
+  const currentExercise = await queryExerciseById(id);
 
   if (!currentExercise) {
     throw new Error('Exercise not found');
@@ -133,7 +139,7 @@ export async function updateExercise(id: string, data: ExerciseInput): Promise<E
   let slug: string | undefined;
   if (currentExercise.name !== data.name) {
     const baseSlug = slugify(data.name);
-    const existingSlugs = await exerciseRepo.findExercisesBySlugs([baseSlug]);
+    const existingSlugs = await queryExercisesBySlugs([baseSlug]);
     // Filter out the current exercise's slug from the existing slugs
     const existingSlugStrings = existingSlugs
       .filter(e => e.slug !== currentExercise.slug)
@@ -141,7 +147,7 @@ export async function updateExercise(id: string, data: ExerciseInput): Promise<E
     slug = makeUniqueSlug(baseSlug, existingSlugStrings);
   }
 
-  return exerciseRepo.updateExercise(id, {
+  return queryUpdateExercise(id, {
     ...rest,
     ...(slug && { slug }),
     duration: Number(rest.duration),
@@ -152,5 +158,5 @@ export async function updateExercise(id: string, data: ExerciseInput): Promise<E
 }
 
 export async function deleteExercise(id: string): Promise<Exercise> {
-  return exerciseRepo.deleteExercise(id);
+  return queryDeleteExercise(id);
 }

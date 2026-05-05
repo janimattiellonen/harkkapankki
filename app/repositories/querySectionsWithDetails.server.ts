@@ -14,7 +14,7 @@ export type SectionWithDetails = {
   }[];
 };
 
-export async function findAllSectionsWithDetails(
+export async function querySectionsWithDetails(
   language: string = 'en'
 ): Promise<SectionWithDetails[]> {
   const sections = await db.section.findMany({
