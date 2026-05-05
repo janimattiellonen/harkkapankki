@@ -1,16 +1,21 @@
+import type { Prisma } from '@prisma/client';
 import { db } from '~/utils/db.server';
+
+type SessionSectionItemInput = {
+  sectionId: string;
+  exerciseTypeId: string;
+  exerciseId?: string | null;
+  order: number;
+};
 
 type CreatePracticeSessionData = {
   slug: string;
   name?: string;
   description?: string;
   sessionLength: number;
-  sectionItems: Array<{
-    sectionId: string;
-    exerciseTypeId: string;
-    exerciseId?: string | null;
-    order: number;
-  }>;
+  seasonId?: string | null;
+  scheduledAt?: Date | null;
+  sectionItems: SessionSectionItemInput[];
 };
 
 export async function createPracticeSession(data: CreatePracticeSessionData) {
@@ -20,6 +25,8 @@ export async function createPracticeSession(data: CreatePracticeSessionData) {
       name: data.name || null,
       description: data.description || null,
       sessionLength: data.sessionLength,
+      seasonId: data.seasonId ?? null,
+      scheduledAt: data.scheduledAt ?? null,
       sectionItems: {
         create: data.sectionItems,
       },
@@ -38,6 +45,25 @@ export async function createPracticeSession(data: CreatePracticeSessionData) {
             },
           },
         },
+      },
+    },
+  });
+}
+
+export async function createPracticeSessionTx(
+  tx: Prisma.TransactionClient,
+  data: CreatePracticeSessionData
+) {
+  return tx.practiceSession.create({
+    data: {
+      slug: data.slug,
+      name: data.name || null,
+      description: data.description || null,
+      sessionLength: data.sessionLength,
+      seasonId: data.seasonId ?? null,
+      scheduledAt: data.scheduledAt ?? null,
+      sectionItems: {
+        create: data.sectionItems,
       },
     },
   });
@@ -177,6 +203,19 @@ export async function findPracticeSessionsBySlugs(slugs: string[]) {
     where: {
       slug: {
         in: slugs,
+      },
+    },
+    select: {
+      slug: true,
+    },
+  });
+}
+
+export async function findPracticeSessionsBySlugPrefix(prefix: string) {
+  return db.practiceSession.findMany({
+    where: {
+      slug: {
+        startsWith: prefix,
       },
     },
     select: {

@@ -1,4 +1,4 @@
-import { Form, Link, useNavigation } from 'react-router';
+import { Form, Link, useNavigation, useSearchParams } from 'react-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '~/components/Button';
@@ -33,8 +33,10 @@ type SeasonDetailPageProps = {
 export default function SeasonDetailPage({ season }: SeasonDetailPageProps) {
   const { t } = useTranslation();
   const navigation = useNavigation();
+  const [searchParams] = useSearchParams();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
+  const warningCount = Number(searchParams.get('warnings') ?? '0');
   const isDeleting = navigation.state !== 'idle' && navigation.formData?.get('intent') === 'delete';
 
   const formatDate = (value: Date | string | null) =>
@@ -107,8 +109,25 @@ export default function SeasonDetailPage({ season }: SeasonDetailPageProps) {
         </div>
       </dl>
 
+      {warningCount > 0 && (
+        <div
+          role="status"
+          className="mb-4 rounded border border-amber-500 bg-amber-50 p-4 text-amber-900"
+        >
+          {t('addSessions.warningBanner', { count: warningCount })}
+        </div>
+      )}
+
       <div>
-        <h2 className="text-xl font-semibold mb-3">{t('seasons.practiceSessions')}</h2>
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="text-xl font-semibold">{t('seasons.practiceSessions')}</h2>
+          <Link
+            to={`/seasons/${season.slug}/add-sessions`}
+            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            {t('addSessions.cta')}
+          </Link>
+        </div>
         {season.practiceSessions.length === 0 ? (
           <p className="text-gray-500">{t('seasons.noPracticeSessions')}</p>
         ) : (

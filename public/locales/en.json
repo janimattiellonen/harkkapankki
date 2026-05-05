@@ -131,6 +131,29 @@
       "7": "Sunday"
     }
   },
+  "addSessions": {
+    "title": "Add practice sessions",
+    "subtitle": "Generate one or more practice sessions for season \"{{season}}\"",
+    "section": "Initial sessions",
+    "howMany": "How many sessions to create?",
+    "regenerate": "Regenerate from defaults",
+    "date": "Date",
+    "startTime": "Start time",
+    "endTime": "End time",
+    "remove": "Remove",
+    "rowDate": "Session {{index}} date",
+    "rowStartTime": "Session {{index}} start time",
+    "rowEndTime": "Session {{index}} end time",
+    "removeRow": "Remove session {{index}}",
+    "empty": "No sessions yet. Set a count above.",
+    "atLeastOne": "At least one session is required",
+    "allFieldsRequired": "All fields are required",
+    "endAfterStart": "End time must be after start time",
+    "submit": "Create sessions",
+    "cta": "Add sessions",
+    "warningBanner_one": "{{count}} section fell back to type-only — the exercise bank didn't have a fresh drill.",
+    "warningBanner_other": "{{count}} sections fell back to type-only — the exercise bank didn't have a fresh drill."
+  },
   "common": {
     "save": "Save",
     "cancel": "Cancel",

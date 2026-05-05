@@ -29,6 +29,8 @@
     "@stylexjs/stylex": "^0.18.2",
     "@uiw/react-md-editor": "^4.0.8",
     "cheerio": "^1.1.2",
+    "date-fns": "^4.1.0",
+    "date-fns-tz": "^3.2.0",
     "i18next": "^25.5.3",
     "i18next-browser-languagedetector": "^8.2.0",
     "i18next-fs-backend": "^2.6.0",
