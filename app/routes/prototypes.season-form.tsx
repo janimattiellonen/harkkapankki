@@ -297,7 +297,7 @@ export default function SeasonFormPrototype() {
                 id="defaultDayOfWeek"
                 value={defaultDayOfWeek}
                 onChange={e => setDefaultDayOfWeek(Number(e.target.value))}
-                className="w-full rounded border border-gray-300 px-3 py-2"
+                className="h-10 w-full rounded border border-gray-300 px-3"
               >
                 {ISO_WEEKDAYS.map(d => (
                   <option key={d.value} value={d.value}>
@@ -315,7 +315,7 @@ export default function SeasonFormPrototype() {
                 id="defaultStartTime"
                 value={defaultStartTime}
                 onChange={e => setDefaultStartTime(e.target.value)}
-                className="w-full rounded border border-gray-300 px-3 py-2"
+                className="h-10 w-full rounded border border-gray-300 px-3"
               />
             </div>
             <div>
@@ -326,7 +326,7 @@ export default function SeasonFormPrototype() {
                 id="defaultDurationMin"
                 value={defaultDurationMin}
                 onChange={e => setDefaultDurationMin(Number(e.target.value) as 60 | 90)}
-                className="w-full rounded border border-gray-300 px-3 py-2"
+                className="h-10 w-full rounded border border-gray-300 px-3"
               >
                 <option value={60}>60 minutes</option>
                 <option value={90}>90 minutes</option>
