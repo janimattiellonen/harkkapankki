@@ -18,13 +18,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   to="/exercises"
                   className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md"
                 >
-                  {t('navigation.exercises')}
+                  {t('navigation.exercises', 'Harjoitukset')}
                 </Link>
                 <Link
                   to="/practise-sessions"
                   className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md"
                 >
-                  {t('navigation.sessions')}
+                  {t('navigation.sessions', 'Harjoituskerrat')}
                 </Link>
               </div>
             </div>
