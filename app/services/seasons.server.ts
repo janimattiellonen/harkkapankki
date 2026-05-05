@@ -5,7 +5,7 @@ import { querySeasonBySlug } from '~/repositories/querySeasonBySlug.server';
 import { querySeasonBySlugWithCoverage } from '~/repositories/querySeasonBySlugWithCoverage.server';
 import { queryUpdateSeason } from '~/repositories/queryUpdateSeason.server';
 import { queryDeleteSeason } from '~/repositories/queryDeleteSeason.server';
-import { querySeasonsBySlugs } from '~/repositories/querySeasonsBySlugs.server';
+import { querySeasonsBySlugPrefix } from '~/repositories/querySeasonsBySlugPrefix.server';
 import { querySectionsWithDetails } from '~/repositories/querySectionsWithDetails.server';
 import { queryCreatePracticeSessionTx } from '~/repositories/queryCreatePracticeSessionTx.server';
 import { queryPracticeSessionsBySlugPrefix } from '~/repositories/queryPracticeSessionsBySlugPrefix.server';
@@ -22,7 +22,7 @@ import { computeSeasonHints, type SeasonHints } from '~/services/seasonHints.ser
 
 export async function createSeason(input: SeasonFormData) {
   const baseSlug = slugify(input.name);
-  const existingSlugs = await querySeasonsBySlugs([baseSlug]);
+  const existingSlugs = await querySeasonsBySlugPrefix(baseSlug);
   const uniqueSlug = makeUniqueSlug(
     baseSlug,
     existingSlugs.map(s => s.slug)
