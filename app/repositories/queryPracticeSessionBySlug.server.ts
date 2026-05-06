@@ -8,7 +8,7 @@ export async function queryPracticeSessionBySlug(slug: string, language: string)
         select: { slug: true, name: true },
       },
       sectionItems: {
-        orderBy: [{ sectionId: 'asc' }, { order: 'asc' }],
+        orderBy: [{ section: { order: 'asc' } }, { order: 'asc' }],
         include: {
           section: {
             include: {
