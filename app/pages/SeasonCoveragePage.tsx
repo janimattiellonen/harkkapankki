@@ -24,7 +24,7 @@ export default function SeasonCoveragePage({ coverage }: SeasonCoveragePageProps
           to={`/seasons/${season.slug}`}
           className="text-blue-600 hover:text-blue-800 mb-4 inline-flex items-center"
         >
-          {t('seasons.backToSeasons')}
+          {t('sessions.backToSeason', { name: season.name })}
         </Link>
         <h1 className="mt-2 text-3xl font-bold">{t('coverage.title', { season: season.name })}</h1>
         <p className="mt-1 text-gray-600">{t('coverage.subtitle', { count: totalSessions })}</p>
