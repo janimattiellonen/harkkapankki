@@ -57,6 +57,19 @@ export default function SeasonForm({ defaults, errors, submitText, cancelHref }:
 
   const fieldError = (field: string): string | undefined => clientErrors[field] ?? errors?.[field];
 
+  const startDateIsInPast = ((): boolean => {
+    if (!startDate) {
+      return false;
+    }
+    const parsed = new Date(startDate);
+    if (Number.isNaN(parsed.getTime())) {
+      return false;
+    }
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return parsed < today;
+  })();
+
   return (
     <Form method="post" onSubmit={handleSubmit} noValidate>
       <fieldset className="mb-6 rounded border border-gray-200 p-4 min-w-0">
@@ -115,6 +128,9 @@ export default function SeasonForm({ defaults, errors, submitText, cancelHref }:
             />
             {fieldError('startDate') && (
               <p className="mt-1 text-sm text-red-600">{fieldError('startDate')}</p>
+            )}
+            {!fieldError('startDate') && startDateIsInPast && (
+              <p className="mt-1 text-sm text-amber-700">{t('seasons.startDateInPast')}</p>
             )}
           </div>
           <div>

@@ -116,6 +116,7 @@
     "startDateOptional": "Alkupäivä (valinnainen)",
     "endDateOptional": "Loppupäivä (valinnainen)",
     "endDateAfterStartDate": "Loppupäivän tulee olla sama tai myöhempi kuin alkupäivän",
+    "startDateInPast": "Alkupäivä on menneisyydessä — automaattisesti generoidut harjoituskerrat alkavat seuraavasta tulevasta oletusviikonpäivästä.",
     "defaultDayOfWeek": "Oletus viikonpäivä",
     "defaultStartTime": "Oletus alkamisaika",
     "defaultDuration": "Oletuskesto",
