@@ -45,6 +45,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     season: { id: ctx.season.id, slug: ctx.season.slug },
     sections: ctx.sections,
     rows: result.data.rows,
+    existingSessionCount: ctx.season.practiceSessions.length,
   });
 
   const params2 = new URLSearchParams();

@@ -310,7 +310,10 @@ type CreateSessionsForSeasonInput = {
   season: { id: string; slug: string };
   sections: SectionsWithDetails;
   rows: AddSessionsRow[];
+  existingSessionCount: number;
 };
+
+const DEFAULT_SESSION_NAME_PREFIX = 'Kenttätreenit';
 
 export async function createSessionsForSeason(input: CreateSessionsForSeasonInput): Promise<{
   createdCount: number;
@@ -346,8 +349,10 @@ export async function createSessionsForSeason(input: CreateSessionsForSeasonInpu
       const row = input.rows[i];
       const scheduledAt = helsinkiWallClockToUtc(row.date, row.startTime);
       const sessionLength = diffMinutes(row);
+      const sessionNumber = input.existingSessionCount + i + 1;
       await queryCreatePracticeSessionTx(tx, {
         slug: finalSlugs[i],
+        name: `${DEFAULT_SESSION_NAME_PREFIX} #${sessionNumber}`,
         sessionLength,
         seasonId: input.season.id,
         scheduledAt,
