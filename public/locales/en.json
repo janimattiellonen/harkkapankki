@@ -116,6 +116,7 @@
     "startDateOptional": "Start date (optional)",
     "endDateOptional": "End date (optional)",
     "endDateAfterStartDate": "End date must be on or after start date",
+    "startDateInPast": "Start date is in the past — auto-generated sessions will start from the next future occurrence of the default weekday.",
     "defaultDayOfWeek": "Default day of week",
     "defaultStartTime": "Default start time",
     "defaultDuration": "Default duration",
