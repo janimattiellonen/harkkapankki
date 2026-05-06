@@ -19,3 +19,8 @@ node_modules
 
 # Claude Code config (personal, per-developer)
 .claude/
+
+# Browser test artifacts (Playwright MCP workspace + agent screenshots)
+/.playwright-mcp/
+/nav-*.png
+/preview-*.png
