@@ -91,7 +91,10 @@
     "partOfSeason": "Osa kautta",
     "backToSeason": "Takaisin kauteen {{name}}",
     "standaloneBanner": "Tämä lista näyttää vain yksittäiset harjoituskerrat. Kausiin sidotut harjoituskerrat löytyvät kausinäkymästä.",
-    "standaloneBannerLink": "Avaa kausinäkymä"
+    "standaloneBannerLink": "Avaa kausinäkymä",
+    "previewExercise": "Esikatsele harjoitus sivupaneelissa",
+    "closePreview": "Sulje esikatselu",
+    "openInNewTab": "Avaa uudessa välilehdessä"
   },
   "seasons": {
     "title": "Kaudet",

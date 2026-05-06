@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import ExercisePreviewPanel from '~/components/ExercisePreviewPanel';
 
 type SectionItem = {
   id: string;
@@ -40,11 +42,65 @@ type PractiseSessionDetailProps = {
   session: PracticeSessionData;
 };
 
+type ExerciseLinkProps = {
+  slug: string;
+  name: string;
+  className?: string;
+  onPreview: (slug: string) => void;
+  isActive: boolean;
+  previewLabel: string;
+};
+
+function ExerciseLink({
+  slug,
+  name,
+  className,
+  onPreview,
+  isActive,
+  previewLabel,
+}: ExerciseLinkProps) {
+  return (
+    <span className="inline-flex items-center gap-1.5">
+      <Link
+        to={`/exercises/${slug}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={className}
+      >
+        {name}
+      </Link>
+      <button
+        type="button"
+        onClick={() => onPreview(slug)}
+        aria-label={previewLabel}
+        aria-pressed={isActive}
+        title={previewLabel}
+        className={`inline-flex items-center justify-center w-5 h-5 rounded text-gray-400 hover:text-blue-600 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+          isActive ? 'text-blue-600 bg-blue-50' : ''
+        }`}
+      >
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M3 6a2 2 0 012-2h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V6zM14 4v16"
+          />
+        </svg>
+      </button>
+    </span>
+  );
+}
+
 export default function PractiseSessionDetail({ session }: PractiseSessionDetailProps) {
   const { t } = useTranslation();
+  const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
+
   const formatDate = (dateString: Date | string, locale: string = 'fi-FI') => {
     return new Date(dateString).toLocaleDateString(locale);
   };
+
+  const previewLabel = t('sessions.previewExercise');
 
   // Group items by section
   const itemsBySection = session.sectionItems.reduce(
@@ -144,103 +200,121 @@ export default function PractiseSessionDetail({ session }: PractiseSessionDetail
         </div>
       )}
 
-      {/* Sections */}
-      <div className="space-y-6">
-        <h2 className="text-xl font-semibold">{t('sessions.sessionPlan')}</h2>
-        {sections.length === 0 ? (
-          <p className="text-gray-500">{t('sessions.noExercisesAdded')}</p>
-        ) : (
-          sections.map(({ section, items }) => (
-            <div key={section.id} className="border rounded-lg p-4">
-              <h3 className="text-lg font-semibold mb-3">
-                {section.translations[0]?.name || section.slug}
-              </h3>
-              <ul className="space-y-2">
-                {(() => {
-                  // Group items by exercise type
-                  const groupedByType: Array<{
-                    typeName: string;
-                    items: SectionItem[];
-                  }> = [];
-                  for (const item of items) {
-                    const typeName =
-                      item.exerciseType.translations[0]?.name || item.exerciseType.id;
-                    const existing = groupedByType.find(g => g.typeName === typeName);
-                    if (existing) {
-                      existing.items.push(item);
-                    } else {
-                      groupedByType.push({ typeName, items: [item] });
-                    }
-                  }
+      {/* Two-column layout: session plan on left, optional exercise preview on right */}
+      <div className={selectedSlug ? 'flex flex-col lg:flex-row lg:gap-6' : ''}>
+        <div className={selectedSlug ? 'lg:w-1/2 lg:flex-shrink-0' : 'w-full'}>
+          <div className="space-y-6">
+            <h2 className="text-xl font-semibold">{t('sessions.sessionPlan')}</h2>
+            {sections.length === 0 ? (
+              <p className="text-gray-500">{t('sessions.noExercisesAdded')}</p>
+            ) : (
+              sections.map(({ section, items }) => (
+                <div key={section.id} className="border rounded-lg p-4">
+                  <h3 className="text-lg font-semibold mb-3">
+                    {section.translations[0]?.name || section.slug}
+                  </h3>
+                  <ul className="space-y-2">
+                    {(() => {
+                      // Group items by exercise type
+                      const groupedByType: Array<{
+                        typeName: string;
+                        items: SectionItem[];
+                      }> = [];
+                      for (const item of items) {
+                        const typeName =
+                          item.exerciseType.translations[0]?.name || item.exerciseType.id;
+                        const existing = groupedByType.find(g => g.typeName === typeName);
+                        if (existing) {
+                          existing.items.push(item);
+                        } else {
+                          groupedByType.push({ typeName, items: [item] });
+                        }
+                      }
 
-                  return groupedByType.map(group => {
-                    const exercisesInGroup = group.items.filter(i => i.exercise);
+                      return groupedByType.map(group => {
+                        const exercisesInGroup = group.items.filter(i => i.exercise);
 
-                    // No exercises linked - show type name only
-                    if (exercisesInGroup.length === 0) {
-                      return group.items.map(item => (
-                        <li key={item.id} className="flex items-start p-3 bg-gray-50 rounded-md">
-                          <span className="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-medium mr-3">
-                            {item.order}
-                          </span>
-                          <span className="text-gray-700">{group.typeName}</span>
-                        </li>
-                      ));
-                    }
-
-                    // Single exercise with same name as type - show once
-                    if (
-                      exercisesInGroup.length === 1 &&
-                      exercisesInGroup[0].exercise!.name === group.typeName
-                    ) {
-                      return (
-                        <li
-                          key={exercisesInGroup[0].id}
-                          className="flex items-start p-3 bg-gray-50 rounded-md"
-                        >
-                          <span className="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-medium mr-3">
-                            {exercisesInGroup[0].order}
-                          </span>
-                          <Link
-                            to={`/exercises/${exercisesInGroup[0].exercise!.slug}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 hover:text-blue-800 hover:underline"
-                          >
-                            {group.typeName}
-                          </Link>
-                        </li>
-                      );
-                    }
-
-                    // Multiple exercises or single with different name - group under type
-                    return (
-                      <li key={group.typeName} className="p-3 bg-gray-50 rounded-md">
-                        <div className="font-medium text-gray-700 mb-2">{group.typeName}</div>
-                        <ul className="ml-4 space-y-1">
-                          {exercisesInGroup.map(item => (
-                            <li key={item.id} className="flex items-start">
-                              <span className="flex-shrink-0 w-5 h-5 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-medium mr-2">
+                        // No exercises linked - show type name only
+                        if (exercisesInGroup.length === 0) {
+                          return group.items.map(item => (
+                            <li
+                              key={item.id}
+                              className="flex items-start p-3 bg-gray-50 rounded-md"
+                            >
+                              <span className="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-medium mr-3">
                                 {item.order}
                               </span>
-                              <Link
-                                to={`/exercises/${item.exercise!.slug}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-blue-600 hover:text-blue-800 hover:underline"
-                              >
-                                {item.exercise!.name}
-                              </Link>
+                              <span className="text-gray-700">{group.typeName}</span>
                             </li>
-                          ))}
-                        </ul>
-                      </li>
-                    );
-                  });
-                })()}
-              </ul>
-            </div>
-          ))
+                          ));
+                        }
+
+                        // Single exercise with same name as type - show once
+                        if (
+                          exercisesInGroup.length === 1 &&
+                          exercisesInGroup[0].exercise!.name === group.typeName
+                        ) {
+                          const single = exercisesInGroup[0];
+                          return (
+                            <li
+                              key={single.id}
+                              className="flex items-start p-3 bg-gray-50 rounded-md"
+                            >
+                              <span className="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-medium mr-3">
+                                {single.order}
+                              </span>
+                              <ExerciseLink
+                                slug={single.exercise!.slug}
+                                name={group.typeName}
+                                className="text-blue-600 hover:text-blue-800 hover:underline"
+                                onPreview={setSelectedSlug}
+                                isActive={selectedSlug === single.exercise!.slug}
+                                previewLabel={previewLabel}
+                              />
+                            </li>
+                          );
+                        }
+
+                        // Multiple exercises or single with different name - group under type
+                        return (
+                          <li key={group.typeName} className="p-3 bg-gray-50 rounded-md">
+                            <div className="font-medium text-gray-700 mb-2">{group.typeName}</div>
+                            <ul className="ml-4 space-y-1">
+                              {exercisesInGroup.map(item => (
+                                <li key={item.id} className="flex items-start">
+                                  <span className="flex-shrink-0 w-5 h-5 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xs font-medium mr-2">
+                                    {item.order}
+                                  </span>
+                                  <ExerciseLink
+                                    slug={item.exercise!.slug}
+                                    name={item.exercise!.name}
+                                    className="text-blue-600 hover:text-blue-800 hover:underline"
+                                    onPreview={setSelectedSlug}
+                                    isActive={selectedSlug === item.exercise!.slug}
+                                    previewLabel={previewLabel}
+                                  />
+                                </li>
+                              ))}
+                            </ul>
+                          </li>
+                        );
+                      });
+                    })()}
+                  </ul>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        {selectedSlug && (
+          <aside className="mt-6 lg:mt-0 lg:w-1/2 lg:flex-shrink-0 lg:sticky lg:top-4 lg:self-start lg:max-h-[calc(100vh-2rem)] lg:overflow-y-auto">
+            <ExercisePreviewPanel
+              key={selectedSlug}
+              slug={selectedSlug}
+              onClose={() => setSelectedSlug(null)}
+            />
+          </aside>
         )}
       </div>
     </div>

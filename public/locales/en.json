@@ -91,7 +91,10 @@
     "partOfSeason": "Part of season",
     "backToSeason": "Back to season {{name}}",
     "standaloneBanner": "This list shows standalone practice sessions only. Season-linked sessions live under their season.",
-    "standaloneBannerLink": "Open seasons"
+    "standaloneBannerLink": "Open seasons",
+    "previewExercise": "Preview exercise in side panel",
+    "closePreview": "Close preview",
+    "openInNewTab": "Open in new tab"
   },
   "seasons": {
     "title": "Seasons",
