@@ -30,7 +30,11 @@ export default function NewSeasonPage({ actionData }: NewSeasonPageProps) {
             ? Number(values.defaultDurationMin)
             : undefined,
       }
-    : undefined;
+    : {
+        defaultDayOfWeek: 3,
+        defaultStartTime: '17:00',
+        defaultDurationMin: 90,
+      };
 
   return (
     <div className="mx-auto max-w-4xl p-6">
