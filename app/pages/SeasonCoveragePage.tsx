@@ -64,6 +64,7 @@ export default function SeasonCoveragePage({ coverage }: SeasonCoveragePageProps
                       {coverage.hints.recentRepeats.map((hint, idx) => (
                         <li key={`${hint.exerciseId}-${idx}`}>
                           {t('hints.repeatItem', {
+                            count: hint.gap,
                             name: hint.exerciseName,
                             gap: hint.gap,
                           })}
