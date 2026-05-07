@@ -39,6 +39,18 @@ export function RetrospectiveSection({ retrospective, actionData }: Retrospectiv
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
+  const retroId = retrospective?.id ?? null;
+  const retroUpdatedAt = retrospective?.updatedAt ?? null;
+
+  // After a successful save the action redirects back to this same URL,
+  // so the component stays mounted and isEditing would remain true. Reset
+  // it whenever the retrospective is created or updated so the read view
+  // takes over. Validation failures don't change retro identity, so the
+  // form correctly stays open with its errors.
+  useEffect(() => {
+    setIsEditing(false);
+  }, [retroId, retroUpdatedAt]);
+
   const hasRetro = Boolean(retrospective);
   const isCreating = !hasRetro && isEditing;
   const isUpdating = hasRetro && isEditing;
