@@ -55,7 +55,9 @@ Two related decisions had to be made together:
   (`prisma/seed.ts`):
   ```ts
   const namespace = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
-  const hash = createHash('sha1').update(namespace + slug).digest('hex');
+  const hash = createHash('sha1')
+    .update(namespace + slug)
+    .digest('hex');
   // formatted as a v5 UUID
   ```
 - This makes IDs a pure function of the slug — same slug, same UUID, every
