@@ -68,13 +68,13 @@ attempt:
    stylexUnplugin.vite({
      useCSSLayers: false,
      // ...
-   })
+   });
    ```
 2. **Centralised design tokens** in `app/styles/`:
    - `tokens.stylex.ts` — semantic design vars (`textPrimary`,
      `buttonPrimaryBackground`, etc.) defined via `defineVars`.
    - `constants.stylex.ts` — raw spacing / font-size / radius scales.
-   Components consume tokens, never raw colour or pixel values.
+     Components consume tokens, never raw colour or pixel values.
 3. **A shared `Button` component** with `primary`, `secondary`, `danger`,
    `ghost`, and `icon` variants. All 19 `<button>` elements in the app
    were converted to use it.
