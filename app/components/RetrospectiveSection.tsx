@@ -42,13 +42,14 @@ export function RetrospectiveSection({ retrospective, actionData }: Retrospectiv
   const retroId = retrospective?.id ?? null;
   const retroUpdatedAt = retrospective?.updatedAt ?? null;
 
-  // After a successful save the action redirects back to this same URL,
-  // so the component stays mounted and isEditing would remain true. Reset
-  // it whenever the retrospective is created or updated so the read view
-  // takes over. Validation failures don't change retro identity, so the
-  // form correctly stays open with its errors.
+  // After a successful create/update/delete the action redirects back to
+  // this same URL, so the component stays mounted and any local UI flags
+  // would persist. Reset them whenever the retrospective's identity
+  // changes (created, updated, or deleted). Validation failures don't
+  // change identity, so the form correctly stays open with its errors.
   useEffect(() => {
     setIsEditing(false);
+    setShowDeleteDialog(false);
   }, [retroId, retroUpdatedAt]);
 
   const hasRetro = Boolean(retrospective);
