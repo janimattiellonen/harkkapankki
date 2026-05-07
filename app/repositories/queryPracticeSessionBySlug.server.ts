@@ -29,6 +29,7 @@ export async function queryPracticeSessionBySlug(slug: string, language: string)
           },
         },
       },
+      retrospective: true,
     },
   });
 }
