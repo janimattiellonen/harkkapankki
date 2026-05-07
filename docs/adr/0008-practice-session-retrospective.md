@@ -7,9 +7,9 @@
 
 ## Context
 
-Harkkapankki today models the *plan* for a practice session
+Harkkapankki today models the _plan_ for a practice session
 (`PracticeSession` + `PracticeSessionSectionItem`) but has no place
-for the *outcome*: how many participants showed up, what actually got
+for the _outcome_: how many participants showed up, what actually got
 run, what worked, what to improve. The author writes the weekly
 programme the day-of and currently has nowhere in the app to record
 post-session reflections that would feed back into next week's plan
@@ -34,7 +34,7 @@ Constraints in play:
 
 ### 1. Retrospective is an inline subresource, not a first-class entity
 
-The retrospective is always reached *through* its parent practice
+The retrospective is always reached _through_ its parent practice
 session. It has **no slug**, **no dedicated routes**, and **no
 listing page**. Add / view / edit / delete all happen inline on
 `/practise-sessions/$slug`. The session detail page is the only
@@ -124,8 +124,8 @@ opening each session.
 
 ### Positive
 
-- Schema is purely additive — one new table, one FK with `@unique`
-  + `onDelete: Cascade`.
+- Schema is purely additive — one new table, one FK that is both
+  `@unique` and `onDelete: Cascade`.
 - Lifecycle is fully described by the parent session — delete the
   session, the retro goes with it.
 - Inline UX matches the read-while-editing reality of writing

@@ -111,10 +111,7 @@ function ExerciseLink({
   );
 }
 
-export default function PractiseSessionDetail({
-  session,
-  actionData,
-}: PractiseSessionDetailProps) {
+export default function PractiseSessionDetail({ session, actionData }: PractiseSessionDetailProps) {
   const { t } = useTranslation();
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
 
@@ -340,10 +337,7 @@ export default function PractiseSessionDetail({
         )}
       </div>
 
-      <RetrospectiveSection
-        retrospective={session.retrospective ?? null}
-        actionData={actionData}
-      />
+      <RetrospectiveSection retrospective={session.retrospective ?? null} actionData={actionData} />
     </div>
   );
 }

@@ -5,10 +5,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type MDEditor from '@uiw/react-md-editor';
 import { Button } from '~/components/Button';
-import {
-  retrospectiveFormSchema,
-  type RetrospectiveFormInput,
-} from '~/schemas/retrospective';
+import { retrospectiveFormSchema, type RetrospectiveFormInput } from '~/schemas/retrospective';
 
 type SerializedRetrospective = {
   id: string;
@@ -234,10 +231,7 @@ function RetrospectiveForm({
       ) : null}
 
       <div>
-        <label
-          htmlFor="participantCount"
-          className="block text-sm font-medium text-gray-700"
-        >
+        <label htmlFor="participantCount" className="block text-sm font-medium text-gray-700">
           {t('retrospective.participantCount')}
         </label>
         <input

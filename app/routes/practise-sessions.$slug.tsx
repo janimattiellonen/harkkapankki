@@ -102,10 +102,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
     }
   }
 
-  return data(
-    { intent: null, fieldErrors: {}, formError: 'Unknown intent' },
-    { status: 400 }
-  );
+  return data({ intent: null, fieldErrors: {}, formError: 'Unknown intent' }, { status: 400 });
 }
 
 export default function PracticeSessionDetailRoute() {

@@ -158,9 +158,7 @@ describe('retrospectives service', () => {
     });
 
     it('throws when deleting a non-existent retrospective', async () => {
-      await expect(
-        deleteRetrospective('00000000-0000-0000-0000-000000000000')
-      ).rejects.toThrow();
+      await expect(deleteRetrospective('00000000-0000-0000-0000-000000000000')).rejects.toThrow();
     });
   });
 
