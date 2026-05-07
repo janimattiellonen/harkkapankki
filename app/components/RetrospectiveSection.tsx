@@ -256,24 +256,27 @@ function RetrospectiveForm({
           name="summary"
           control={control}
           render={({ field: { onChange, value } }) => (
-            <div key={mounted ? 'editor-summary' : 'textarea-summary'}>
-              {mounted && MDEditorComponent ? (
-                <MDEditorComponent
-                  value={value ?? ''}
-                  onChange={val => onChange(val ?? '')}
-                  preview="edit"
-                  height={200}
-                />
-              ) : (
-                <textarea
-                  id="summary"
-                  rows={4}
-                  value={value ?? ''}
-                  onChange={e => onChange(e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                />
-              )}
-            </div>
+            <>
+              <div key={mounted ? 'editor-summary' : 'textarea-summary'}>
+                {mounted && MDEditorComponent ? (
+                  <MDEditorComponent
+                    value={value ?? ''}
+                    onChange={val => onChange(val ?? '')}
+                    preview="edit"
+                    height={200}
+                  />
+                ) : (
+                  <textarea
+                    id="summary"
+                    rows={4}
+                    value={value ?? ''}
+                    onChange={e => onChange(e.target.value)}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  />
+                )}
+              </div>
+              <input type="hidden" name="summary" value={value ?? ''} />
+            </>
           )}
         />
         {errors.summary ? (
@@ -289,24 +292,27 @@ function RetrospectiveForm({
           name="wentWell"
           control={control}
           render={({ field: { onChange, value } }) => (
-            <div key={mounted ? 'editor-wentWell' : 'textarea-wentWell'}>
-              {mounted && MDEditorComponent ? (
-                <MDEditorComponent
-                  value={value ?? ''}
-                  onChange={val => onChange(val ?? '')}
-                  preview="edit"
-                  height={200}
-                />
-              ) : (
-                <textarea
-                  id="wentWell"
-                  rows={4}
-                  value={value ?? ''}
-                  onChange={e => onChange(e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                />
-              )}
-            </div>
+            <>
+              <div key={mounted ? 'editor-wentWell' : 'textarea-wentWell'}>
+                {mounted && MDEditorComponent ? (
+                  <MDEditorComponent
+                    value={value ?? ''}
+                    onChange={val => onChange(val ?? '')}
+                    preview="edit"
+                    height={200}
+                  />
+                ) : (
+                  <textarea
+                    id="wentWell"
+                    rows={4}
+                    value={value ?? ''}
+                    onChange={e => onChange(e.target.value)}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  />
+                )}
+              </div>
+              <input type="hidden" name="wentWell" value={value ?? ''} />
+            </>
           )}
         />
         {errors.wentWell ? (
@@ -322,24 +328,27 @@ function RetrospectiveForm({
           name="improvements"
           control={control}
           render={({ field: { onChange, value } }) => (
-            <div key={mounted ? 'editor-improvements' : 'textarea-improvements'}>
-              {mounted && MDEditorComponent ? (
-                <MDEditorComponent
-                  value={value ?? ''}
-                  onChange={val => onChange(val ?? '')}
-                  preview="edit"
-                  height={200}
-                />
-              ) : (
-                <textarea
-                  id="improvements"
-                  rows={4}
-                  value={value ?? ''}
-                  onChange={e => onChange(e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                />
-              )}
-            </div>
+            <>
+              <div key={mounted ? 'editor-improvements' : 'textarea-improvements'}>
+                {mounted && MDEditorComponent ? (
+                  <MDEditorComponent
+                    value={value ?? ''}
+                    onChange={val => onChange(val ?? '')}
+                    preview="edit"
+                    height={200}
+                  />
+                ) : (
+                  <textarea
+                    id="improvements"
+                    rows={4}
+                    value={value ?? ''}
+                    onChange={e => onChange(e.target.value)}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  />
+                )}
+              </div>
+              <input type="hidden" name="improvements" value={value ?? ''} />
+            </>
           )}
         />
         {errors.improvements ? (
