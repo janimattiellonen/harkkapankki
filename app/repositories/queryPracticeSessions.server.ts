@@ -16,6 +16,9 @@ export async function queryPracticeSessions(options: QueryPracticeSessionsOption
           sectionItems: true,
         },
       },
+      retrospective: {
+        select: { id: true },
+      },
     },
   });
 }

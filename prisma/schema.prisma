@@ -192,10 +192,25 @@ model PracticeSession {
   createdAt     DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime  @updatedAt @map("updated_at")
 
-  sectionItems PracticeSessionSectionItem[]
+  sectionItems  PracticeSessionSectionItem[]
+  retrospective PracticeSessionRetrospective?
 
   @@index([seasonId, scheduledAt])
   @@map("practice_sessions")
+}
+
+model PracticeSessionRetrospective {
+  id                String          @id @default(uuid())
+  practiceSession   PracticeSession @relation(fields: [practiceSessionId], references: [id], onDelete: Cascade)
+  practiceSessionId String          @unique @map("practice_session_id")
+  participantCount  Int             @map("participant_count")
+  summary           String          @db.Text
+  wentWell          String?         @map("went_well") @db.Text
+  improvements      String?         @db.Text
+  createdAt         DateTime        @default(now()) @map("created_at")
+  updatedAt         DateTime        @updatedAt @map("updated_at")
+
+  @@map("practice_session_retrospectives")
 }
 
 model PracticeSessionSectionItem {

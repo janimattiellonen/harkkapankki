@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import ExercisePreviewPanel from '~/components/ExercisePreviewPanel';
+import { RetrospectiveSection } from '~/components/RetrospectiveSection';
 
 type SectionItem = {
   id: string;
@@ -26,6 +27,16 @@ type SectionItem = {
   } | null;
 };
 
+type Retrospective = {
+  id: string;
+  participantCount: number;
+  summary: string;
+  wentWell: string | null;
+  improvements: string | null;
+  createdAt: Date | string;
+  updatedAt: Date | string;
+};
+
 type PracticeSessionData = {
   id: string;
   name: string | null;
@@ -36,10 +47,18 @@ type PracticeSessionData = {
   createdAt: Date;
   updatedAt: Date;
   sectionItems: SectionItem[];
+  retrospective?: Retrospective | null;
+};
+
+type RetrospectiveActionData = {
+  intent: string | null;
+  fieldErrors: Record<string, string>;
+  formError?: string;
 };
 
 type PractiseSessionDetailProps = {
   session: PracticeSessionData;
+  actionData?: RetrospectiveActionData;
 };
 
 type ExerciseLinkProps = {
@@ -92,7 +111,7 @@ function ExerciseLink({
   );
 }
 
-export default function PractiseSessionDetail({ session }: PractiseSessionDetailProps) {
+export default function PractiseSessionDetail({ session, actionData }: PractiseSessionDetailProps) {
   const { t } = useTranslation();
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
 
@@ -317,6 +336,8 @@ export default function PractiseSessionDetail({ session }: PractiseSessionDetail
           </aside>
         )}
       </div>
+
+      <RetrospectiveSection retrospective={session.retrospective ?? null} actionData={actionData} />
     </div>
   );
 }

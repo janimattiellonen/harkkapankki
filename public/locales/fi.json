@@ -215,5 +215,17 @@
     "invalidEmail": "Virheellinen sähköpostiosoite",
     "tooShort": "Liian lyhyt",
     "tooLong": "Liian pitkä"
+  },
+  "retrospective": {
+    "title": "Retrospektiivi",
+    "add": "Lisää retrospektiivi",
+    "emptyHint": "Tälle harjoituskerralle ei ole vielä kirjattu retrospektiiviä.",
+    "participantCount": "Osallistujien määrä",
+    "summary": "Mitä teimme",
+    "wentWell": "Mikä meni hyvin",
+    "improvements": "Mitä voisi parantaa",
+    "deleteTitle": "Poista retrospektiivi",
+    "deleteConfirm": "Haluatko varmasti poistaa tämän retrospektiivin? Tätä toimintoa ei voi perua.",
+    "hasRetro": "Sisältää retrospektiivin"
   }
 }

@@ -215,5 +215,17 @@
     "invalidEmail": "Invalid email address",
     "tooShort": "Too short",
     "tooLong": "Too long"
+  },
+  "retrospective": {
+    "title": "Retrospective",
+    "add": "Add retrospective",
+    "emptyHint": "No retrospective has been written for this session yet.",
+    "participantCount": "Participant count",
+    "summary": "What we did",
+    "wentWell": "What went well",
+    "improvements": "What to improve",
+    "deleteTitle": "Delete retrospective",
+    "deleteConfirm": "Are you sure you want to delete this retrospective? This action cannot be undone.",
+    "hasRetro": "Has retrospective"
   }
 }
